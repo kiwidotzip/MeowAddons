@@ -1,0 +1,8 @@
+{
+    "name"          : "MeowAddons",
+    "author"        : "Kiwi",
+    "description"   : "QOL features and some dumb ones",
+    "version"       : "1.2.0",
+    "entry"         : "index.js",
+    "requires"      : ["Vigilance", "BloomCore"]
+}

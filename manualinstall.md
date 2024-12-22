@@ -2,13 +2,9 @@
 
 Taken from [here](https://github.com/DocilElm/Doc-Ct-Guide/blob/main/misc/ManualInstall.md)
 
-### Getting a module
-First we need the module we want to install for this we'll head over to the [Chattriggers Modules Website](https://www.chattriggers.com/modules) and search for our module.<br>
-Then we click on the `view` button.<br>
-Next step will be to scroll down to the bottom and click the `Download` button<br>
-> [!IMPORTANT]
-> Make sure you download the correct version for your mod (3.0 beta is for mc 1.21+).<br>
-
+### Getting the module zip
+First we need MeowAddons.zip, for this we'll head over to the [Chattriggers MeowAddons Link](https://www.chattriggers.com/modules/v/meowaddons) and click the `Download` button<br>
+<br>
 ### Dependencies
 Once we have the zip file downloaded we'll proceed to unzip it and open the folder.<br>
 Next step is to open the `metadata.json` file that it contains inside, we'll check whether there is a `"requires":` inside this.<br>

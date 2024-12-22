@@ -32,7 +32,7 @@ register("chat", (event) => {
 
 register("chat", (event) => {
     if (!Settings.fishingmsgsilly) return
-        ChatLib.command(`pc Nutcracker!`)
+        ChatLib.command(`pc A forgotten Nut(cracker)!`)
 }).setCriteria("You found a forgotten Nutcracker laying beneath the ice.")
 
 register("chat", (event) => {

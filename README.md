@@ -9,10 +9,4 @@ Automatic way
 
 Manual way
 
-- Download MeowAddons.zip from the releases page
-- Do /ct files in game
-- Locate the modules folder
-- Extract MeowAddons.zip
-- Drag the MeowAddons folder into the modules folder
-
-
+[Click here](https://github.com/kiwidotzip/meowaddons/manualinstall.md)

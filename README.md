@@ -9,4 +9,4 @@ Automatic way
 
 Manual way
 
-[Click here](https://github.com/kiwidotzip/meowaddons/manualinstall.md)
+[Click here](https://github.com/kiwidotzip/MeowAddons/blob/main/manualinstall.md)

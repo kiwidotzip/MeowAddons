@@ -6,10 +6,8 @@ Taken from [here](https://github.com/DocilElm/Doc-Ct-Guide/blob/main/misc/Manual
 First we need MeowAddons.zip, for this we'll head over to the [Chattriggers MeowAddons Link](https://www.chattriggers.com/modules/v/meowaddons) and click the `Download` button<br>
 <br>
 ### Dependencies
-Once we have the zip file downloaded we'll proceed to unzip it and open the folder.<br>
-Next step is to open the `metadata.json` file that it contains inside, we'll check whether there is a `"requires":` inside this.<br>
-* **if there is not**: do nothing
-* if there is: This is a list of modules that the current module depends on, for this we'll need to install each one of them and also check whether those require any dependencies themselves and repeat this cycle.
+
+Download the [Dependencies.zip](https://github.com/kiwidotzip/MeowAddons/releases/tag/Dependencies) file and extract it. It should contain several other folders (modules)
 
 ### Wrapping things up
 Once we have all of our folders (aka "modules") we can now go in game and type `/ct files` and hit enter<br>

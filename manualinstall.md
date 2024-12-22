@@ -3,7 +3,7 @@
 Taken from [here](https://github.com/DocilElm/Doc-Ct-Guide/blob/main/misc/ManualInstall.md)
 
 ### Getting the module zip
-First we need MeowAddons.zip, for this we'll head over to the [Chattriggers MeowAddons Link](https://www.chattriggers.com/modules/v/meowaddons) and click the `Download` button<br>
+First we need MeowAddons.zip, for this we'll head over to the [Chattriggers MeowAddons](https://www.chattriggers.com/modules/v/meowaddons) for a stable release and click the download button or [MeowAddons GitHub](https://github.com/kiwidotzip/MeowAddons/releases/) for the newest version and click the MeowAddons.zip in the latest release<br>
 <br>
 ### Dependencies
 

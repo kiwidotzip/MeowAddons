@@ -88,7 +88,7 @@ class Config {
 
     @SwitchProperty({
         name: "BetterAH",
-        description: "Formats Auction House messages",
+        description: "Formats Auction House messages\n&4Currently somewhat broken for CO-OP AH",
         category: "Chat",
         subcategory: "General"
     })

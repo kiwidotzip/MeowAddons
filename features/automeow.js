@@ -1,34 +1,42 @@
 import Settings from "../config";
 
-register("chat", (event) => {
-    if(!Settings.automeow) return;
-    var message = ChatLib.getChatMessage(event).removeFormatting();
-    var playerName = Player.getName();
+const Normalregex = /^(.+)? ?(>)? ?(\[.+\])? ?(.+?) ?(\[.+?\])?: meow$/i;
+const BridgeBotregex = /Guild > ?(\[.+\])? ?(.+?) ?(\[.+?\])?: (.+?) » meow$/i;
 
-        const Normalregex = /^(.+)? ?(>)? ?(\[.+\])? ?(.+?) ?(\[.+?\])?: meow$/i;
-        const BridgeBotregex = /Guild > ?(\[.+\])? ?(.+?) ?(\[.+?\])?: (.+?) » meow$/i;
+let lastscantime = 0;
+const scancooldown = 1000;
+
+register("chat", (event) => {
+    if (!Settings.automeow) return;
+
+    const currentTime = Date.now();
+    if (currentTime - lastscantime < scancooldown) return;
+
+    const message = ChatLib.getChatMessage(event).removeFormatting();
+    const playerName = Player.getName();
+
+    if (!message.includes("meow") || message.includes(playerName)) return;
 
     if (Normalregex.test(message)) {
-        if(message.includes(playerName)) return;
-
-        if(message.startsWith("Party >")) {
-            ChatLib.say("/pc meow :3")
-        } else if(message.startsWith("Guild >")) {
-            ChatLib.say("/gc meow :3")
-        } else if(message.startsWith("Officer >")) {
-            ChatLib.say("/oc meow :3")
+        if (message.startsWith("Party >")) {
+            ChatLib.command("pc meow :3");
+        } else if (message.startsWith("Guild >")) {
+            ChatLib.command("gc meow :3");
+        } else if (message.startsWith("Officer >")) {
+            ChatLib.command("oc meow :3");
         } else {
-            ChatLib.say("/ac meow :3")
+            ChatLib.command("ac meow :3");
         }
+        lastscantime = currentTime;
         return;
     }
 
     if (BridgeBotregex.test(message)) {
-        if(message.startsWith("Guild >")) {
-            ChatLib.say("/gc meow :3")
-        } else if(message.startsWith("Officer >")) {
-            ChatLib.say("/oc meow :3")
+        if (message.startsWith("Guild >")) {
+            ChatLib.command("gc meow :3");
+        } else if (message.startsWith("Officer >")) {
+            ChatLib.command("oc meow :3");
         }
-        return;
+        lastscantime = currentTime;
     }
-})
+});

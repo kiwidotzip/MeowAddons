@@ -22,11 +22,10 @@ register ("worldLoad", () => {
 
 register("chat", (event) => {
     if (!Settings.blood) return;
-
+//DUNGEON CHECK
     if (TabList.getNames()?.includes("§r       §r§3§lDungeon Stats§r")) {
         indungeon = true;
     }
-//DUNGEON CHECK
     if (!indungeon) return; {
         const message = ChatLib.getChatMessage(event);
 //BLOOD OPEN

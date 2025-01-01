@@ -15,7 +15,7 @@ import {
         return categories.indexOf(a.name) - categories.indexOf(b.name);
     },
     getSubcategoryComparator: () => (a, b) => {
-        const subcategories = ["General", "Modules", "Developer", "Mask notifcations", "Main toggle", "Sub Toggle","Fishing messages", "Join/Leave format", "Chat format", "UAYOR"];
+        const subcategories = ["General", "Modules", "Developer", "Mask notifcations", "Blood helper", "Main toggle", "Sub Toggle","Fishing messages", "Join/Leave format", "Chat format", "UAYOR"];
         return subcategories.indexOf(a.getValue()[0].attributesExt.subcategory) - subcategories.indexOf(b.getValue()[0].attributesExt.subcategory);
     }
 })
@@ -117,6 +117,22 @@ class Config {
         subcategory: "Mask notifications"
     })
     masknotifier = false
+
+    @SwitchProperty({
+        name: "Blood Helper",
+        description: "Main toggle for blood helper",
+        category: "Dungeons",
+        subcategory: "Blood helper"
+    })
+    blood = false
+
+    @SwitchProperty({
+        name: "Send blood information",
+        description: "Sends blood times to party chat",
+        category: "Dungeons",
+        subcategory: "Blood helper"
+    })
+    sendbloodparty = false
     
     @SwitchProperty({
         name: "Main toggle",
@@ -232,6 +248,7 @@ class Config {
         this.addDependency("Format guild messages", "Toggle chat formatting")
         this.addDependency("Fishing messages", "Main toggle")
         this.addDependency("Silly Fishing messages", "Main toggle")
+        this.addDependency("Send blood information", "Blood Helper")
     }
 }
 export default new Config()

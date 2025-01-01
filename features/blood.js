@@ -33,6 +33,7 @@ register("chat", (event) => {
             bloodopen = true;
             starttime = Date.now();
         }
+//WATCHER DIALOGUE
         if (message.startsWith("[BOSS] The Watcher: Let's see how you can handle this.")) {
             speaktime = Date.now();
             diftime = (speaktime - starttime) / 1000;

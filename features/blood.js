@@ -1,10 +1,10 @@
 import Settings from "../config";
 
 let bloodopen = false
+let indungeon = false
 let starttime= 0
 let speaktime = 0
 let diftime = 0
-let indungeon = false
 let spawnalltime = 0
 let camptime = 0
 var blooddone = false
@@ -26,9 +26,10 @@ register("chat", (event) => {
     if (TabList.getNames()?.includes("§r       §r§3§lDungeon Stats§r")) {
         indungeon = true;
     }
+//DUNGEON CHECK
     if (!indungeon) return; {
         const message = ChatLib.getChatMessage(event);
-
+//BLOOD OPEN
         if (message.startsWith("[BOSS] The Watcher:") && !bloodopen) {
             bloodopen = true;
             starttime = Date.now();
@@ -36,7 +37,7 @@ register("chat", (event) => {
         if (message.startsWith("[BOSS] The Watcher: Let's see how you can handle this.")) {
             speaktime = Date.now();
             diftime = (speaktime - starttime) / 1000;
-
+//FAST WATCHER
             if (diftime < 22) {
                 World.playSound("mob.cat.meow", 10, 1);
                 Client.showTitle(`&c&LFast Watcher`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
@@ -44,6 +45,7 @@ register("chat", (event) => {
                 if (Settings.sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [FAST]`);
                 }
+//AVERAGE WATCHER
             } else if (diftime >= 22 && diftime < 25) {
                 World.playSound("mob.cat.meow", 10, 1);
                 Client.showTitle(`&c&lAverage Watcher`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
@@ -51,6 +53,7 @@ register("chat", (event) => {
                 if (Settings.sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [AVERAGE]`);
                 }
+//SLOW WATCHER
             } else if (diftime >= 25) {
                 World.playSound("mob.cat.meow", 10, 1);
                 Client.showTitle(`&c&lSlow Watcher`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
@@ -60,7 +63,7 @@ register("chat", (event) => {
                 }
             }
         }
-
+//SPAWNED ALL MOBS
         if (message.startsWith("[BOSS] The Watcher: That will be enough for now.")) {
             spawnalltime = ((Date.now() - starttime) / 1000).toFixed(1);
             Client.showTitle(`&cWatcher finished spawning mobs!`, 2, 45, 10);
@@ -69,7 +72,7 @@ register("chat", (event) => {
                 ChatLib.command(`pc MeowAddons » Watcher took ${spawnalltime}s to spawn all mobs!`);
             }
         }
-
+//CAMP TIME
         if (message.startsWith("[BOSS] The Watcher: You have proven yourself. You may pass.") && starttime != 0) {
             blooddone = true;
             camptime = ((Date.now() - starttime) / 1000).toFixed(1);

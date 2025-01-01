@@ -80,5 +80,3 @@ register("chat", (event) => {
         }
     }
 });
-
-console.log (`${indungeon}`)

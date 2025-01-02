@@ -17,3 +17,16 @@ export function formatNumber(number, uppercase = false) {
 
     return formattedNumber;
 }
+
+export function InDungeon() {
+    try {
+        const tabList = TabList.getNames();
+        if (!tabList) return false;
+        return tabList.some(line => 
+            ChatLib.removeFormatting(line).includes("Dungeon:")
+        );
+    } catch (error) {
+        ChatLib.chat(`&c&lMeowAddons &8» Error in checkInDungeon: ${error}`);
+        return false;
+    }
+}

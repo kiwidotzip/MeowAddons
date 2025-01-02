@@ -15,7 +15,7 @@ import {
         return categories.indexOf(a.name) - categories.indexOf(b.name);
     },
     getSubcategoryComparator: () => (a, b) => {
-        const subcategories = ["General", "Modules", "Developer", "Mask notifcations", "Blood helper", "Main toggle", "Sub Toggle","Fishing messages", "Join/Leave format", "Chat format", "UAYOR"];
+        const subcategories = ["General", "Modules", "Developer", "Mask notifcations", "Blood helper", "Main toggle", "Sub Toggle","Fishing messages", "Join/Leave format", "Chat format", "UAYOR", "Debug"];
         return subcategories.indexOf(a.getValue()[0].attributesExt.subcategory) - subcategories.indexOf(b.getValue()[0].attributesExt.subcategory);
     }
 })
@@ -109,6 +109,14 @@ class Config {
         subcategory: "UAYOR"
     })
     automeow = false
+
+    @SwitchProperty({
+        name: "Debug",
+        description: "Enables debug messages",
+        category: "Chat",
+        subcategory: "Debug"
+    })
+    debug = false
 
     @SwitchProperty({
         name: "Mask Notifications",

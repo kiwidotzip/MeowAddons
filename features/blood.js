@@ -19,7 +19,12 @@ register ("worldLoad", () => {
     camptime = 0
     blooddone = false
 })
-
+register ("worldLoad", () => {
+    if (!Settings.debug) return;
+    Client.scheduleTask(150, () => {
+        ChatLib.chat(`&dMeowAddons &8»&r InDungeon: ${indungeon}`);
+    })
+})
 register("chat", (event) => {
     if (!Settings.blood) return;
 //DUNGEON CHECK
@@ -40,7 +45,7 @@ register("chat", (event) => {
 //FAST WATCHER
             if (diftime < 22) {
                 World.playSound("mob.cat.meow", 10, 1);
-                Client.showTitle(`&c&LFast Watcher`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
+                Client.showTitle(`&c&lFast Watcher`, `&cWatcher reached dialogue!`, 2, 45, 10);
                 ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${diftime.toFixed(1)}s&r to reach dialogue! &c&l[FAST]`);
                 if (Settings.sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [FAST]`);
@@ -48,7 +53,7 @@ register("chat", (event) => {
 //AVERAGE WATCHER
             } else if (diftime >= 22 && diftime < 25) {
                 World.playSound("mob.cat.meow", 10, 1);
-                Client.showTitle(`&c&lAverage Watcher`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
+                Client.showTitle(`&c&lAverage Watcher`, `&cWatcher reached dialogue!`, 2, 45, 10);
                 ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${diftime.toFixed(1)}s&r to reach dialogue! &c&l[AVERAGE]`);
                 if (Settings.sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [AVERAGE]`);
@@ -56,7 +61,7 @@ register("chat", (event) => {
 //SLOW WATCHER
             } else if (diftime >= 25) {
                 World.playSound("mob.cat.meow", 10, 1);
-                Client.showTitle(`&c&lSlow Watcher`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
+                Client.showTitle(`&c&lSlow Watcher`, `&cWatcher reached dialogue!`, 2, 45, 10);
                 ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${diftime.toFixed(1)}s&r to reach dialogue! &c&l[SLOW]`);
                 if (Settings.sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [SLOW]`);
@@ -66,7 +71,7 @@ register("chat", (event) => {
 //SPAWNED ALL MOBS
         if (message.startsWith("[BOSS] The Watcher: That will be enough for now.")) {
             spawnalltime = ((Date.now() - starttime) / 1000).toFixed(1);
-            Client.showTitle(`&cWatcher finished spawning mobs!`, 2, 45, 10);
+            Client.showTitle(`&c!`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
             ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${spawnalltime}s&r to spawn all mobs!`);
             if (Settings.sendbloodparty) {
                 ChatLib.command(`pc MeowAddons » Watcher took ${spawnalltime}s to spawn all mobs!`);

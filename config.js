@@ -164,14 +164,6 @@ class Config {
     automeow = false
 
     @SwitchProperty({
-        name: "Debug",
-        description: "Enables debug messages",
-        category: "Chat",
-        subcategory: "Debug"
-    })
-    debug = false
-
-    @SwitchProperty({
         name: "Mask Notifications",
         description: "Notifies party chat when a mask pops",
         category: "Dungeons",
@@ -286,14 +278,13 @@ class Config {
     })
     credit2() {};
 
-    @ButtonProperty({
-        name: "CrazyAddons",
-        description: "For automeow",
+    @SwitchProperty({
+        name: "Debug",
+        description: "Enables debug messages",
         category: "Credits",
-        subcategory: "Modules",
-        placeholder: " "
+        subcategory: "Debug"
     })
-    credit3() {};
+    debug = false
 
     constructor() {
         this.initialize(this)

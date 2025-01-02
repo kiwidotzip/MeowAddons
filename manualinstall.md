@@ -5,7 +5,7 @@ Taken from [here](https://github.com/DocilElm/Doc-Ct-Guide/blob/main/misc/Manual
 ### Getting the module zip
 First we need MeowAddons.zip, for this we'll head over to the [Chattriggers MeowAddons](https://www.chattriggers.com/modules/v/meowaddons) for a stable release and click the download button or [MeowAddons GitHub](https://github.com/kiwidotzip/MeowAddons/releases/) for the newest version and click the MeowAddons.zip in the latest release<br>
 <br>
-### Dependencies
+### Dependencies (Should be automatically imported, no need to do this step)
 
 Download the [Dependencies.zip](https://github.com/kiwidotzip/MeowAddons/releases/tag/Dependencies) file and extract it. It should contain several other folders (modules)
 

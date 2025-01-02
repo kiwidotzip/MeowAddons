@@ -11,11 +11,11 @@ import {
 
 @Vigilant("MeowAddons", "Meow Addons", {
     getCategoryComparator: () => (a, b) => {
-        const categories = ["Chat", "Dungeons","Fishing", "Party Commands", "Credits"];
+        const categories = ["Chat", "Dungeons", "Fishing", "Party Commands", "Credits"];
         return categories.indexOf(a.name) - categories.indexOf(b.name);
     },
     getSubcategoryComparator: () => (a, b) => {
-        const subcategories = ["General", "Modules", "Developer", "Mask notifcations", "Blood helper", "Main toggle", "Sub Toggle","Fishing messages", "Join/Leave format", "Chat format", "UAYOR", "Debug"];
+        const subcategories = ["General", "Modules", "Developer", "Mask notifcations", "Blood helper", "Main toggle", "Sub Toggle","Fishing messages", "Join/Leave format", "Chat format", "Custom chat rank color", "UAYOR", "Debug"];
         return subcategories.indexOf(a.getValue()[0].attributesExt.subcategory) - subcategories.indexOf(b.getValue()[0].attributesExt.subcategory);
     }
 })
@@ -85,6 +85,59 @@ class Config {
         subcategory: "Chat format"
     })
     guildformat = false
+
+    @SwitchProperty({
+        name: "Toggle custom chat rank color",
+        description: "Toggles custom chat rank color\n&4Requires party chat and guild chat formatting to be enabled",
+        category: "Chat",
+        subcategory: "Custom chat rank color"
+    })
+    togglecustomchatrankcolor = false
+
+    @TextProperty({
+        name: "Color code for MVP++ rank",
+        description: "Color code for MVP++ rank",
+        category: "Chat",
+        subcategory: "Custom chat rank color",
+        placeholder: "6"
+    })
+    mvppluspluscolor = "6"
+
+    @TextProperty({
+        name: "Color code for MVP+ rank",
+        description: "Color code for MVP+ rank",
+        category: "Chat",
+        subcategory: "Custom chat rank color",
+        placeholder: "b"
+    })
+    mvppluscolor = "b"
+
+    @TextProperty({
+        name: "Color code for MVP rank",
+        description: "Color code for MVP rank",
+        category: "Chat",
+        subcategory: "Custom chat rank color",
+        placeholder: "b"
+    })
+    mvpcolor = "b"
+
+    @TextProperty({
+        name: "Color code for VIP+ rank",
+        description: "Color code for VIP+ rank",
+        category: "Chat",
+        subcategory: "Custom chat rank color",
+        placeholder: "a"
+    })
+    vippluscolor = "a"
+
+    @TextProperty({
+        name: "Color code for VIP rank",
+        description: "Color code for VIP rank",
+        category: "Chat",
+        subcategory: "Custom chat rank color",
+        placeholder: "a"
+    })
+    vipcolor = "a"
 
     @SwitchProperty({
         name: "BetterAH",
@@ -257,6 +310,11 @@ class Config {
         this.addDependency("Fishing messages", "Main toggle")
         this.addDependency("Silly Fishing messages", "Main toggle")
         this.addDependency("Send blood information", "Blood Helper")
+        this.addDependency("Color code for MVP++ rank", "Toggle custom chat rank color")
+        this.addDependency("Color code for MVP+ rank", "Toggle custom chat rank color")
+        this.addDependency("Color code for MVP rank", "Toggle custom chat rank color")
+        this.addDependency("Color code for VIP+ rank", "Toggle custom chat rank color")
+        this.addDependency("Color code for VIP rank", "Toggle custom chat rank color")
     }
 }
 export default new Config()

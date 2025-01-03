@@ -1,19 +1,19 @@
-import Settings from "../config";
+import Config from "../config";
 
 
 register("chat", (hypixelrank, username, message, event) => {
-    if (!Settings.partyformat) return;
+    if (!Config().partyformat && !Config().togglecustomchatrankcolor) return;
     cancel(event);
     const rankColors = {
         "Admin": "&c",
         "Mod": "&2",
         "Helper": "&9",
         "GM": "&2",
-        "MVP++": `&${Settings.mvppluspluscolor}`,
-        "MVP+": `&${Settings.mvppluscolor}`,
-        "MVP": `&${Settings.mvpcolor}`,
-        "VIP+": `&${Settings.vippluscolor}`,
-        "VIP": `&${Settings.vipcolor}`,
+        "MVP++": `&${Config().mvppluspluscolor}`,
+        "MVP+": `&${Config().mvppluscolor}`,
+        "MVP": `&${Config().mvpcolor}`,
+        "VIP+": `&${Config().vippluscolor}`,
+        "VIP": `&${Config().vipcolor}`,
     };
     const rankNameMatch = hypixelrank ? hypixelrank.match(/\[(.+?)\]/) : null;
     const rankName = rankNameMatch ? rankNameMatch[1] : null;

@@ -5,7 +5,6 @@ import "./features/cleanguildjoin";
 import "./features/cleanpartyjoin";
 import "./features/partyformat";
 import "./features/guildformat";
-import "./features/commands";
 import "./features/fishingmsg";
 import "./features/fishingmsgsilly";
 import "./features/partycmd";

@@ -1,4 +1,4 @@
-import Settings from "../config";
+import Config from "../config";
 import { InDungeon } from "./helperfunction";
 
 let bloodopen = false
@@ -20,7 +20,7 @@ register ("worldLoad", () => {
 })
 
 register("chat", (event) => {
-    if (!Settings.blood) return;
+    if (!Config().blood) return;
     if (!InDungeon) return;
 //BLOOD OPEN
         if (ChatLib.getChatMessage(event).startsWith("[BOSS] The Watcher:") && !bloodopen) {
@@ -36,7 +36,7 @@ register("chat", (event) => {
                 World.playSound("mob.cat.meow", 10, 1);
                 Client.showTitle(`&c&lFast Watcher`, `&cWatcher reached dialogue!`, 2, 45, 10);
                 ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${diftime.toFixed(1)}s&r to reach dialogue! &c&l[FAST]`);
-                if (Settings.sendbloodparty) {
+                if (Config().sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [FAST]`);
                 }
 //AVERAGE WATCHER
@@ -44,7 +44,7 @@ register("chat", (event) => {
                 World.playSound("mob.cat.meow", 10, 1);
                 Client.showTitle(`&c&lAverage Watcher`, `&cWatcher reached dialogue!`, 2, 45, 10);
                 ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${diftime.toFixed(1)}s&r to reach dialogue! &c&l[AVERAGE]`);
-                if (Settings.sendbloodparty) {
+                if (Config().sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [AVERAGE]`);
                 }
 //SLOW WATCHER
@@ -52,7 +52,7 @@ register("chat", (event) => {
                 World.playSound("mob.cat.meow", 10, 1);
                 Client.showTitle(`&c&lSlow Watcher`, `&cWatcher reached dialogue!`, 2, 45, 10);
                 ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${diftime.toFixed(1)}s&r to reach dialogue! &c&l[SLOW]`);
-                if (Settings.sendbloodparty) {
+                if (Config().sendbloodparty) {
                     ChatLib.command(`pc MeowAddons » Watcher took ${diftime.toFixed(1)}s to reach dialogue! [SLOW]`);
                 }
             }
@@ -62,7 +62,7 @@ register("chat", (event) => {
             spawnalltime = ((Date.now() - starttime) / 1000).toFixed(1);
             Client.showTitle(`&c!`, `&cWatcher finished spawning mobs!`, 2, 45, 10);
             ChatLib.chat(`&dMeowAddons &8» &rWatcher took &e${spawnalltime}s&r to spawn all mobs!`);
-            if (Settings.sendbloodparty) {
+            if (Config().sendbloodparty) {
                 ChatLib.command(`pc MeowAddons » Watcher took ${spawnalltime}s to spawn all mobs!`);
             }
         }
@@ -71,7 +71,7 @@ register("chat", (event) => {
             blooddone = true;
             camptime = ((Date.now() - starttime) / 1000).toFixed(1);
             ChatLib.chat(`&dMeowAddons &8» &rBlood camp took &e${camptime}s&r!`);
-            if (Settings.sendbloodparty) {
+            if (Config().sendbloodparty) {
                 ChatLib.command(`pc MeowAddons » Blood camp took ${camptime}s!`);
             }
         }
@@ -79,7 +79,7 @@ register("chat", (event) => {
 //DEBUG
 register("worldLoad", () => {
     Client.scheduleTask(150, () => {
-        if (Settings.debug) {
+        if (Config().debug) {
             const indungeondebug = InDungeon();
             ChatLib.chat(`&c&lMeowAddons-DEBUG &8» &rInDungeon: &c${indungeondebug}`);
         }

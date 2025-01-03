@@ -5,8 +5,15 @@ function disableFishingMsg() {
     ChatLib.chat("&dMeowAddons &8> &cNormal fishing messages have been disabled because you have silly fishing messages enabled!");
 }
 
+register("worldLoad", () => {
+    Client.scheduleTask(150, () => {
+        if (!Settings.fishingmsg) return;
+        disableFishingMsg();
+    })
+});
+
 register("chat", (event) => {
-    if (!Settings.fishingmsgsilly) {
+    if (!Settings.fishingmsgsilly && !Settings.fishingmsg){
         disableFishingMsg();
         return;
     }
@@ -15,7 +22,7 @@ register("chat", (event) => {
 }).setCriteria("What is this creature!?");
 
 register("chat", (event) => {
-    if (!Settings.fishingmsgsilly) {
+    if (!Settings.fishingmsgsilly && !Settings.fishingmsg) {
         disableFishingMsg();
         return;
     }
@@ -24,7 +31,7 @@ register("chat", (event) => {
 }).setCriteria("The Water Hydra has come to test your strength.");
 
 register("chat", (event) => {
-    if (!Settings.fishingmsgsilly) {
+    if (!Settings.fishingmsgsilly && !Settings.fishingmsg) {
         disableFishingMsg();
         return;
     }
@@ -33,7 +40,7 @@ register("chat", (event) => {
 }).setCriteria("The Sea Emperor arises from the depths.");
 
 register("chat", (event) => {
-    if (!Settings.fishingmsgsilly) {
+    if (!Settings.fishingmsgsilly && !Settings.fishingmsg) {
         disableFishingMsg();
         return;
     }
@@ -42,7 +49,7 @@ register("chat", (event) => {
 }).setCriteria("Hide no longer, a Great White Shark has tracked your scent and thirsts for your blood!");
 
 register("chat", (event) => {
-    if (!Settings.fishingmsgsilly) {
+    if (!Settings.fishingmsgsilly && !Settings.fishingmsg) {
         disableFishingMsg();
         return;
     }
@@ -51,7 +58,7 @@ register("chat", (event) => {
 }).setCriteria("This can't be! The manifestation of death himself!");
 
 register("chat", (event) => {
-    if (!Settings.fishingmsgsilly) {
+    if (!Settings.fishingmsgsilly && !Settings.fishingmsg) {
         disableFishingMsg();
         return;
     }
@@ -60,7 +67,7 @@ register("chat", (event) => {
 }).setCriteria("A Reindrake forms from the depths.");
 
 register("chat", (event) => {
-    if (!Settings.fishingmsgsilly) {
+    if (!Settings.fishingmsgsilly && !Settings.fishingmsg) {
         disableFishingMsg();
         return;
     }

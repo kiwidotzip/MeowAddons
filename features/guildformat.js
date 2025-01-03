@@ -1,18 +1,18 @@
-import Settings from "../config";
+import Config from "../config";
 
 register("chat", (hypixelrank, username, guildrank, message, event) => {
-    if (!Settings.guildformat) return;
+    if (!Config().guildformat && !Config().togglecustomchatrankcolor) return;
     cancel(event);
     const rankColors = {
         "Admin": "&c",
         "Mod": "&2",
         "Helper": "&9",
         "GM": "&2",
-        "MVP++": `&${Settings.mvppluspluscolor || "6"}`,
-        "MVP+": `&${Settings.mvppluscolor || "b"}`,
-        "MVP": `&${Settings.mvpcolor || "b"}`,
-        "VIP+": `&${Settings.vippluscolor || "a"}`,
-        "VIP": `&${Settings.vipcolor || "a"}`,
+        "MVP++": `&${Config().mvppluspluscolor || "6"}`,
+        "MVP+": `&${Config().mvppluscolor || "b"}`,
+        "MVP": `&${Config().mvpcolor || "b"}`,
+        "VIP+": `&${Config().vippluscolor || "a"}`,
+        "VIP": `&${Config().vipcolor || "a"}`,
     };
     //extract rank name from hypixelrank or return null if it doesnt exist
     const rankNameMatch = hypixelrank ? hypixelrank.match(/\[(.+?)\]/) : null;

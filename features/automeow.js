@@ -1,13 +1,13 @@
-import Settings from "../config";
+import Config from "../config";
 
 const Normalregex = /^(.+)? ?(>)? ?(\[.+\])? ?(.+?) ?(\[.+?\])?: meow$/i;
 const BridgeBotregex = /Guild > ?(\[.+\])? ?(.+?) ?(\[.+?\])?: (.+?) » meow$/i;
 
 let lastscantime = 0;
-const scancooldown = 1000;
+const scancooldown = 300;
 
 register("chat", (event) => {
-    if (!Settings.automeow) return;
+    if (!Config().automeow) return;
 
     const currentTime = Date.now();
     if (currentTime - lastscantime < scancooldown) return;
@@ -38,5 +38,6 @@ register("chat", (event) => {
             ChatLib.command("oc meow :3");
         }
         lastscantime = currentTime;
+        return;
     }
 });

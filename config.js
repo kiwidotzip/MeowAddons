@@ -11,7 +11,7 @@ import {
 
 @Vigilant("MeowAddons", "Meow Addons", {
     getCategoryComparator: () => (a, b) => {
-        const categories = ["Chat", "Dungeons", "Fishing", "Party Commands", "Credits"];
+        const categories = ["Chat", "Dungeons", "Fishing", "Party Commands", "Dev"];
         return categories.indexOf(a.name) - categories.indexOf(b.name);
     },
     getSubcategoryComparator: () => (a, b) => {
@@ -263,7 +263,7 @@ class Config {
     @ButtonProperty({
         name: "Kiwidotzip",
         description: "Developer",
-        category: "Credits",
+        category: "Dev",
         subcategory: "Developer",
         placeholder: " "
     })
@@ -272,7 +272,7 @@ class Config {
     @ButtonProperty({
         name: "Sascha_Vadkovson (Scatha)",
         description: "Developer",
-        category: "Credits",
+        category: "Dev",
         subcategory: "Developer",
         placeholder: " "
     })
@@ -281,7 +281,7 @@ class Config {
     @SwitchProperty({
         name: "Debug",
         description: "Enables debug messages",
-        category: "Credits",
+        category: "Dev",
         subcategory: "Debug"
     })
     debug = false

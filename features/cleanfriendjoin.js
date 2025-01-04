@@ -1,7 +1,8 @@
 import Config from "../config";
 
 register("chat", (color, username, joinleftmsg, event) => {
-    if (!Config().cleanfriendjoin && !Config().cleantoggle) return;
+    if (!Config().cleanfriendjoin) return;
+    if (!Config().cleantoggle) return;
     cancel(event);
     if (joinleftmsg === "joined") ChatLib.chat(`&8F &2>> ${color}${username}`);
     if (joinleftmsg === "left") ChatLib.chat(`&8F &4<< ${color}${username}`);

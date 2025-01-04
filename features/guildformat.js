@@ -1,7 +1,8 @@
 import Config from "../config";
 
 register("chat", (hypixelrank, username, guildrank, message, event) => {
-    if (!Config().guildformat && !Config().togglecustomchatrankcolor) return;
+    if (!Config().guildformat) return;
+    if (!Config().formatchatmessage) return;
     cancel(event);
     const rankColors = {
         "Admin": "&c",

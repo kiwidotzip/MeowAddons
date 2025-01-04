@@ -2,7 +2,8 @@ import Config from "../config";
 
 
 register("chat", (hypixelrank, username, message, event) => {
-    if (!Config().partyformat && !Config().togglecustomchatrankcolor) return;
+    if (!Config().partyformat) return;
+    if (!Config().formatchatmessage) return;
     cancel(event);
     const rankColors = {
         "Admin": "&c",

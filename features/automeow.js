@@ -14,29 +14,40 @@ register("chat", (event) => {
 
     const message = ChatLib.getChatMessage(event).removeFormatting();
     const playerName = Player.getName();
+    const randomdelay = Config().randomdelayautomeow ? Math.floor(Math.random() * 2000 + 500) : 100;
 
-    if (!message.includes("meow") || message.includes(playerName)) return;
-
-    if (Normalregex.test(message)) {
-        if (message.startsWith("Party >")) {
-            ChatLib.command("pc meow :3");
-        } else if (message.startsWith("Guild >")) {
-            ChatLib.command("gc meow :3");
-        } else if (message.startsWith("Officer >")) {
-            ChatLib.command("oc meow :3");
-        } else {
-            ChatLib.command("ac meow :3");
-        }
+    if (!message.includes("meow")) return;
+    if (Normalregex.test(message) || message.includes(playerName)) {
+        setTimeout(() => {
+            if (message.startsWith("Party >")) {
+                ChatLib.command("pc meow :3");
+            } else if (message.startsWith("Guild >")) {
+                if (Config().guildchattoggleautomeow) {
+                    ChatLib.command("gc meow :3");
+                }
+            } else if (message.startsWith("Officer >")) {
+                if (Config().guildchattoggleautomeow) {
+                    ChatLib.command("oc meow :3");
+                }
+            } else {
+                ChatLib.command("ac meow :3");
+            }
+        }, randomdelay);    
         lastscantime = currentTime;
         return;
     }
-
     if (BridgeBotregex.test(message)) {
-        if (message.startsWith("Guild >")) {
-            ChatLib.command("gc meow :3");
-        } else if (message.startsWith("Officer >")) {
-            ChatLib.command("oc meow :3");
-        }
+        setTimeout(() => {
+            if (message.startsWith("Guild >")) {
+                if (Config().guildchattoggleautomeow) {
+                    ChatLib.command("gc meow :3");
+                }
+            } else if (message.startsWith("Officer >")) {
+                if (Config().guildchattoggleautomeow) {
+                    ChatLib.command("oc meow :3");
+                }
+            }
+        }, randomdelay);
         lastscantime = currentTime;
         return;
     }

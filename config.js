@@ -153,8 +153,24 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Chat",
     configName: "automeow",
     title: "Automeow",
-    description: "Sends \"meow\" when someone says \"meow :3\" in chat.",
+    description: "Sends \"meow :3\" when someone says \"meow\" in chat.",
     subcategory: "UAYOR"
+})
+.addSwitch({
+    category: "Chat",
+    configName: "randomdelayautomeow",
+    title: "Enable delay for automeow",
+    description: "Adds a random delay to the meow message to make it less detectable.\n&4Recommeneded if you are using it in guild chat",
+    subcategory: "UAYOR",
+    shouldShow: data => data.automeow
+})
+.addSwitch({
+    category: "Chat",
+    configName: "guildchattoggleautomeow",
+    title: "Enables automeow for guild chat",
+    description: "Enables automeow for guild chat.\n&4Enable random delay for auto meow",
+    subcategory: "UAYOR",
+    shouldShow: data => data.automeow
 })
 
 // Dungeons - Mask notifications

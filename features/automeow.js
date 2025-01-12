@@ -16,8 +16,8 @@ register("chat", (event) => {
     const playerName = Player.getName();
     const randomdelay = Config().randomdelayautomeow ? Math.floor(Math.random() * 2000 + 500) : 100;
 
-    if (!message.includes("meow")) return;
-    if (Normalregex.test(message) || BridgeBotregex.test(message) || message.includes(playerName)) {
+    if (!message.includes("meow") || message.includes(playerName)) return;
+    if (Normalregex.test(message) || BridgeBotregex.test(message)) {
         setTimeout(() => {
             if (message.startsWith("Party >")) {
                 ChatLib.command("pc meow :3");

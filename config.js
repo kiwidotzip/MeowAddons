@@ -160,7 +160,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Chat",
     configName: "randomdelayautomeow",
     title: "Enable delay for automeow",
-    description: "Adds a random delay to the meow message to make it less detectable.\n&4Recommeneded if you are using it in guild chat",
+    description: "Adds a random delay to the meow message to make it less detectable.\n&4Recommended if you are using it in guild chat",
     subcategory: "UAYOR",
     shouldShow: data => data.automeow
 })

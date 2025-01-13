@@ -183,7 +183,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Mask notifications"
 })
 
-// ungeons - Blood helper
+// Dungeons - Blood helper
 
 .addSwitch({
     category: "Dungeons",

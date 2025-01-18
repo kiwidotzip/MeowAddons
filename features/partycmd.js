@@ -22,7 +22,7 @@ register('chat', (rank, name) => {
 	if (!Config().partyallinvite) return;
 	if (!Config().partycommands) return;
 	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party Config() allinvite`)
+		ChatLib.command(`party allinvite`)
 	}
 }).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !allinv$/)
 

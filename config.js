@@ -147,30 +147,40 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.togglecustomchatrankcolor
 })
 
-// Chat - UAYOR
+// Meowing - Auto meow
 
 .addSwitch({
-    category: "Chat",
+    category: "Meowing",
     configName: "automeow",
     title: "Automeow",
     description: "Sends \"meow :3\" when someone says \"meow\" in chat.",
-    subcategory: "UAYOR"
+    subcategory: "Auto-meow"
 })
 .addSwitch({
-    category: "Chat",
+    category: "Meowing",
     configName: "randomdelayautomeow",
     title: "Enable delay for automeow",
     description: "Adds a random delay to the meow message to make it less detectable.\n&4Recommended if you are using it in guild chat",
-    subcategory: "UAYOR",
+    subcategory: "Auto-meow",
     shouldShow: data => data.automeow
 })
 .addSwitch({
-    category: "Chat",
+    category: "Meowing",
     configName: "guildchattoggleautomeow",
     title: "Enables automeow for guild chat",
     description: "Enables automeow for guild chat.\n&4Enable random delay for auto meow",
-    subcategory: "UAYOR",
+    subcategory: "Auto-meow",
     shouldShow: data => data.automeow
+})
+
+// Meowing - Meow sounds
+
+.addSwitch({
+    category: "Meowing",
+    configName: "meowsounds",
+    title: "Cat sounds",
+    description: "Plays cat sounds whenever someone says meow in chat",
+    subcategory: "Meow-Sounds"
 })
 
 // Dungeons - Mask notifications

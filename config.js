@@ -169,7 +169,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "guildchattoggleautomeow",
     title: "Enables automeow for guild chat",
     description: "Enables automeow for guild chat.\n&4Enable random delay for auto meow",
-    subcategory: "Auto-meow",
+    subcategory: "Auto meow",
     shouldShow: data => data.automeow
 })
 
@@ -180,7 +180,28 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "meowsounds",
     title: "Cat sounds",
     description: "Plays cat sounds whenever someone says meow in chat",
-    subcategory: "Meow-Sounds"
+    subcategory: "Meow Sounds"
+})
+
+// Meowing - Meow hit sounds
+
+.addSwitch({
+    category: "Meowing",
+    configName: "meowhitsound",
+    title: "Meow hit sound",
+    description: "Plays cat sounds whenever you hit a mob",
+    subcategory: "Meow Hit Sounds"
+})
+
+.addSlider({
+    category: "Meowing",
+    configName: "meowhitradius",
+    title: "Meow hit radius",
+    description: "Radius in which the meow hit sound will play",
+    options: [0, 32],
+    value: 5,
+    subcategory: "Meow Hit Sounds",
+    shouldShow: data => data.meowhitsound
 })
 
 // Dungeons - Mask notifications

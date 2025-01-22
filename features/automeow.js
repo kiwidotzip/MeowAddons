@@ -2,6 +2,7 @@ import Config from "../config";
 
 const Normalregex = /^(.+)? ?(>)? ?(\[.+\])? ?(.+?) ?(\[.+?\])?: meow$/i;
 const BridgeBotregex = /Guild > ?(\[.+\])? ?(.+?) ?(\[.+?\])?: (.+?) » meow$/i;
+const meow = ["mroww", "purr", "meowwwwww", "meow :3", "mrow", "moew", "mrow :3", "purrr :3"]
 
 let lastscantime = 0;
 const scancooldown = 300;
@@ -20,17 +21,17 @@ register("chat", (event) => {
     if (Normalregex.test(message) || BridgeBotregex.test(message)) {
         setTimeout(() => {
             if (message.startsWith("Party >")) {
-                ChatLib.command("pc meow :3");
+                ChatLib.command(`pc ${meow[random]}`);
             } else if (message.startsWith("Guild >")) {
                 if (Config().guildchattoggleautomeow) {
-                    ChatLib.command("gc meow :3");
+                    ChatLib.command(`gc ${meow[random]}`);
                 }
             } else if (message.startsWith("Officer >")) {
                 if (Config().guildchattoggleautomeow) {
-                    ChatLib.command("oc meow :3");
+                    ChatLib.command(`oc ${meow[random]}`);
                 }
             } else {
-                ChatLib.command("ac meow :3");
+                ChatLib.command(`ac ${meow[random]}`);
             }
         }, randomdelay);
         lastscantime = currentTime;

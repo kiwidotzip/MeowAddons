@@ -1,7 +1,8 @@
 import Config from "../config"
+const sounds = ["mob.cat.hit", "mob.cat.meow", "mob.cat.purreow", "mob.cat.straymeow"]
 
 register("chat", (message, event) => {
     if (!Config().meowsounds) return;
         if (message.toLowerCase().includes("meow")) 
-            World.playSound("mob.cat.meow", 1, 1);
+            World.playSound(sounds[random], 1, 1);
     }).setCriteria(/(?:Guild|Party|Co-op|From|To)? ?(?:>)? ?(?:\[.+?\])? ?(?:[a-zA-Z0-9_]+) ?(?:\[.+?\])?: (.+)/)

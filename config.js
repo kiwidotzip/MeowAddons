@@ -188,19 +188,19 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 .addSwitch({
     category: "Meowing",
     configName: "meowhitsound",
-    title: "Meow hit sound",
-    description: "Plays cat sounds whenever you hit a mob",
-    subcategory: "Meow Hit Sounds"
+    title: "Meow kill sounds",
+    description: "Plays cat sounds whenever you kill a mob",
+    subcategory: "Meow Kills Sounds"
 })
 
 .addSlider({
     category: "Meowing",
     configName: "meowhitradius",
-    title: "Meow hit radius",
-    description: "Radius in which the meow hit sound will play",
+    title: "Meow sound radius",
+    description: "Radius in which the meow kill sound will play",
     options: [0, 32],
     value: 5,
-    subcategory: "Meow Hit Sounds",
+    subcategory: "Meow Kills Sounds",
     shouldShow: data => data.meowhitsound
 })
 

@@ -20,6 +20,7 @@ register("chat", (event) => {
     if (!message.includes("meow") || message.includes(playerName)) return;
     if (Normalregex.test(message) || BridgeBotregex.test(message)) {
         setTimeout(() => {
+            let random = Math.floor(Math.random() * meow.length)
             if (message.startsWith("Party >")) {
                 ChatLib.command(`pc ${meow[random]}`);
             } else if (message.startsWith("Guild >")) {

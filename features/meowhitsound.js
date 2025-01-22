@@ -5,7 +5,7 @@ const sounds = ["mob.cat.hit", "mob.cat.meow", "mob.cat.purreow", "mob.cat.stray
 
 register("entityDeath", (entity) => {
     if (!Config().meowhitsound || entity == null) return
-    if (entity.distanceTo(Player.getPlayer()) > !Config().meowhitradius) return
+    if (entity.distanceTo(Player.getPlayer()) > Config().meowhitradius) return
     if (entity.getEntity() instanceof ArmorStand) return;
 
     playSFX()

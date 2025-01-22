@@ -1,7 +1,7 @@
 import Config from "../config"
 
 const ArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand");
-const sounds = ["mob.cat.hit", "mob.cat.meow", "mob.cat.purreow", "mob.cat.straymeow"]
+const sounds = ["mob.cat.meow", "mob.cat.purreow", "mob.cat.straymeow"]
 
 register("entityDeath", (entity) => {
     if (!Config().meowhitsound || entity == null) return

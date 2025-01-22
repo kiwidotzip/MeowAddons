@@ -45,10 +45,13 @@ Silly chattriggers module that has some QOL features
 ## Silly features
 
 - Auto-meow 
-  - Automatically meows when someone says meow! (has a random delay now)
+  - Automatically meows (a total of 7 randomised responses) when someone says meow! (has a random delay now)
 
 - Meow sounds
-  - Plays cat sounds when someone says meow!
+  - Plays cat sounds when someone says meow
+
+- Meow kill sounds
+  - Plays cat sounds when you kill a mob
 
 - Random meow (coming soon™)
 

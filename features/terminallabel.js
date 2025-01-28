@@ -1,6 +1,14 @@
 import Config from "../config";
 import { pogData } from "./helperfunction";
 
+const termLabels = {
+    1: "Tank",
+    2: "Mage",
+    3: "Berserk",
+    4: "Archer",
+    Device: "Healer",
+};
+
 const phases = {
   1: [
     { text: "1", x: 111.5, y: 113.5, z: 73.5 },
@@ -35,6 +43,10 @@ const phases = {
 function renderText(term, x, y, z) {
   if (Config().showTerm === term || Config().showTerm === 6) {
     Tessellator.drawString(term === "Device" ? term : `${term}`, x, y, z, Renderer.WHITE, true, 1.5, true);
+
+    if(termLabels[term]){
+      Tessellator.drawString(`${termLabels[term]}`, x, y + 1, z, Renderer.WHITE, true, 1.5, true);
+    }
   }
 }
 

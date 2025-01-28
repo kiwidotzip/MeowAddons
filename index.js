@@ -21,3 +21,4 @@ import "./features/BetterBZ";
 import "./features/masknotifiers";
 import "./features/blood";
 import "./features/terminallabels";
+import "./features/leapannounce";

@@ -232,6 +232,18 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.blood
 })
 
+// Dungeons - Terminal labels
+
+.addDropDown({
+    category: "Dungeons",
+    configName: "showTerm",
+    title: "Terminal labels",
+    description: "Select the terminal number that you want!",
+    subcategory: "Terminals - P3",
+    options: ['None', '1', '2', '3', '4', 'Device', 'All'],
+    value: 0
+})
+
 // Fishing - Fishing messagees
 
 .addSwitch({

@@ -1,3 +1,25 @@
+import PogObject from "../../PogData"
+
+export const pogData = new PogObject("MeowAddons", {
+    goldorsection: 0,
+});
+
+register("chat", (message) => {
+    if (message == "[BOSS] Storm: I should have known that I stood no chance.") {
+        pogData.goldorsection = 1;
+        pogData.save();
+    } else if ((message.includes("(7/7)") || message.includes("(8/8)")) && !message.includes(":")) {
+        pogData.goldorsection += 1;
+        pogData.save();
+    } else if (message == "The Core entrance is opening!") {
+        pogData.goldorsection = 5;
+        pogData.save();
+    } else if (message == "[BOSS] Necron: You went further than any human before, congratulations.") {
+        pogData.goldorsection == 0;
+        pogData.save();
+    }
+}).setCriteria("${message}");
+
 export function formatNumber(number, uppercase = false) {
     let formattedNumber;
     if(number < 100) return number
@@ -60,3 +82,4 @@ export function getCryptCountFromTablist() {
         }
     }
 }
+

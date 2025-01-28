@@ -42,6 +42,12 @@ Silly chattriggers module that has some QOL features
 - Mask notifications
   - Sends alerts in party chat when you activate a mask/phoenix pet
 
+- Terminal labels
+  - Labels terminals 
+
+- Leap announce
+  - Announces leap messages in party chat
+
 ## Silly features
 
 - Auto-meow 

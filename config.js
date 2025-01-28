@@ -232,6 +232,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.blood
 })
 
+// Dungeons - Leap announce
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "leapannounce",
+    title: "Leap Announce",
+    description: "Sends a message in party chat when you leap to a player",
+    subcategory: "Leap announce"
+})
+
 // Dungeons - Terminal labels
 
 .addDropDown({

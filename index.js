@@ -20,5 +20,5 @@ import "./features/BetterBZ";
 // Dungeons
 import "./features/masknotifiers";
 import "./features/blood";
-import "./features/terminallabels";
+import "./features/terminallabel";
 import "./features/leapannounce";

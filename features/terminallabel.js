@@ -1,5 +1,5 @@
 import Config from "../config";
-import { pogData } from "./helperfunction";
+import { pogData } from "./utils/pogdata";
 
 const phases = {
   1: [
@@ -32,9 +32,9 @@ const phases = {
   ],
 };
 
-function renderText(term, x, y, z) {
-  if (Config().showTerm === term || Config().showTerm === 6) {
-    Tessellator.drawString(term === "Device" ? term : `${term}`, x, y, z, Renderer.WHITE, true, 1.5, true);
+function renderText(text, x, y, z) {
+  if (Config().showTerm == text || (Config().showTerm === 5 && text === "Device") || Config().showTerm == 6) {
+    Tessellator.drawString(text, x, y, z, Renderer.WHITE, true, 0.05, false);
   }
 }
 

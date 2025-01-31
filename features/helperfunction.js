@@ -1,11 +1,13 @@
-import PogObject from "../../PogData";
+import { pogData } from "./utils/pogdata";
 
-export const pogData = new PogObject("MeowAddons", {
-    goldorsection: 0,
+register("worldLoad", () => {
+    pogData.goldorsection = 0;
+    pogData.save();
 });
 
-register("chat", (message) => {
-    if (message == "[BOSS] Storm: I should have known that I stood no chance.") {
+register("chat", (message, rest) => {
+    if (message.startsWith("Guild >")) {
+        console.log(message);
         pogData.goldorsection = 1;
         pogData.save();
     } else if ((message.includes("(7/7)") || message.includes("(8/8)")) && !message.includes(":")) {
@@ -22,7 +24,7 @@ register("chat", (message) => {
 
 export function formatNumber(number, uppercase = false) {
     let formattedNumber;
-    if(number < 100) return number
+    if(number < 1000) return number
     number = parseFloat(number.toString().replace(/,/g, '').replace(/,/g, ''));
 
     if (number >= 1000000000) {

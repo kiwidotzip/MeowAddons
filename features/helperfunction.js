@@ -6,8 +6,7 @@ register("worldLoad", () => {
 });
 
 register("chat", (message, rest) => {
-    if (message.startsWith("Guild >")) {
-        console.log(message);
+    if (message.startsWith("[BOSS] Storm: I should have known that I stood no chance.")) {
         pogData.goldorsection = 1;
         pogData.save();
     } else if ((message.includes("(7/7)") || message.includes("(8/8)")) && !message.includes(":")) {

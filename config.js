@@ -253,6 +253,22 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     options: ['None', '1', '2', '3', '4', 'Device', 'All'],
     value: 0
 })
+.addSwitch({
+    category: "Dungeons",
+    configName: "showTermClass",
+    title: "Show class",
+    description: "Shows the class that should be doing the terminal",
+    subcategory: "Terminals",
+    shouldShow: data => data.showTerm
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "boxTerm",
+    title: "Box terminal",
+    description: "Boxes the terminal",
+    subcategory: "Terminals",
+    shouldShow: data => data.showTerm
+})
 
 // Fishing - Fishing messagees
 

@@ -11,7 +11,7 @@ register("chat", (hypixelrankcolor, username, event) => {
     if (!Config().cleanpartyjoin) return;
     if (!Config().cleantoggle) return;
     cancel(event);
-    ChatLib.chat(`&9P &4<<&r &${hypixelrankcolor}${username}`);
+    ChatLib.chat(`&9P &2>>&r &${hypixelrankcolor}${username}`);
 }).setCriteria(/^The party leader ?&(.)(?:\[[^\]]+\] )?(\w+) has rejoined\.&r$/);
 
 register("chat", (hypixelrankcolor, username, event) => {
@@ -25,5 +25,5 @@ register("chat", (hypixelrankcolor, username, event) => {
     if (!Config().cleanpartyjoin) return;
     if (!Config().cleantoggle) return;
     cancel(event);
-    ChatLib.chat(`&9P &4<<&r &${hypixelrankcolor}${username}`);
+    ChatLib.chat(`&9P &2>>&r &${hypixelrankcolor}${username}`);
 }).setCriteria(/^&(.)(?:\[[^\]]+\] )?(\w+) &r&ehas rejoined\.&r$/);

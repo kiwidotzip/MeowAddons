@@ -16,7 +16,7 @@ register("chat", (message, rest) => {
         pogData.goldorsection = 5;
         pogData.save();
     } else if (message == "[BOSS] Necron: You went further than any human before, congratulations.") {
-        pogData.goldorsection == 0;
+        pogData.goldorsection = 0;
         pogData.save();
     }
 }).setCriteria("${message}");

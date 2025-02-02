@@ -35,6 +35,7 @@ const phases = {
 };
 
 function renderText(text, x, y, z) {
+  // Credit to Eclipse-5214 for the calcDistance code
   let pos = [x, y, z];
   let playerPos = [Math.round(Player.getX() + 0.25) - 1, Math.round(Player.getY()), Math.round(Player.getZ() + 0.25) - 1];
   calcDistance = (p1, p2) => {
@@ -42,65 +43,89 @@ function renderText(text, x, y, z) {
     var b = p2[1] - p1[1];
     var c = p2[2] - p1[2];
 
-    let dist = Math.sqrt(a * a + b * b + c * c);
-
-    if (dist < 0) {
-        dist *= -1;
-    }
-    return dist;};
+    return Math.sqrt(a * a + b * b + c * c)};
   let pdistance = calcDistance(playerPos, pos);
-  
 
   if (Config().showTerm == text || (Config().showTerm === 5 && text === "Device") || Config().showTerm == 6) {
 
-    if (pdistance > 7) { Tessellator.drawString(text, x, y, z, 0xffffff, true, 2, true); } 
-    else { Tessellator.drawString(text, x, y, z, 0xffffff, true, 0.05, false); }
+    const numberColor = 0x00ffff;
+    const deviceColor = 0xff69b4;
+    let displayColor = text === "Device" ? deviceColor : numberColor;
+
+    if (pdistance > 7) {
+      Tessellator.drawString(text, x, y, z, displayColor, true, 2, true);
+    } else {
+      Tessellator.drawString(text, x, y, z, displayColor, true, 0.05, false);
+    }
 
     let label = "";
-    switch (text) {
-      case "[1]":
+    const isPhase1 = pogData.goldorsection === 1;
+
+    if (isPhase1 && Config().m7roles) {
+      if (text === "[1]" || text === "[2]") {
         label = "Tank";
-        break;
-      case "[2]":
+      } else if (text === "[3]" || text === "[4]") {
         label = "Mage";
-        break;
-      case "[3]":
-        label = "Bers";
-        break;
-      case "[4]":
-        label = "Arch";
-        break;
-      case "[5]":
-        label = "Bers";
-        break;
+      }
+    } else {
+      switch (text) {
+        case "[1]":
+          label = "Tank";
+          break;
+        case "[2]":
+          label = "Mage";
+          break;
+        case "[3]":
+          label = "Bers";
+          break;
+        case "[4]":
+          label = "Arch";
+          break;
+        case "[5]":
+          label = "Bers";
+          break;
+      }
     }
+
+    const labelColorMap = {
+      Tank: 0x00ff00, // Green
+      Mage: 0x00ffff, // Aqua
+      Bers: 0xffd700, // Gold
+      Arch: 0xff0000, // Red
+    };
 
     if (label && Config().showTermClass) {
-    if (pdistance < 14) {
-    Tessellator.drawString(label, x, y - 0.5, z, 0xffffff, true, 0.05, false);
-    }
+      const labelColor = labelColorMap[label];
+      const showTermClassDistance = Config().showTermClassDistance;
+      if (pdistance < showTermClassDistance) {
+        Tessellator.drawString(label, x, y - 0.5, z, labelColor, true, 0.05, false);
+      }
     }
   }
-};
+}
 
 register("renderWorld", () => {
- const phaseData = phases[pogData.goldorsection];
+  const phaseData = phases[pogData.goldorsection];
   if (Config().showTerm !== 0) {
     if (phaseData) {
       phaseData.forEach(({ text, x, y, z }) => renderText(text, x, y, z));
     }
   }
   if (Config().boxTerm) {
-   if (phaseData) {
-  phaseData.forEach(({ x, y, z }) => renderFilledBox(x, y - 0.5, z, 1, 1, 1, 1, 10, 0.5, false));
-   }
+    if (phaseData) {
+      phaseData.forEach(({ text, x, y, z }) => {
+        if (text !== "Device") {
+          renderFilledBox(x, y - 0.5, z, 1.01, 1.01, 1, 1, 10, 0.5, false);
+        }
+      });
+    }
   }
 });
 
 register("command", () => {
-  if (!Config().debug) return;
+  if (Config().forcerenderterm || Config().debug) {
   const phaseData = phases[pogData.goldorsection];
   if (phaseData) {
     phaseData.forEach(({ text, x, y, z }) => renderText(text, x, y, z));
-  }
+  }} 
 }).setName("renderterm");

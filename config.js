@@ -249,7 +249,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "showTerm",
     title: "Terminal labels",
     description: "Select the terminal number that you want!",
-    subcategory: "Terminals - P3",
+    subcategory: "Terminals",
     options: ['None', '1', '2', '3', '4', 'Device', 'All'],
     value: 0
 })
@@ -258,16 +258,36 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "showTermClass",
     title: "Show class",
     description: "Shows the class that should be doing the terminal",
-    subcategory: "Terminals"
+    subcategory: "Terminals",
+    shouldShow: data => data.showTerm != 0
+})
+.addSlider({
+    category: "Dungeons",
+    configName: "showTermClassDistance",
+    title: "Show class distance",
+    description: "Distance at which the class label will be shown",
+    options: [0, 20],
+    value: 14,
+    subcategory: "Terminals",
+    shouldShow: data => data.showTermClass
 })
 .addSwitch({
     category: "Dungeons",
     configName: "boxTerm",
     title: "Box terminal",
     description: "Boxes the terminal",
-    subcategory: "Terminals"
+    subcategory: "Terminals",
+    shouldShow: data => data.showTerm != 0
 })
-
+.addDropDown({
+    category: "Dungeons",
+    configName: "sendTermInChat",
+    title: "Send the terminal you select in chat",
+    description: "Sends the terminal you select in chat",
+    subcategory: "Terminals",
+    options: ['None', '1', '2', '3', '4', 'Device'],
+    value: 0
+})
 // Fishing - Fishing messagees
 
 .addSwitch({

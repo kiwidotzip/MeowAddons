@@ -242,7 +242,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Leap announce"
 })
 
-// Dungeons - Terminal labels
+// Dungeons - Terminal
 
 .addDropDown({
     category: "Dungeons",
@@ -288,6 +288,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     options: ['None', '1', '2', '3', '4', 'Device'],
     value: 0
 })
+
 // Fishing - Fishing messagees
 
 .addSwitch({

@@ -22,7 +22,7 @@ register('chat', (rank, name) => {
 	if (!Config().partyallinvite) return;
 	if (!Config().partycommands) return;
 	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party allinvite`)
+		ChatLib.command(`party settings allinvite`)
 	}
 }).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !allinv$/)
 
@@ -30,7 +30,7 @@ register('chat', (rank, name) => {
 	if (!Config().partykickoffline) return;
 	if (!Config().partycommands) return;
 	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party kickoffline`)
+		ChatLib.command(`party settings kickoffline`)
 	}
 }).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !kickoffline$/)
 

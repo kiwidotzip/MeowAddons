@@ -374,6 +374,8 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Developer",
     subcategory: "Developer",
     onClick() {
+        ChatLib.chat(`&d&lmeow`)
+        World.playSound("mob.cat.meow", 1, 1)
     }
 })
 .addButton({
@@ -383,6 +385,8 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Developer",
     subcategory: "Developer",
     onClick() {
+        ChatLib.chat(`&3&lAurora Dye`)
+        World.playSound("mob.cat.meow", 1, 1)
     }
 })
 .addSwitch({

@@ -10,7 +10,6 @@ import "./features/cleanpartyjoin";
 import "./features/partyformat";
 import "./features/guildformat";
 // Fishing
-import "./features/fishingmsg";
 import "./features/fishingmsgsilly";
 // Party command
 import "./features/partycmd";

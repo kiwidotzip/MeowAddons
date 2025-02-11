@@ -300,14 +300,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addSwitch({
     category: "Fishing",
-    configName: "fishingmsg",
-    title: "Fishing messages",
-    description: "Notifies party chat when a fishing boss spawns",
-    subcategory: "Fishing messages",
-    shouldShow: data => data.fishingmsgmaintoggle
-})
-.addSwitch({
-    category: "Fishing",
     configName: "fishingmsgsilly",
     title: "Silly Fishing messages",
     description: "Sends more lively messages when a fishing boss spawns",

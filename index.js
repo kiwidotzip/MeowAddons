@@ -63,7 +63,18 @@ function checkUpdate() {
     });
 }
 
-checkUpdate();
+let UpdateChecked = false;
+
+register("worldLoad", () => {
+    if (!UpdateChecked) {
+    checkUpdate();
+    UpdateChecked = true;
+    }
+});
+
+register("gameLoad", () => {
+    UpdateChecked = false;
+});
 
 register('command', () => {
     checkUpdate();

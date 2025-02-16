@@ -66,9 +66,9 @@ let UpdateChecked = false;
 
 register("worldLoad", () => {
     if (!UpdateChecked) {
+        UpdateChecked = true;
         Client.scheduleTask(1000, () => {
             checkUpdate();
-            UpdateChecked = true;
         });
     }
 });

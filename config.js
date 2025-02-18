@@ -204,6 +204,40 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.meowhitsound
 })
 
+// Slayers - Carrying
+
+.addSwitch({
+    category: "Slayers",
+    configName: "drawcarrybox",
+    title: "Background for carry list",
+    description: "Enables the background for carry list",
+    subcategory: "Carrying"
+})
+
+.addColorPicker({
+    category: "Slayers",
+    configName: "carryboxcolor",
+    title: "Color Picker",
+    description: "Pick a color for the background",
+    subcategory: "Carrying",
+    value: [0, 0, 255, 255],
+    shouldShow: data => data.drawcarrybox
+})
+.addSwitch({
+    category: "Slayers",
+    configName: "carrytimesend",
+    title: "Send carry time",
+    description: "Sends carry time in chat, not party chat",
+    subcategory: "Carrying"
+})
+.addSwitch({
+    category: "Slayers",
+    configName: "sendcarrycount",
+    title: "Send carry count",
+    description: "Sends carry count in party chat",
+    subcategory: "Carrying"
+})
+
 // Dungeons - Mask notifications
 
 .addSwitch({

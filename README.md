@@ -32,7 +32,14 @@ Silly chattriggers module that has some QOL features
   - Formats bazaar messages to look cleaner
 
 - BetterAH (WIP)
-  - Formats auction house messages to look cleaner
+  - Formats auction house messages to look cleaner'
+
+## Slayer
+
+- Carry counter
+  - Counts the carries that you do with a nice gui
+- Carry time
+  - Shows the amount of time you took to complete a carry
 
 ## Dungeons
 

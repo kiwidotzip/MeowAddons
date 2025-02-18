@@ -16,6 +16,8 @@ import "./features/partycmd";
 // Skyblock General
 import "./features/BetterAH";
 import "./features/BetterBZ";
+// Skyblock Slayer
+import "./features/carrycounter";
 // Dungeons
 import "./features/masknotifiers";
 import "./features/blood";

@@ -18,6 +18,7 @@ import "./features/BetterAH";
 import "./features/BetterBZ";
 // Skyblock Slayer
 import "./features/carrycounter";
+import "./features/slayertimer";
 // Dungeons
 import "./features/masknotifiers";
 import "./features/blood";

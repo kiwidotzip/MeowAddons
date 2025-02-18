@@ -204,6 +204,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.meowhitsound
 })
 
+// Slayers - Kill timer
+
+.addSwitch({
+    category: "Slayers",
+    configName: "slayerkilltimer",
+    title: "Slayer kill timer",
+    description: "Sends the slayer kill time in chat, not party chat",
+    subcategory: "Slayers"
+})
+
 // Slayers - Carrying
 
 .addSwitch({
@@ -237,7 +247,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Sends carry count in party chat",
     subcategory: "Carrying"
 })
-
 // Dungeons - Mask notifications
 
 .addSwitch({

@@ -171,6 +171,23 @@ register("command", (...args = []) => {
         default:
             showHelp();
     }
+}).setTabCompletions((args) => {
+    const subcommand = args[0]?.toLowerCase();
+    const currentArg = args[args.length - 1]?.toLowerCase();
+    const playerNames = World.getAllPlayers()
+    .filter(player => player.getUUID().version() === 4)
+    .map(player => ChatLib.removeFormatting(player.getName()));
+    
+    if (subcommand === "add" || subcommand === "remove" || subcommand === "set") {
+        if (args.length === 2) {
+            return playerNames.filter(name => name.toLowerCase().startsWith(currentArg));
+        }
+    }
+    if (args.length === 1) {
+        return ["add", "remove", "set", "list", "gui"].filter(cmd => cmd.startsWith(currentArg));
+    }
+
+    return [];
 }).setName("carry").setAliases(["macarry"]);
 
 function findCarryee(name) {

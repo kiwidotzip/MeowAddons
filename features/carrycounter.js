@@ -1,13 +1,7 @@
 import settings from "../config";
-import PogObject from "../../PogData";
+import { pogData } from "./utils/pogdata";
 
 let prefix = `&e[MeowAddons]`;
-const hudConfig = new PogObject("MeowAddons", {}, "meowaddonscarryhud", {
-    x: 0,
-    y: 0,
-    textColor: "FFFFFF",
-    scale: 1
-});
 
 class Carryee {
     constructor(name, total) {
@@ -21,13 +15,11 @@ class Carryee {
     }
 
     incrementTotal() {
-        if (!playerJustDied) {
-            if (++this.count >= this.total) {
-                this.complete();
-                carryees = carryees.filter(carryee => carryee !== this);
-            }
-            ChatLib.command(`pc ${this.name}: ${this.count}/${this.total}`);
+        if (++this.count >= this.total) {
+            this.complete();
+            carryees = carryees.filter(carryee => carryee !== this);
         }
+        ChatLib.command(`pc ${this.name}: ${this.count}/${this.total}`);
     }
 
     recordBossStartTime(bossID) {
@@ -102,7 +94,6 @@ register("entityDeath", (entity) => {
 
 register("renderOverlay", () => {
     if (carryees.length === 0) return;
-    Renderer.scale(hudConfig.scale);
 
     const longestWidth = Math.max(...carryees.map(carryee => 
         Renderer.getStringWidth(carryee.toString())
@@ -112,23 +103,38 @@ register("renderOverlay", () => {
     if (settings().drawCarryBox) {
         Renderer.drawRect(
             Renderer.color(...settings().carryBoxColor),
-            hudConfig.x,
-            hudConfig.y,
+            pogData.CarryX,
+            pogData.CarryY,
             longestWidth,
             totalHeight
         );
     }
 
-    Renderer.drawString("&e[MA] &d&lCarries&f:", hudConfig.x + 4, hudConfig.y + 4);
+    Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
     carryees.forEach((carryee, index) => {
         Renderer.drawString(
             carryee.toString(),
-            hudConfig.x + 4,
-            hudConfig.y + 16 + (index * 10)
+            pogData.CarryX + 4,
+            pogData.CarryY + 16 + (index * 10)
         );
     });
 
-    Renderer.scale(1 / hudConfig.scale);
+    if (hudEditor.isOpen()) {
+        Renderer.drawString(
+            "&a&lDrag to move HUD",
+            Renderer.screen.getWidth() / 2 - 45,
+            Renderer.screen.getHeight() / 2 - 30,
+            true
+        );
+    }
+});
+
+register("dragged", (dx, dy, x, y, button) => {
+    if (hudEditor.isOpen() && button === 0) {
+        pogData.CarryX = x;
+        pogData.CarryY = y;
+        pogData.save();
+    }
 });
 
 register("command", (...args = []) => {

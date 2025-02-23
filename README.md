@@ -20,7 +20,7 @@ Silly chattriggers module that has some QOL features
 - Friend Join/Leave format
   - Formats friend join/leave messages to look cleaner
 
-- Party Join/Leave format (WIP)
+- Party Join/Leave format
   - Formats party join/leave messages to look cleaner
 
 - Party commands (WIP)
@@ -40,6 +40,12 @@ Silly chattriggers module that has some QOL features
   - Counts the carries that you do with a nice gui
 - Carry time
   - Shows the amount of time you took to complete a carry
+- Slayer time
+  - Shows the amount of time you took to kill your slayer boss, as accurate as skytils timer and always works unlike skytils smh
+- Highlight Slayer boss (coming soon)
+  - Highlights your carry/slayer boss
+- Highlight carry player
+  - Highlights the player you're carrying
 
 ## Dungeons
 

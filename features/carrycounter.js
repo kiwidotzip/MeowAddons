@@ -186,7 +186,6 @@ register("command", (...args = []) => {
     if (args.length === 1) {
         return ["add", "remove", "set", "list", "gui"].filter(cmd => cmd.startsWith(currentArg));
     }
-
     return [];
 }).setName("carry").setAliases(["macarry"]);
 

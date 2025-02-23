@@ -29,6 +29,6 @@ registerWhen(
             isFighting = false; 
             startTime = null; 
         }
-    }).setFps(30),
+    }).setFps(10),
 () => settings().slayerkilltimer
 );

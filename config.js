@@ -238,14 +238,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "carrytimesend",
     title: "Send carry time",
     description: "Sends carry time in chat, not party chat",
-    subcategory: "Carrying"
+    subcategory: "Carrying",
+    value: "true"
 })
 .addSwitch({
     category: "Slayers",
     configName: "sendcarrycount",
     title: "Send carry count",
     description: "Sends carry count in party chat",
-    subcategory: "Carrying"
+    subcategory: "Carrying",
+    value: "true"
 })
 // Dungeons - Mask notifications
 

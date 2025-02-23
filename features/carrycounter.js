@@ -1,21 +1,13 @@
 import settings from "../config";
 import PogObject from "../../PogData";
-let prefix = `&e[MeowAddons]`;
 
-const hudConfig = new PogObject("meowaddonscarry", {
+let prefix = `&e[MeowAddons]`;
+const hudConfig = new PogObject("MeowAddons", {}, "meowaddonscarryhud", {
     x: 0,
     y: 0,
     textColor: "FFFFFF",
     scale: 1
 });
-
-let playerJustDied = false;
-register("chat", (message) => {
-    if (message.startsWith("☠ You were killed by")) {
-        playerJustDied = true;
-        setTimeout(() => playerJustDied = false, 3000);
-    }
-}).setCriteria(/^☠ You were killed by (.+)/);
 
 class Carryee {
     constructor(name, total) {
@@ -25,6 +17,7 @@ class Carryee {
         this.lastBossTime = null;
         this.startTime = null;
         this.isFighting = false;
+        this.bossID = null;
     }
 
     incrementTotal() {
@@ -37,10 +30,11 @@ class Carryee {
         }
     }
 
-    recordBossStartTime() {
+    recordBossStartTime(bossID) {
         if (!this.startTime && !this.isFighting) {
             this.startTime = Date.now();
             this.isFighting = true;
+            this.bossID = bossID;
         }
     }
 
@@ -76,93 +70,66 @@ class Carryee {
 let carryees = [];
 const hudEditor = new Gui();
 
-register("renderOverlay", () => {
-  if (carryees.length === 0) return;
-  Renderer.scale(hudConfig.scale);
-
-  const longestWidth = Math.max(...carryees.map(carryee => 
-      Renderer.getStringWidth(carryee.toString())
-    )) + 8;
-  const totalHeight = carryees.length * 10 + 20;
-
-  if (settings().drawCarryBox) {
-      Renderer.drawRect(
-          Renderer.color(...settings().carryBoxColor),
-          hudConfig.x,
-          hudConfig.y,
-          longestWidth,
-          totalHeight
-      );
-  }
-
-  Renderer.drawString("&e[MA] &d&lCarries&f:", hudConfig.x + 4, hudConfig.y + 4);
-  carryees.forEach((carryee, index) => {
-      Renderer.drawString(
-          carryee.toString(),
-          hudConfig.x + 4,
-          hudConfig.y + 16 + (index * 10)
-      );
-  });
-
-  Renderer.scale(1 / hudConfig.scale);
-});
-
-register("renderOverlay", () => {
-    if (!hudEditor.isOpen()) return;
-    Renderer.drawString(
-        "&a&lDrag to move HUD",
-        Renderer.screen.getWidth() / 2 - 45,
-        Renderer.screen.getHeight() / 2 - 30,
-        true
-    );
-});
-
-register("dragged", (dx, dy, x, y, button) => {
-    if (hudEditor.isOpen() && button === 0) {
-        hudConfig.x = x;
-        hudConfig.y = y;
-        hudConfig.save();
-    }
-});
-
-let previousBossStands = new Set();
-let currentBossStands = new Set();
-
-register("step", () => {
-    const armorStands = World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"));
-    currentBossStands.clear();
-    armorStands.forEach(stand => {
-        const name = ChatLib.removeFormatting(stand.getName());
+register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (entity) => {
+    Client.scheduleTask(1, () => {
+        const name = ChatLib.removeFormatting(entity.entity.func_70005_c_());
         if (name.includes("Spawned by")) {
-            currentBossStands.add(name);
             const playerName = name.split("by: ")[1];
             const carryee = findCarryee(playerName);
             if (carryee) {
-                carryee.recordBossStartTime();
+                const armorStandID = entity.entity.func_145782_y(); // Get Armor Stand ID
+                const bossID = armorStandID - 3; // Get Boss ID
+                carryee.recordBossStartTime(bossID);
             }
         }
     });
+});
 
-    const disappearedStands = new Set([...previousBossStands].filter(
-        standName => !currentBossStands.has(standName)
-    ));
+register("entityDeath", (entity) => {
+    const bossID = entity.entity.func_145782_y();
+    carryees.forEach((carryee) => {
+        if (carryee.bossID === bossID) { 
+            carryee.incrementTotal();
+            carryee.recordBossTime();
+            const timeTaken = carryee.getTimeTakenToKillBoss();
+            ChatLib.chat(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&f.`);
+            carryee.isFighting = false;
+            carryee.startTime = null;
+            carryee.bossID = null; 
+        }
+    });
+});
 
-    disappearedStands.forEach(standName => {
-        const playerName = standName.split("by: ")[1];
-        carryees.forEach(carryee => {
-            if (carryee.name.toLowerCase() === playerName.toLowerCase()) {
-                carryee.incrementTotal();
-                carryee.recordBossTime();
-                const timeTaken = carryee.getTimeTakenToKillBoss();
-                ChatLib.chat(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&f.`);
-                carryee.isFighting = false;
-                carryee.startTime = null;
-            }
-        });
+register("renderOverlay", () => {
+    if (carryees.length === 0) return;
+    Renderer.scale(hudConfig.scale);
+
+    const longestWidth = Math.max(...carryees.map(carryee => 
+        Renderer.getStringWidth(carryee.toString())
+    )) + 8;
+    const totalHeight = carryees.length * 10 + 20;
+
+    if (settings().drawCarryBox) {
+        Renderer.drawRect(
+            Renderer.color(...settings().carryBoxColor),
+            hudConfig.x,
+            hudConfig.y,
+            longestWidth,
+            totalHeight
+        );
+    }
+
+    Renderer.drawString("&e[MA] &d&lCarries&f:", hudConfig.x + 4, hudConfig.y + 4);
+    carryees.forEach((carryee, index) => {
+        Renderer.drawString(
+            carryee.toString(),
+            hudConfig.x + 4,
+            hudConfig.y + 16 + (index * 10)
+        );
     });
 
-    previousBossStands = new Set(currentBossStands);
-}).setFps(30);
+    Renderer.scale(1 / hudConfig.scale);
+});
 
 register("command", (...args = []) => {
     const [subcommand, name, count] = args;
@@ -223,6 +190,6 @@ register("gameUnload", () => {
     ChatLib.chat(`${prefix} &aPrinting &6${carryees.length} &aactive carries:`);
     carryees.forEach(carryee => {
         const progress = `&b${carryee.count}&f/&b${carryee.total}`;
-        ChatLib.chat(` &e> &f${carryee.name}: ${progress}`);
+        ChatLib.chat(`&e> &f${carryee.name}: ${progress}`);
     });
 });

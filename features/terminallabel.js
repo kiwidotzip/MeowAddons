@@ -1,6 +1,7 @@
 import Config from "../config";
 import { pogData } from "./utils/pogdata";
 import { renderFilledBox } from "../../BloomCore/RenderUtils";
+import { InDungeon } from "./helperfunction";
 
 const phases = {
   1: [
@@ -35,6 +36,8 @@ const phases = {
 };
 
 function renderText(text, x, y, z) {
+  const indungeondebug = InDungeon();
+  if (!indungeondebug) return;
   // Credit to Eclipse-5214 for the calcDistance code
   let pos = [x, y, z];
   let playerPos = [Math.round(Player.getX() + 0.25) - 1, Math.round(Player.getY()), Math.round(Player.getZ() + 0.25) - 1];

@@ -44,7 +44,7 @@ Silly chattriggers module that has some QOL features
   - Shows the amount of time you took to kill your slayer boss, as accurate as skytils timer and always works unlike skytils smh
 - Highlight Slayer boss (coming soon)
   - Highlights your carry/slayer boss
-- Highlight carry player
+- Highlight carry player (coming soon)
   - Highlights the player you're carrying
 
 ## Dungeons

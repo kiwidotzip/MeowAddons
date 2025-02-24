@@ -56,7 +56,7 @@ Silly chattriggers module that has some QOL features
   - Sends alerts in party chat when you activate a mask/phoenix pet
 
 - Terminal labels
-  - Labels terminals - Has an option to display the class (only f7 roles rn) that should be doing the term as well as boxing the term
+  - Labels terminals - Has an option to display the class (both f7 and m7 roles) that should be doing the term as well as boxing the term
 
 - Terminal callouts
   - Sends the terminal that you choose in party chat at end of P2

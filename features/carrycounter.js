@@ -95,10 +95,10 @@ register("entityDeath", (entity) => {
 
 register("chat", (deadPlayer) => {
     carryees.forEach((carryee) => {
-        if (carryee.name === deadPlayer && carryee.isFighting) {
+        if (carryee.name === deadPlayer) {
             carryee.isFighting = false;
             carryee.startTime = null;
-            carryee.bossID = null;
+//            carryee.bossID = null;
             if (settings().debug) { ChatLib.chat(`${prefix} &c${carryee.name} died! Resetting their carry tracking.`); }
             ChatLib.chat(                
                 new Message(
@@ -112,7 +112,7 @@ register("chat", (deadPlayer) => {
                     .setHoverValue("Click to ignore")))
         }
     });
-}).setCriteria(/^☠ (\w+) was killed by .+$/);
+}).setCriteria(/^ ☠ (\w+) was killed by (?:.+)$/);
 
 register("renderOverlay", () => {
     if (carryees.length === 0) return;
@@ -122,9 +122,9 @@ register("renderOverlay", () => {
     )) + 8;
     const totalHeight = carryees.length * 10 + 20;
 
-    if (settings().drawCarryBox) {
+    if (settings().drawcarrybox) {
         Renderer.drawRect(
-            Renderer.color(...settings().carryBoxColor),
+            Renderer.color(...settings().carryboxcolor),
             pogData.CarryX,
             pogData.CarryY,
             longestWidth,

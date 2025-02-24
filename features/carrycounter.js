@@ -19,7 +19,8 @@ class Carryee {
             this.complete();
             carryees = carryees.filter(carryee => carryee !== this);
         }
-        ChatLib.command(`pc ${this.name}: ${this.count}/${this.total}`);
+        if (settings().debug) { ChatLib.chat(`${prefix} &fLogged 1 carry for &6${this.name} &7(${this.count}/${this.total})`); }
+        if (settings().sendcarrycount) { ChatLib.command(`pc ${this.name}: ${this.count}/${this.total}`); }
     }
 
     recordBossStartTime(bossID) {
@@ -91,6 +92,27 @@ register("entityDeath", (entity) => {
         }
     });
 });
+
+register("chat", (deadPlayer) => {
+    carryees.forEach((carryee) => {
+        if (carryee.name === deadPlayer && carryee.isFighting) {
+            carryee.isFighting = false;
+            carryee.startTime = null;
+            carryee.bossID = null;
+            if (settings().debug) { ChatLib.chat(`${prefix} &c${carryee.name} died! Resetting their carry tracking.`); }
+            ChatLib.chat(                
+                new Message(
+                `${prefix} &c${carryee.name} died! Count the carry? `,
+                new TextComponent("&a[Yes]")
+                    .setClick("run_command", `/carry confirmdeath ${carryee.name}`)
+                    .setHoverValue("Click to count the carry"),
+                ` &7| `,
+                new TextComponent("&c[No]")
+                    .setClick("run_command", `/carry canceldeath ${carryee.name}`)
+                    .setHoverValue("Click to ignore")))
+        }
+    });
+}).setCriteria(/^☠ (\w+) was killed by .+$/);
 
 register("renderOverlay", () => {
     if (carryees.length === 0) return;
@@ -168,6 +190,19 @@ register("command", (...args = []) => {
         case "gui":
             hudEditor.open();
             break;
+        case "confirmdeath":
+            if (!name) return syntaxError("confirmdeath <name>");
+            const carryeeConfirm = findCarryee(name);
+            if (!carryeeConfirm) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            carryeeConfirm.incrementTotal();
+            ChatLib.chat(`${prefix} &aCount incremented for &6${name}`);
+            break;
+        case "canceldeath":
+            if (!name) return syntaxError("canceldeath <name>");
+            const carryeeCancel = findCarryee(name);
+            if (!carryeeCancel) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            ChatLib.chat(`${prefix} &7Ignored death for &6${name}`);
+            break;
         default:
             showHelp();
     }
@@ -186,6 +221,7 @@ register("command", (...args = []) => {
     if (args.length === 1) {
         return ["add", "remove", "set", "list", "gui"].filter(cmd => cmd.startsWith(currentArg));
     }
+
     return [];
 }).setName("carry").setAliases(["macarry"]);
 
@@ -208,7 +244,6 @@ function showHelp() {
 
 register("gameUnload", () => {
     if (carryees.length === 0) return;
-    hudConfig.save();
     ChatLib.chat(`${prefix} &aPrinting &6${carryees.length} &aactive carries:`);
     carryees.forEach(carryee => {
         const progress = `&b${carryee.count}&f/&b${carryee.total}`;

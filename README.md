@@ -6,7 +6,7 @@ Silly chattriggers module that has some QOL features
 ## General
  
 - Chat Cleaner 
-  - Removes a LOT of spam messages (List coming soon)
+  - Removes a LOT of spam messages. [List here](https://github.com/kiwidotzip/MeowAddons/blob/main/chatcleanerlist.json)
 
 - Guild Chat format
   - Formats guild chat to look cleaner

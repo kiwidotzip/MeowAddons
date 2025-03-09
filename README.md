@@ -91,7 +91,7 @@ First we need MeowAddons.zip, for this we'll head over to the [release page](htt
 
 ### Dependencies (No need to do this, for now)
 
-If /ct import is down for some reason, a link to the dependencies will be put here.
+Download [Dependencies.zip](https://github.com/kiwidotzip/randomstuff/releases/tag/meowaddonsdependencies)
 
 ### Wrapping things up
 Once we have all of our folders (aka "modules") we can now go in game and type `/ct files` and hit enter<br>

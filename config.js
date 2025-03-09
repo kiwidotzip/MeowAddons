@@ -253,6 +253,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.drawcarrybox
 })
 
+.addDropDown({
+    category: "Slayers",
+    configName: "bossph",
+    title: "Boss/Money per hour",
+    description: "Shows the approximate amount of bosses/money you can make per hour",
+    subcategory: "Carrying",
+    options: ['None', 'Boss'],
+    value: 0
+})
+
 .addSwitch({
     category: "Slayers",
     configName: "notifybossspawn",

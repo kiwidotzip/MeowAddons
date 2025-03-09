@@ -9,6 +9,7 @@ class Carryee {
         this.total = total;
         this.count = 0;
         this.lastBossTime = null;
+        this.firstBossTime = null;
         this.startTime = null;
         this.isFighting = false;
         this.bossID = null;
@@ -32,6 +33,9 @@ class Carryee {
     }
 
     recordBossTime() {
+        if (this.firstBossTime === null) {
+            this.firstBossTime = Date.now();
+        }
         this.lastBossTime = Date.now();
     }
 
@@ -45,6 +49,20 @@ class Carryee {
         return ((Date.now() - this.startTime) / 1000).toFixed(1) + "s";
     }
 
+    getBossPerHour() {
+        if (this.firstBossTime === null || this.count === 0) {
+            return "N/A";
+        }
+        const endTime = this.count >= this.total ? this.lastBossTime : Date.now();
+        const durationMs = endTime - this.firstBossTime;
+        if (durationMs <= 0) {
+            return "N/A";
+        }
+        const hours = durationMs / 3600000;
+        const bph = this.count / hours;
+        return `${bph.toFixed(0)}/hr`;
+    }
+
     complete() {
         ChatLib.chat(`${prefix} &aCarries completed for &6${this.name}`);
         World.playSound("note.pling", 5, 2);
@@ -56,7 +74,7 @@ class Carryee {
     }
 
     toString() {
-        return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()})`;
+        return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()} | ${this.getBossPerHour()})`;
     }
 }
 
@@ -380,6 +398,7 @@ register("command", (...args = []) => {
             const carryeeConfirm = findCarryee(name);
             if (!carryeeConfirm) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeConfirm.incrementTotal();
+            carryeeConfirm.recordBossTime();
             ChatLib.chat(`${prefix} &aCount incremented for &6${name}`);
             break;
         case "canceldeath":

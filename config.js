@@ -216,6 +216,25 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Slayers - Carrying
 
+.addTextParagraph({
+    configName: "carryinfo",
+    title: "Carry info",
+    description: "Use /carry help to see the commands",
+    centered: true,
+    category: "Slayers",
+    subcategory: "Carrying"
+})
+
+.addTextInput({
+    configName: "carryvalue",
+    title: "Carry price",
+    description: "Auto-adds player to carry when you are receive a trade req. \n&4Put the carry value in millions",
+    category: "Slayers",
+    subcategory: "Carrying",
+    value: "1.3",
+    placeHolder: "1.3"
+})
+
 .addSwitch({
     category: "Slayers",
     configName: "drawcarrybox",
@@ -233,6 +252,15 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     value: [0, 0, 255, 255],
     shouldShow: data => data.drawcarrybox
 })
+
+.addSwitch({
+    category: "Slayers",
+    configName: "notifybossspawn",
+    title: "Notify boss spawn",
+    description: "Displays a title when your client's boss spawns",
+    subcategory: "Carrying"
+})
+
 .addSwitch({
     category: "Slayers",
     configName: "carrytimesend",

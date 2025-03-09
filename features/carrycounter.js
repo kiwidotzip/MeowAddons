@@ -73,6 +73,7 @@ register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (ent
                 const armorStandID = entity.entity.func_145782_y(); // Get Armor Stand ID
                 const bossID = armorStandID - 3; // Get Boss ID
                 carryee.recordBossStartTime(bossID);
+                if (settings().notifybossspawn) { Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1); }
             }
         }
     });
@@ -114,15 +115,70 @@ register("chat", (deadPlayer) => {
     });
 }).setCriteria(/^ ☠ (\w+) was killed by (?:.+)$/);
 
+let lastTradePlayer = null;
+let lastTradeTime = 0;
+
+register("chat", (lastplayer) => {
+        lastTradePlayer = lastplayer;
+        lastTradeTime = Date.now();
+        if (settings().debug) ChatLib.chat(`${prefix} &fDetected trade with &6${lastTradePlayer}`);
+}).setCriteria(/^Trade completed with (?:\[.*?\] )?(\w+)!$/);
+
+register("chat", (totalCoins) => {
+    Client.scheduleTask(1, () => {
+        if (lastTradePlayer && Date.now() - lastTradeTime < 1000) {
+            const carryValue = settings().carryvalue;
+            const adjustedcarries = totalCoins / carryValue;
+            if (Math.abs(adjustedcarries - Math.round(adjustedcarries)) > 1e-6) {
+                lastTradePlayer = null;
+                lastTradeTime = 0;
+                return;
+            }
+            
+            const integerCarries = Math.round(adjustedcarries);
+            const carryee = findCarryee(lastTradePlayer);
+            
+            if (!carryee) {                
+                ChatLib.chat(                    
+                new Message(`${prefix}&f Add &b${lastTradePlayer}&f for &b${integerCarries}&f carries? `)
+                .addTextComponent(
+                    new TextComponent("&a[Yes]")
+                        .setClick("run_command", `/carry add ${lastTradePlayer} ${integerCarries}`)
+                        .setHoverValue("Click to add player")
+                )
+                .addTextComponent(" &7| ")
+                .addTextComponent(
+                    new TextComponent("&c[No]")
+                        .setHoverValue("Click to ignore")
+                )
+            );
+            }
+            lastTradePlayer = null;
+            lastTradeTime = 0;
+        }
+    });
+}).setCriteria(/^ \+ (\d+\.?\d*)M coins$/);
+
+const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
+let isInInventory = false;
+
+register("guiOpened", (event) => {
+    if (event.gui instanceof GuiInventory) { isInInventory = true; }
+});
+
+register("guiClosed", (gui) => {
+    if (gui instanceof GuiInventory) { isInInventory = false; }
+});
+
 register("renderOverlay", () => {
-    if (carryees.length === 0) return;
+    if (isInInventory) return;
 
     const longestWidth = Math.max(...carryees.map(carryee => 
         Renderer.getStringWidth(carryee.toString())
     )) + 8;
     const totalHeight = carryees.length * 10 + 20;
 
-    if (settings().drawcarrybox) {
+    if (settings().drawcarrybox && carryees.length > 0) {
         Renderer.drawRect(
             Renderer.color(...settings().carryboxcolor),
             pogData.CarryX,
@@ -131,15 +187,16 @@ register("renderOverlay", () => {
             totalHeight
         );
     }
-
-    Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
-    carryees.forEach((carryee, index) => {
-        Renderer.drawString(
-            carryee.toString(),
-            pogData.CarryX + 4,
-            pogData.CarryY + 16 + (index * 10)
-        );
-    });
+    if (!hudEditor.isOpen() && carryees.length > 0) {
+        Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
+        carryees.forEach((carryee, index) => {
+            Renderer.drawString(
+                carryee.toString(),
+                pogData.CarryX + 4,
+                pogData.CarryY + 16 + (index * 10)
+            );
+        });
+    }
 
     if (hudEditor.isOpen()) {
         Renderer.drawString(
@@ -148,8 +205,101 @@ register("renderOverlay", () => {
             Renderer.screen.getHeight() / 2 - 30,
             true
         );
+        Renderer.drawString(
+            "&e[MA] &d&lCarries&f:",
+            pogData.CarryX + 4,
+            pogData.CarryY + 4
+        );
+        Renderer.drawString("&blyfrieren&f: 23&8/&f1984 &7(N/A)",
+            pogData.CarryX + 4,
+            pogData.CarryY + 16
+        );
+        Renderer.drawString("&bsascha&f: 23&8/&f1984 &7(N/A)",
+            pogData.CarryX + 4,
+            pogData.CarryY + 26
+        );
+    };
+});
+
+register("guiRender", () => {
+    if (isInInventory && carryees.length > 0) {
+        Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
+        carryees.forEach((carryee, index) => {
+            Renderer.drawString(
+                carryee.toString(),
+                pogData.CarryX + 4,
+                pogData.CarryY + 16 + (index * 10)
+            );
+        });
+        carryees.forEach((carryee, index) => {
+            const pixelwidth = Renderer.getStringWidth(carryee.toString());
+            Renderer.drawString(
+                "&7|&a [+] &7|&c [-] &7|&4 [×]",
+                pixelwidth + 6,
+                pogData.CarryY + 16 + (index * 10)
+            );
+        });
     }
 });
+
+register("guiMouseclick", (mouseX, mouseY, mouseButton) => {
+    if (mouseButton !== 0 || !isInInventory) return;
+    
+    const hudX = pogData.CarryX;
+    const hudY = pogData.CarryY;
+    
+    carryees.forEach((carryee, index) => {
+        const entryY = hudY + 16 + (index * 10);
+        const mainTextWidth = Renderer.getStringWidth(carryee.toString());
+        const buttonBaseX = hudX + 4 + mainTextWidth + 6;
+        
+        // [+] Button
+        const plusButtonText = " [+] ";
+        const plusWidth = Renderer.getStringWidth(plusButtonText);
+        const plusArea = {
+            x1: buttonBaseX,
+            y1: entryY,
+            x2: buttonBaseX + plusWidth,
+            y2: entryY + 8
+        };
+        
+        // [-] Button
+        const minusButtonText = " [-] ";
+        const minusWidth = Renderer.getStringWidth(minusButtonText);
+        const minusArea = {
+            x1: plusArea.x2,
+            y1: entryY,
+            x2: plusArea.x2 + minusWidth,
+            y2: entryY + 8
+        };
+        
+        // [×] Button
+        const removeButtonText = "[×]";
+        const removeWidth = Renderer.getStringWidth(removeButtonText);
+        const removeArea = {
+            x1: minusArea.x2,
+            y1: entryY,
+            x2: minusArea.x2 + removeWidth,
+            y2: entryY + 8
+        };
+        
+        // Check clicks
+        if (isInArea(mouseX, mouseY, plusArea)) {
+            carryee.count = Math.min(carryee.total, carryee.count + 1);
+            ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's count to &6${carryee.count}`);
+        } else if (isInArea(mouseX, mouseY, minusArea)) {
+            carryee.count = Math.max(0, carryee.count - 1);
+            ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's count to &6${carryee.count}`);
+        } else if (isInArea(mouseX, mouseY, removeArea)) {
+            carryees = carryees.filter(c => c !== carryee);
+            ChatLib.chat(`${prefix} &aRemoved &6${carryee.name}`);
+        }
+    });
+});
+
+function isInArea(x, y, area) {
+    return x >= area.x1 && x <= area.x2 && y >= area.y1 && y <= area.y2;
+}
 
 register("dragged", (dx, dy, x, y, button) => {
     if (hudEditor.isOpen() && button === 0) {
@@ -183,9 +333,44 @@ register("command", (...args = []) => {
         case "list":
             if (carryees.length === 0) return ChatLib.chat(`${prefix} &cNo active carries!`);
             ChatLib.chat(`${prefix} &aActive carries (&6${carryees.length}&a):`);
-            carryees.forEach((carryee, index) => 
-                ChatLib.chat(` &7${index + 1}) &e${carryee.toString()}`)
-            );
+            carryees.forEach((carryee, index) => {
+                const message = new Message()
+                    .addTextComponent(
+                        new TextComponent(`&7> &e${carryee.name}: &b${carryee.count}/${carryee.total} &7| `)
+                    )
+                    .addTextComponent(
+                        new TextComponent("&a[+]")
+                            .setClick("run_command", `/carry increase ${carryee.name}`)
+                            .setHoverValue("&7Click to increase count")
+                    )
+                    .addTextComponent(" &7| ")
+                    .addTextComponent(
+                        new TextComponent("&c[-]")
+                            .setClick("run_command", `/carry decrease ${carryee.name}`)
+                            .setHoverValue("&7Click to decrease count")
+                       )
+                    .addTextComponent(" &7| ")
+                    .addTextComponent(
+                        new TextComponent("&4[×]")
+                            .setClick("run_command", `/carry remove ${carryee.name}`)
+                            .setHoverValue("&7Click to remove player")
+                    );
+                ChatLib.chat(message);
+            });
+            break;
+        case "increase":
+            if (!name) return syntaxError("increase <name>");
+            const carryeeInc = findCarryee(name);
+            if (!carryeeInc) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            carryeeInc.count = Math.min(carryeeInc.total, carryeeInc.count + 1);
+            ChatLib.chat(`${prefix} &aIncreased &6${name}&a's count to &6${carryeeInc.count}`);
+            break;
+        case "decrease":
+            if (!name) return syntaxError("decrease <name>");
+            const carryeeDec = findCarryee(name);
+            if (!carryeeDec) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            carryeeDec.count = Math.max(0, carryeeDec.count - 1);
+            ChatLib.chat(`${prefix} &aDecreased &6${name}&a's count to &6${carryeeDec.count}`);
             break;
         case "gui":
             hudEditor.open();
@@ -238,6 +423,8 @@ function showHelp() {
     ChatLib.chat("> &e/carry add &c<name> <count> &7- Add new carry");
     ChatLib.chat("> &e/carry set &c<name> <count> &7- Update carry count");
     ChatLib.chat("> &e/carry remove &c<name> &7- Remove carry");
+    ChatLib.chat("> &e/carry increase &c<name> &7- Increase carry count");
+    ChatLib.chat("> &e/carry decrease &c<name> &7- Decrease carry count");
     ChatLib.chat("> &e/carry list &7- Show active carries");
     ChatLib.chat("> &e/carry gui &7- Open HUD editor");
 }

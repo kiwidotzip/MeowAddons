@@ -281,12 +281,21 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 .addSwitch({
     category: "Slayers",
+    configName: "sendtrademsg",
+    title: "Send trade msg",
+    description: "Sends a message asking if you want to trade the player after their carry ends.",
+    subcategory: "carrying"
+})
+
+.addSwitch({
+    category: "Slayers",
     configName: "carrytimesend",
     title: "Send carry time",
     description: "Sends carry time in chat, not party chat",
     subcategory: "Carrying",
     value: "true"
 })
+
 .addSwitch({
     category: "Slayers",
     configName: "sendcarrycount",

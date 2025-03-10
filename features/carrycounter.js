@@ -75,7 +75,19 @@ class Carryee {
     }
 
     complete() {
-        ChatLib.chat(`${prefix} &aCarries completed for &6${this.name}`);
+        ChatLib.chat(`${prefix} &fCarries completed for &b${this.name}`);
+        if (settings().sendtrademsg) {
+            Client.scheduleTask(20, () => {
+                ChatLib.chat(
+                    new Message(`${prefix} &fTrade with &b${this.name}&f? `)
+                    .addTextComponent(
+                        new TextComponent(`&a[Yes]`)
+                        .setClick("run_command", `/trade ${this.name}`)
+                        .setHoverValue(`&fClick to trade with &b${this.name}`)
+                    )
+                )
+            })
+        }
         World.playSound("note.pling", 5, 2);
         Client.showTitle(
             `&aCarries Completed: &6${this.name}`,

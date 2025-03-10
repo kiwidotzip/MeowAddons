@@ -259,7 +259,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Boss/Money per hour",
     description: "Shows the approximate amount of bosses/money you can make per hour",
     subcategory: "Carrying",
-    options: ['None', 'Boss'],
+    options: ['None', 'Boss', 'Money'],
     value: 0
 })
 
@@ -268,6 +268,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "notifybossspawn",
     title: "Notify boss spawn",
     description: "Displays a title when your client's boss spawns",
+    subcategory: "Carrying"
+})
+
+.addSwitch({
+    category: "Slayers",
+    configName: "renderbossoutline",
+    title: "Highlight boss",
+    description: "Highlights boss when its in render distance",
     subcategory: "Carrying"
 })
 

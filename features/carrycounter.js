@@ -1,6 +1,7 @@
 import settings from "../config";
 import { pogData } from "./utils/pogdata";
-
+import { registerWhen } from "../../BloomCore/utils/Utils";
+import drawEntityBox from "./utils/renderhelper";
 let prefix = `&e[MeowAddons]`;
 
 class Carryee {
@@ -50,7 +51,7 @@ class Carryee {
     }
 
     getBossPerHour() {
-        if (this.firstBossTime === null || this.count === 0) {
+        if (this.firstBossTime === null || this.count <= 2) {
             return "N/A";
         }
         const endTime = this.count >= this.total ? this.lastBossTime : Date.now();
@@ -61,6 +62,16 @@ class Carryee {
         const hours = durationMs / 3600000;
         const bph = this.count / hours;
         return `${bph.toFixed(0)}/hr`;
+    }
+
+    getMoneyPerHour() {
+        if (this.firstBossTime === null || this.count <= 2) {
+            return "N/A";
+        }
+        const bphx = this.getBossPerHour()
+        const mph = bphx * 1.3
+        return `${mph.toFixed(1)}M/hr`
+
     }
 
     complete() {
@@ -76,6 +87,8 @@ class Carryee {
     toString() {
         if (settings().bossph == 1) {
             return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()} | ${this.getBossPerHour()})`;
+        } else if (settings().bossph == 2) {
+            return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()} | ${this.getMoneyPerHour()})`
         } else {
             return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()})`;
         }
@@ -95,7 +108,10 @@ register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (ent
                 const armorStandID = entity.entity.func_145782_y(); // Get Armor Stand ID
                 const bossID = armorStandID - 3; // Get Boss ID
                 carryee.recordBossStartTime(bossID);
-                if (settings().notifybossspawn) { Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1); }
+                if (settings().notifybossspawn) { 
+                    Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1); 
+                    World.playSound("mob.cat.meow", 5, 2)
+                }
             }
         }
     });
@@ -115,6 +131,31 @@ register("entityDeath", (entity) => {
         }
     });
 });
+
+registerWhen(
+    register("renderEntity", (entity, _, pticks) => {
+        const entityName = entity.getName();
+        const entityID = entity.entity.func_145782_y();
+        const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"]
+        if (!bossEntityNames.includes(entityName)) return;
+        carryees.forEach((carryee) => {
+            if (carryee.bossID === entityID) {
+                const entityX = entity.getRenderX() - (entity.getRenderX() - entity.getX())
+                const entityY = entity.getRenderY() - (entity.getRenderY() - entity.getY())
+                const entityZ = entity.getRenderZ() - (entity.getRenderZ() - entity.getZ())
+                drawEntityBox(
+                    entityX,
+                    entityY,
+                    entityZ,
+                    entity.getWidth(),
+                    entity.getHeight(),
+                    0, 255, 255, 255, 2, false, true, pticks
+                );
+            }
+        });
+    }), () => settings().renderbossoutline
+)
+
 
 register("chat", (deadPlayer) => {
     carryees.forEach((carryee) => {
@@ -427,7 +468,7 @@ register("command", (...args = []) => {
         }
     }
     if (args.length === 1) {
-        return ["add", "remove", "set", "list", "gui"].filter(cmd => cmd.startsWith(currentArg));
+        return ["add", "remove", "set", "list", "gui", "increase", "decrease"].filter(cmd => cmd.startsWith(currentArg));
     }
 
     return [];

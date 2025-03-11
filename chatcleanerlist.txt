@@ -25,7 +25,8 @@ Your hit was reduced by Hellion Shield!
 
 // Auction house messages 
 Processing purchase...
-Claiming BIN auction...
+Claiming BIN auction...
+
 Putting item in escrow...
 Setting up the auction...
 Visit the Auction House to collect your item!
@@ -149,25 +150,35 @@ Staff have banned an additional .+
 
 Warping you to your SkyBlock island...
 You earned .+ Event EXP from playing SkyBlock!
-Warping...
+Warping...
+
 RARE REWARD!.+
 Error initializing players: undefined
 You are playing on profile: .+
-Profile ID: .+
+Profile ID: .+
+
+
 Woah slow down, you're doing that too fast!
-Command Failed: This command is on cooldown! Try again in about a second!
-A mystical force in this room prevents you from using that ability!
-Autopet equipped your.+
+Command Failed: This command is on cooldown! Try again in about a second!
+
+A mystical force in this room prevents you from using that ability!
+
+Autopet equipped your.+
+
 Your Auto Recombobulator recombobulated
-You cannot use abilities in this room!
+You cannot use abilities in this room!
+
 You sold .+ x.* for .+
 You don't have enough space in your inventory to pick up this item!.*
-Inventory full? Don't forget to check out your Storage inside the SkyBlock Menu!
+Inventory full? Don't forget to check out your Storage inside the SkyBlock Menu!
+
 You are not allowed to use Potion Effects.+
 [STATUE].+
-[NPC] (Hugo)
+[NPC] (Hugo)
+
 There are blocks in the way!
-Error initializing players: undefined Hidden
+Error initializing players: undefined Hidden
+
 Moved .+ Ender Pearl from your Sacks to your inventory.
 You have .+ unclaimed .+
 Click here to view them!
@@ -177,13 +188,18 @@ Latest update: SkyBlock .+
 BONUS! Temporarily earn 5% more skill experience!
 .+ is now ready!
 Sending to server .+
-Queuing... .+
+Queuing... .+
+
 You do not have enough mana to do this!
-.+Kill Combo+
+.+Kill Combo+
+
 This menu is disabled here!
 This item is on cooldown.+
-This ability is on cooldown.+
-Please wait a few seconds between refreshing!
-Your Kill Combo has expired! You reached a .+ Kill Combo!
+This ability is on cooldown.+
+
+Please wait a few seconds between refreshing!
+
+Your Kill Combo has expired! You reached a .+ Kill Combo!
+
 This creature is immune to this kind of magic!
 FISHING FESTIVAL The festival is now underway! Break out your fishing rods and watch out for sharks!

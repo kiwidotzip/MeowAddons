@@ -23,28 +23,46 @@ Silly chattriggers module that has some QOL features
 - Party Join/Leave format
   - Formats party join/leave messages to look cleaner
 
-- Party commands (WIP)
+- Party commands
   - Adds various party commands! (alias is !)
 
 ## Skyblock
 
-- BetterBZ (WIP)
+- BetterBZ 
   - Formats bazaar messages to look cleaner
 
 - BetterAH (WIP)
-  - Formats auction house messages to look cleaner'
+  - Formats auction house messages to look cleaner
 
 ## Slayer
+ 
+- Slayer time
+  - Shows the amount of time you took to kill your slayer boss, as accurate as skytils timer and always works unlike skytils smh
+
+## Carrying
 
 - Carry counter
   - Counts the carries that you do with a nice gui
+  - Has an option to automatically send the current count in party chat
+  - More accurate than skyhanni's counter
+  - Clean gui to increase, decrease and remove the client
+
+- Notify on carry boss spawn
+  - Plays a cat sound and displays a short title on carry boss spawn
+
+- Auto send trade message
+  - Sends a message asking if you want to trade with the player after you finish their carries
+
+- Boss/money per hour
+  - Calculates an approximate count of how many bosses you can do in an hour or how much money you're making (multiplies by the carry value)
+
 - Carry time
   - Shows the amount of time you took to complete a carry
-- Slayer time
-  - Shows the amount of time you took to kill your slayer boss, as accurate as skytils timer and always works unlike skytils smh
-- Highlight Slayer boss (coming soon)
+
+- Highlight Slayer boss
   - Highlights your carry/slayer boss
-- Highlight carry player (coming soon)
+ 
+- Highlight carry player
   - Highlights the player you're carrying
 
 ## Dungeons

@@ -506,9 +506,10 @@ register("command", (...args = []) => {
     return [];
 }).setName("carry").setAliases(["macarry"]);
 
+let lastPartyChatMessageTime = 0;
+
 function sendPartyChatMessage(msg) {
     const delay = 1000 - (Date.now() - lastPartyChatMessageTime);
-    let lastPartyChatMessageTime = 0;
     if (delay <= 0) {
       ChatLib.command(msg);
       lastPartyChatMessageTime = Date.now();

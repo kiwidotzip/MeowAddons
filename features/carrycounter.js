@@ -223,23 +223,46 @@ register("chat", (lastplayer) => {
         if (settings().debug) ChatLib.chat(`${prefix} &fDetected trade with &6${lastTradePlayer}`);
 }).setCriteria(/^Trade completed with (?:\[.*?\] )?(\w+)!$/);
 
+function resetTrade() {
+    lastTradePlayer = null;
+    lastTradeTime = 0;
+}
+
 register("chat", (totalCoins) => {
     Client.scheduleTask(1, () => {
-        if (lastTradePlayer && Date.now() - lastTradeTime < 1000) {
-            const carryValue = settings().carryvalue;
-            const adjustedcarries = totalCoins / carryValue;
-            if (Math.abs(adjustedcarries - Math.round(adjustedcarries)) > 1e-6) {
-                lastTradePlayer = null;
-                lastTradeTime = 0;
-                return;
+        if (!lastTradePlayer/* || Date.now() - lastTradeTime >= 1000*/) return;
+
+        const totalCoinsFloat = parseFloat(totalCoins);
+        const carryValues = settings().carryvalue
+            .split(',')
+            .map(v => parseFloat(v))
+            .filter(v => !isNaN(v));
+
+        if (carryValues.length === 0) {
+            if (settings().debug) { ChatLib.chat(`${prefix} &cInvalid carryvalue in config!`); }
+            resetTrade();
+            return;
+        }
+
+        let integerCarries = null;
+        for (const value of carryValues) {
+            const adjusted = totalCoinsFloat / value;
+            if (Math.abs(adjusted - Math.round(adjusted)) < 1e-6) {
+                integerCarries = Math.round(adjusted);
+                break;
             }
-            
-            const integerCarries = Math.round(adjustedcarries);
-            const carryee = findCarryee(lastTradePlayer);
-            
-            if (!carryee) {                
-                ChatLib.chat(                    
-                new Message(`${prefix}&f Add &b${lastTradePlayer}&f for &b${integerCarries}&f carries? `)
+        }
+        if (integerCarries === null) {
+            resetTrade();
+            if (settings().debug) { ChatLib.chat(`${prefix} &cNull amount.`)}
+            return;
+        }
+
+        const carryee = findCarryee(lastTradePlayer);
+        if (!carryee) {
+            ChatLib.chat(new Message(
+                `${prefix}&f Add &b${lastTradePlayer}&f for &b${integerCarries}&f carries? `
+            )
                 .addTextComponent(
                     new TextComponent("&a[Yes]")
                         .setClick("run_command", `/carry add ${lastTradePlayer} ${integerCarries}`)
@@ -249,12 +272,9 @@ register("chat", (totalCoins) => {
                 .addTextComponent(
                     new TextComponent("&c[No]")
                         .setHoverValue("Click to ignore")
-                )
-            );
-            }
-            lastTradePlayer = null;
-            lastTradeTime = 0;
+                ));
         }
+        resetTrade();
     });
 }).setCriteria(/^ \+ (\d+\.?\d*)M coins$/);
 

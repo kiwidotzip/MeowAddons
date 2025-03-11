@@ -508,18 +508,11 @@ register("command", (...args = []) => {
 
 let lastPartyChatMessageTime = 0;
 
-function sendPartyChatMessage(msg) {
-    const delay = 1000 - (Date.now() - lastPartyChatMessageTime);
-    if (delay <= 0) {
-      ChatLib.command(msg);
-      lastPartyChatMessageTime = Date.now();
-    } else {
-      Client.scheduleTask(Math.ceil(delay / 50), () => {
-        ChatLib.command(msg);
-        lastPartyChatMessageTime = Date.now();
-      });
-    }
-}  
+const sendPartyChatMessage = msg => {
+    const d = 1000 - (Date.now() - lastPartyChatMessageTime);
+    d <= 0 ? (ChatLib.command(msg), lastPartyChatMessageTime = Date.now())
+            : Client.scheduleTask(Math.ceil(d / 50), () => (ChatLib.command(msg), lastPartyChatMessageTime = Date.now()));
+  };  
 
 function findCarryee(name) {
     return carryees.find(carryee => carryee.name.toLowerCase() === name.toLowerCase());

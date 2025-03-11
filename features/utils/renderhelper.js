@@ -1,6 +1,8 @@
 const RenderGlobal = Java.type("net.minecraft.client.renderer.RenderGlobal");
 const AxisAlignedBB = Java.type("net.minecraft.util.AxisAlignedBB");
 
+// Taken from doc's renderhelper, ily doc (https://github.com/DocilElm/Doc)
+
 export default function drawEntityBox(x, y, z, width, height, red, green, blue, alpha, lineWidth = 1, phase = false) {
     if (x == null) return;
     

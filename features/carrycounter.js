@@ -2,6 +2,7 @@ import settings from "../config";
 import { pogData } from "./utils/pogdata";
 import { registerWhen } from "../../BloomCore/utils/Utils";
 import drawEntityBox from "./utils/renderhelper";
+
 let prefix = `&e[MeowAddons]`;
 
 class Carryee {
@@ -22,7 +23,7 @@ class Carryee {
             carryees = carryees.filter(carryee => carryee !== this);
         }
         if (settings().debug) { ChatLib.chat(`${prefix} &fLogged 1 carry for &6${this.name} &7(${this.count}/${this.total})`); }
-        if (settings().sendcarrycount) { ChatLib.command(`pc ${this.name}: ${this.count}/${this.total}`); }
+        if (settings().sendcarrycount) { sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`); }
     }
 
     recordBossStartTime(bossID) {
@@ -65,10 +66,10 @@ class Carryee {
     }
 
     getMoneyPerHour() {
-        if (this.firstBossTime === null || this.count <= 2) {
+        if (this.firstBossTime === null || this.count <= 2 || this.getBossPerHour() === "N/A") {
             return "N/A";
         }
-        const bphx = this.getBossPerHour()
+        const bphx = parseFloat(this.getBossPerHour().replace("/hr", ""));
         const mph = bphx * 1.3
         return `${mph.toFixed(1)}M/hr`
 
@@ -109,25 +110,28 @@ class Carryee {
 
 let carryees = [];
 const hudEditor = new Gui();
+const processedEntities = new Set();
 
-register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (entity) => {
-    Client.scheduleTask(1, () => {
+register("step", () => {
+    const allEntities = World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"));
+    allEntities.forEach(entity => {
+        const id = entity.entity.func_145782_y();
         const name = ChatLib.removeFormatting(entity.entity.func_70005_c_());
-        if (name.includes("Spawned by")) {
+        if (!processedEntities.has(id) && name.includes("Spawned by")) {
+            processedEntities.add(id);
             const playerName = name.split("by: ")[1];
             const carryee = findCarryee(playerName);
             if (carryee) {
-                const armorStandID = entity.entity.func_145782_y(); // Get Armor Stand ID
-                const bossID = armorStandID - 3; // Get Boss ID
+                const armorStandID = id;
+                const bossID = armorStandID - 3;
                 carryee.recordBossStartTime(bossID);
-                if (settings().notifybossspawn) { 
-                    Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1); 
-                    World.playSound("mob.cat.meow", 5, 2)
-                }
+                if (settings().notifybossspawn) {
+                     Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1);
+                     World.playSound("mob.cat.meow", 5, 2)}
             }
         }
     });
-});
+}).setFps(10);
 
 register("entityDeath", (entity) => {
     const bossID = entity.entity.func_145782_y();
@@ -145,29 +149,45 @@ register("entityDeath", (entity) => {
 });
 
 registerWhen(
-    register("renderEntity", (entity, _, pticks) => {
-        const entityName = entity.getName();
-        const entityID = entity.entity.func_145782_y();
-        const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"]
-        if (!bossEntityNames.includes(entityName)) return;
-        carryees.forEach((carryee) => {
-            if (carryee.bossID === entityID) {
-                const entityX = entity.getRenderX() - (entity.getRenderX() - entity.getX())
-                const entityY = entity.getRenderY() - (entity.getRenderY() - entity.getY())
-                const entityZ = entity.getRenderZ() - (entity.getRenderZ() - entity.getZ())
-                drawEntityBox(
-                    entityX,
-                    entityY,
-                    entityZ,
-                    entity.getWidth(),
-                    entity.getHeight(),
-                    0, 255, 255, 255, 2, false, true, pticks
-                );
-            }
-        });
+    register("postRenderEntity", (entity, pos) => { 
+        const entityName = entity.getName(); 
+        const entityID = entity.entity.func_145782_y(); 
+        const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"] 
+        if (!bossEntityNames.includes(entityName)) return; 
+        carryees.forEach((carryee) => { 
+            if (carryee.bossID === entityID) { 
+                drawEntityBox( 
+                    pos.getX(), 
+                    pos.getY(), 
+                    pos.getZ(), 
+                    entity.getWidth(), 
+                    entity.getHeight(), 
+                    0, 255, 255, 255, 2, false
+                    ); 
+            } 
+        }); 
     }), () => settings().renderbossoutline
 )
 
+registerWhen(
+    register("postRenderEntity", (entity, pos) => { 
+        const entityName = entity.getName(); 
+        const isPlayer = entity.entity instanceof net.minecraft.entity.player. EntityPlayer; 
+        if (!isPlayer) return; 
+        carryees.forEach((carryee) => { 
+            if (carryee.name === entityName) { 
+                drawEntityBox( 
+                    pos.getX(), 
+                    pos.getY(), 
+                    pos.getZ(), 
+                    entity.getWidth(), 
+                    entity.getHeight(), 
+                    0, 255, 255, 255, 2, false
+                    ); 
+            } 
+        }); 
+    }), () => settings().renderplayeroutline
+)
 
 register("chat", (deadPlayer) => {
     carryees.forEach((carryee) => {
@@ -310,7 +330,7 @@ register("guiRender", () => {
             const pixelwidth = Renderer.getStringWidth(carryee.toString());
             Renderer.drawString(
                 "&7|&a [+] &7|&c [-] &7|&4 [×]",
-                pixelwidth + 6,
+                pogData.CarryX + pixelwidth + 6,
                 pogData.CarryY + 16 + (index * 10)
             );
         });
@@ -485,6 +505,20 @@ register("command", (...args = []) => {
 
     return [];
 }).setName("carry").setAliases(["macarry"]);
+
+function sendPartyChatMessage(msg) {
+    const delay = 1000 - (Date.now() - lastPartyChatMessageTime);
+    let lastPartyChatMessageTime = 0;
+    if (delay <= 0) {
+      ChatLib.command(msg);
+      lastPartyChatMessageTime = Date.now();
+    } else {
+      Client.scheduleTask(Math.ceil(delay / 50), () => {
+        ChatLib.command(msg);
+        lastPartyChatMessageTime = Date.now();
+      });
+    }
+}  
 
 function findCarryee(name) {
     return carryees.find(carryee => carryee.name.toLowerCase() === name.toLowerCase());

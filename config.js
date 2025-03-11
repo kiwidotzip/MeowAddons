@@ -230,9 +230,43 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Carry price",
     description: "Auto-adds player to carry when you are receive a trade req. \n&4Put the carry value in millions",
     category: "Slayers",
-    subcategory: "Carrying",
+    subcategory: "Carrying - QOL",
     value: "1.3",
     placeHolder: "1.3"
+})
+
+.addSwitch({
+    category: "Slayers",
+    configName: "notifybossspawn",
+    title: "Notify boss spawn",
+    description: "Displays a title when your client's boss spawns",
+    subcategory: "Carrying - QOL"
+})
+
+.addSwitch({
+    category: "Slayers",
+    configName: "sendtrademsg",
+    title: "Send trade msg",
+    description: "Sends a message asking if you want to trade the player after their carry ends.",
+    subcategory: "Carrying - QOL"
+})
+
+.addSwitch({
+    category: "Slayers",
+    configName: "carrytimesend",
+    title: "Send carry time",
+    description: "Sends carry time in chat, not party chat",
+    subcategory: "Carrying - QOL",
+    value: "true"
+})
+
+.addSwitch({
+    category: "Slayers",
+    configName: "sendcarrycount",
+    title: "Send carry count",
+    description: "Sends carry count in party chat",
+    subcategory: "Carrying - QOL",
+    value: "true"
 })
 
 .addSwitch({
@@ -240,7 +274,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "drawcarrybox",
     title: "Background for carry list",
     description: "Enables the background for carry list",
-    subcategory: "Carrying"
+    subcategory: "Carrying - Rendering"
 })
 
 .addColorPicker({
@@ -248,7 +282,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "carryboxcolor",
     title: "Color Picker",
     description: "Pick a color for the background",
-    subcategory: "Carrying",
+    subcategory: "Carrying - Rendering",
     value: [0, 0, 255, 255],
     shouldShow: data => data.drawcarrybox
 })
@@ -258,17 +292,9 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "bossph",
     title: "Boss/Money per hour",
     description: "Shows the approximate amount of bosses/money you can make per hour",
-    subcategory: "Carrying",
+    subcategory: "Carrying - Rendering",
     options: ['None', 'Boss', 'Money'],
     value: 0
-})
-
-.addSwitch({
-    category: "Slayers",
-    configName: "notifybossspawn",
-    title: "Notify boss spawn",
-    description: "Displays a title when your client's boss spawns",
-    subcategory: "Carrying"
 })
 
 .addSwitch({
@@ -276,34 +302,17 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "renderbossoutline",
     title: "Highlight boss",
     description: "Highlights boss when its in render distance",
-    subcategory: "Carrying"
+    subcategory: "Carrying - Rendering"
 })
 
 .addSwitch({
     category: "Slayers",
-    configName: "sendtrademsg",
-    title: "Send trade msg",
-    description: "Sends a message asking if you want to trade the player after their carry ends.",
-    subcategory: "carrying"
+    configName: "renderplayeroutline",
+    title: "Highlight player",
+    description: "Highlights the palyer you're carrying when they're in render distance",
+    subcategory: "Carrying - Rendering"
 })
 
-.addSwitch({
-    category: "Slayers",
-    configName: "carrytimesend",
-    title: "Send carry time",
-    description: "Sends carry time in chat, not party chat",
-    subcategory: "Carrying",
-    value: "true"
-})
-
-.addSwitch({
-    category: "Slayers",
-    configName: "sendcarrycount",
-    title: "Send carry count",
-    description: "Sends carry count in party chat",
-    subcategory: "Carrying",
-    value: "true"
-})
 // Dungeons - Mask notifications
 
 .addSwitch({

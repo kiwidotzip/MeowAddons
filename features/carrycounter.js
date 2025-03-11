@@ -248,7 +248,7 @@ function resetTrade() {
 
 register("chat", (totalCoins) => {
     Client.scheduleTask(1, () => {
-        if (!lastTradePlayer/* || Date.now() - lastTradeTime >= 1000*/) return;
+        if (!lastTradePlayer || Date.now() - lastTradeTime >= 1000) return;
 
         const totalCoinsFloat = parseFloat(totalCoins);
         const carryValues = settings().carryvalue

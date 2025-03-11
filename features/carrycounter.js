@@ -212,7 +212,7 @@ register("chat", (deadPlayer, entityName) => {
                     .setHoverValue("Click to ignore")))
         }
     });
-}).setCriteria(/^ ☠ (\w+) was killed by (.+)$/);
+}).setCriteria(/^ ☠ (\w+) was killed by (.+).$/);
 
 let lastTradePlayer = null;
 let lastTradeTime = 0;

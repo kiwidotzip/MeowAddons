@@ -139,6 +139,24 @@ register("step", () => {
     });
 }).setFps(10);
 
+let checkCounter = 0;
+
+register("step", () => {
+    checkCounter++;
+    if (checkCounter >= 20) {
+        checkCounter = 0;
+        carryees.forEach(carryee => {
+            if (carryee.bossID !== null) {
+                const entity = World.getEntityByID(carryee.bossID);
+                if (!entity || entity.isDead()) {
+                    if (settings().debug) ChatLib.chat(`${prefix} &cBoss entity for ${carryee.name} not found/reset.`);
+                    carryee.reset();
+                }
+            }
+        });
+    }
+}).setFps(1);
+
 register("entityDeath", (entity) => {
     const bossID = entity.entity.func_145782_y();
     carryees.forEach((carryee) => {

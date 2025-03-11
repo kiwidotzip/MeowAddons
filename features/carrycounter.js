@@ -75,6 +75,12 @@ class Carryee {
 
     }
 
+    reset() {
+        this.isFighting = false;
+        this.startTime = null;
+        this.bossID = null;
+    }
+
     complete() {
         ChatLib.chat(`${prefix} &fCarries completed for &b${this.name}`);
         if (settings().sendtrademsg) {
@@ -141,9 +147,7 @@ register("entityDeath", (entity) => {
             carryee.recordBossTime();
             const timeTaken = carryee.getTimeTakenToKillBoss();
             ChatLib.chat(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&f.`);
-            carryee.isFighting = false;
-            carryee.startTime = null;
-            carryee.bossID = null; 
+            carryee.reset();
         }
     });
 });
@@ -189,12 +193,12 @@ registerWhen(
     }), () => settings().renderplayeroutline
 )
 
-register("chat", (deadPlayer) => {
+register("chat", (deadPlayer, entityName) => {
+    const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
+    if (!bossnames.includes(entityName)) return;
     carryees.forEach((carryee) => {
         if (carryee.name === deadPlayer) {
-            carryee.isFighting = false;
-            carryee.startTime = null;
-//            carryee.bossID = null;
+            carryee.reset();
             if (settings().debug) { ChatLib.chat(`${prefix} &c${carryee.name} died! Resetting their carry tracking.`); }
             ChatLib.chat(                
                 new Message(
@@ -208,7 +212,7 @@ register("chat", (deadPlayer) => {
                     .setHoverValue("Click to ignore")))
         }
     });
-}).setCriteria(/^ ☠ (\w+) was killed by (?:.+)$/);
+}).setCriteria(/^ ☠ (\w+) was killed by (.+)$/);
 
 let lastTradePlayer = null;
 let lastTradeTime = 0;
@@ -418,6 +422,7 @@ register("command", (...args = []) => {
             const carryee = findCarryee(name);
             if (!carryee) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryee.count = Math.max(0, parseInt(count));
+            carryee.reset();
             ChatLib.chat(`${prefix} &aSet &6${name}&a's count to &6${count}`);
             break;
         case "remove":
@@ -458,6 +463,7 @@ register("command", (...args = []) => {
             const carryeeInc = findCarryee(name);
             if (!carryeeInc) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeInc.count = Math.min(carryeeInc.total, carryeeInc.count + 1);
+            carryeeInc.reset()
             ChatLib.chat(`${prefix} &aIncreased &6${name}&a's count to &6${carryeeInc.count}`);
             break;
         case "decrease":
@@ -465,6 +471,7 @@ register("command", (...args = []) => {
             const carryeeDec = findCarryee(name);
             if (!carryeeDec) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeDec.count = Math.max(0, carryeeDec.count - 1);
+            carryeeDec.reset()
             ChatLib.chat(`${prefix} &aDecreased &6${name}&a's count to &6${carryeeDec.count}`);
             break;
         case "gui":

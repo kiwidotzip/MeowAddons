@@ -169,7 +169,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "guildchattoggleautomeow",
     title: "Enables automeow for guild chat",
     description: "Enables automeow for guild chat.\n&4Enable random delay for auto meow",
-    subcategory: "Auto meow",
+    subcategory: "Auto-meow",
     shouldShow: data => data.automeow
 })
 

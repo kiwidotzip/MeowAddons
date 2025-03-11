@@ -146,6 +146,7 @@ register("step", () => {
     if (checkCounter >= 20) {
         checkCounter = 0;
         carryees.forEach(carryee => {
+            if (settings().debug) {ChatLib.chat(`${prefix} &fChecking for boss entity.`)}
             if (carryee.bossID !== null) {
                 const entity = World.getEntityByID(carryee.bossID);
                 if (!entity || entity.isDead()) {

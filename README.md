@@ -1,9 +1,26 @@
-# MeowAddons
-Silly chattriggers module that has some QOL features
+<p align="center">
+  <img alt="logo" src="https://i.imgur.com/9wgdq81.png" /
+</p>
 
-# Features 
+***
+<p align="center">
+  <a href="https://github.com/kiwidotzip/MeowAddons/releases" target="_blank">
+    <img alt="downloads" src="https://img.shields.io/github/v/release/kiwidotzip/MeowAddons?color=ff54f9&style=flat-square" />
+  </a>
+  <a href="https://github.com/Eclipse-5214/stella/">
+    <img src="https://tokei.rs/b1/github/kiwidotzip/MeowAddons?category=code&color=ff54f9&style=flat-square" alt="lines">
+  </a>
+</p>
 
-## General
+<p align="center" id="description"><em>MeowAddons</em> is a Silly chattriggers module that has some QOL features</p>
+
+---
+
+<h2 align="center">Features List</h2>
+
+<p>Here are some of the standout features that <em>MeowAddons</em> has so far</p>
+
+## *General*
  
 - Chat Cleaner 
   - Removes a LOT of spam messages. [List here](https://github.com/kiwidotzip/MeowAddons/blob/main/chatcleanerlist.json)
@@ -26,7 +43,7 @@ Silly chattriggers module that has some QOL features
 - Party commands
   - Adds various party commands! (alias is !)
 
-## Skyblock
+## **Skyblock**
 
 - BetterBZ 
   - Formats bazaar messages to look cleaner
@@ -34,12 +51,12 @@ Silly chattriggers module that has some QOL features
 - BetterAH (WIP)
   - Formats auction house messages to look cleaner
 
-## Slayer
+### **Slayer**
  
 - Slayer time
   - Shows the amount of time you took to kill your slayer boss, as accurate as skytils timer and always works unlike skytils smh
 
-## Carrying
+### **Carrying**
 
 - Carry counter
   - Counts the carries that you do with a nice gui
@@ -65,7 +82,7 @@ Silly chattriggers module that has some QOL features
 - Highlight carry player
   - Highlights the player you're carrying
 
-## Dungeons
+### **Dungeons**
 
 - Blood camp helper
   - Sends alerts and information messages about the blood camp to both the party and the player
@@ -82,7 +99,7 @@ Silly chattriggers module that has some QOL features
 - Leap announce
   - Announces leap messages in party chat
 
-## Silly features
+## **Silly features**
 
 - Auto-meow 
   - Automatically meows (a total of 7 randomised responses) when someone says meow! (has a random delay now)
@@ -95,23 +112,22 @@ Silly chattriggers module that has some QOL features
 
 - Random meow (coming soon™)
 
-# Installation instructions
+<h2 align="center">Installation Steps (hopefully coming soon)</h2>
 
-## Automatic way
+### **Automatic way**
 
 - /ct import meowaddons (may be an older version)
 
-## Manual way
+### **Manual way**
 
-### Getting the module zip
-First we need MeowAddons.zip, for this we'll head over to the [release page](https://github.com/kiwidotzip/MeowAddons/releases/) for the newest version and click the MeowAddons.zip in the latest release<br>
-<br>
+#### **Getting the module zip**
+First we need MeowAddons.zip, for this we'll head over to the [release page](https://github.com/kiwidotzip/MeowAddons/releases/) for the newest version and click the MeowAddons.zip in the latest release<
 
-### Dependencies (No need to do this, for now)
+#### **Dependencies (No need to do this, for now)**
 
 Download [Dependencies.zip](https://github.com/kiwidotzip/randomstuff/releases/tag/meowaddonsdependencies)
 
-### Wrapping things up
+#### **Wrapping things up**
 Once we have all of our folders (aka "modules") we can now go in game and type `/ct files` and hit enter<br>
 A file window will pop up, we open the folder that is called `modules` and paste all of the folders that we have gathered thus far<br>
 After that we can head back over in game and type `/ct load` and hit enter.<br>
@@ -120,4 +136,10 @@ And that should be it, you _should_ have properly manually installed the desired
 > Make sure that the folders do not have a folder inside otherwise the module will not work properly.<br>
 > for example: If i unzipped Vigilance-1.3.2 and it has a folder inside called Vigilance this folder inside is the module itself that i need
 
+   
+---
 
+<h2 align="center">Credits</h2>
+
+- **Kiwi** - Developer
+- **Sascha** - Developer

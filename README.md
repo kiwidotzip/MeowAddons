@@ -112,7 +112,7 @@
 
 - Random meow (coming soon™)
 
-<h2 align="center">Installation Steps (hopefully coming soon)</h2>
+<h2 align="center">Installation Steps</h2>
 
 ### **Automatic way**
 
@@ -121,7 +121,7 @@
 ### **Manual way**
 
 #### **Getting the module zip**
-First we need MeowAddons.zip, for this we'll head over to the [release page](https://github.com/kiwidotzip/MeowAddons/releases/) for the newest version and click the MeowAddons.zip in the latest release<
+First we need MeowAddons.zip, for this we'll head over to the [release page](https://github.com/kiwidotzip/MeowAddons/releases/) for the newest version and click the MeowAddons.zip in the latest release
 
 #### **Dependencies (No need to do this, for now)**
 

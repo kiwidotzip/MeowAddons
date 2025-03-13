@@ -530,6 +530,11 @@ register("command", (...args = []) => {
             if (!carryeeCancel) return ChatLib.chat(`${prefix} &c${name} not found!`);
             ChatLib.chat(`${prefix} &7Ignored death for &6${name}`);
             break;
+        case "clear":
+            const message = carryees.length ? `${prefix} &aCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
+            carryees = [];
+            ChatLib.chat(message);
+            break; 
         default:
             showHelp();
     }
@@ -576,6 +581,7 @@ function showHelp() {
     ChatLib.chat("> &e/carry increase &c<name> &7- Increase carry count");
     ChatLib.chat("> &e/carry decrease &c<name> &7- Decrease carry count");
     ChatLib.chat("> &e/carry list &7- Show active carries");
+    ChatLib.chat("> &e/carry clear &7- Clears all active carries")
     ChatLib.chat("> &e/carry gui &7- Open HUD editor");
 }
 

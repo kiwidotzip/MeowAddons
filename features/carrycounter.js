@@ -558,13 +558,14 @@ register("command", (...args = []) => {
     return [];
 }).setName("carry").setAliases(["macarry"]);
 
-let lastPartyChatMessageTime = 0;
-
+let nextAvailableTime = 0;
 const sendPartyChatMessage = msg => {
-    const d = 1000 - (Date.now() - lastPartyChatMessageTime);
-    d <= 0 ? (ChatLib.command(msg), lastPartyChatMessageTime = Date.now())
-            : Client.scheduleTask(Math.ceil(d / 50), () => (ChatLib.command(msg), lastPartyChatMessageTime = Date.now()));
-  };  
+    const now = Date.now();
+    nextAvailableTime = Math.max(now, nextAvailableTime);
+    const delay = nextAvailableTime - now;
+    Client.scheduleTask(Math.ceil(delay / 50), () => ChatLib.command(msg));
+    nextAvailableTime += 1000;
+};
 
 function findCarryee(name) {
     return carryees.find(carryee => carryee.name.toLowerCase() === name.toLowerCase());

@@ -70,7 +70,8 @@ class Carryee {
             return "N/A";
         }
         const bphx = parseFloat(this.getBossPerHour().replace("/hr", ""));
-        const mph = bphx * 1.3
+        const carryValue = parseFloat(settings().carryvalue.split(",")[0]) || 1.3
+        const mph = bphx * carryValue
         return `${mph.toFixed(1)}M/hr`
 
     }

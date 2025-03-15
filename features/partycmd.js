@@ -1,44 +1,31 @@
-import Config from "../config";
+import Config from "../config"
 import Party from "../../BloomCore/Party"
 
-register('chat', (rank, name) => {
-    if (name === Player.getName()) return;
-	if (!Config().partytransfer) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party transfer ${name}`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !ptme$/)
+register("chat", (rank, name, alias, player) => {
+    if (!Config().partycommands) return
+    if (Party.leader !== Player.getName()) return
 
-register('chat', (rank, name) => {
-	if (!Config().partywarp) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party warp`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !warp$/)
+    let message = ChatLib.getChatMessage(event)
+    let command = null
 
-register('chat', (rank, name) => {
-	if (!Config().partyallinvite) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party settings allinvite`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !allinv$/)
+    if (Config().partytransfer && /Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !ptme$/.test(message)) {
+        if (name === Player.getName()) return
+        command = `party transfer ${name}`
+    } 
+    else if (Config().partywarp && /Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !warp$/.test(message)) {
+        command = `party warp`
+    } 
+    else if (Config().partyallinvite && /Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !allinv$/.test(message)) {
+        command = `party settings allinvite`
+    } 
+    else if (Config().partykickoffline && /Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !kickoffline$/.test(message)) {
+        command = `party settings kickoffline`
+    } 
+    else if (Config().partyinvite && /Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !(inv|invite|p|party) (.+)$/.test(message)) {
+        command = `party invite ${player}`
+    }
 
-register('chat', (rank, name) => {
-	if (!Config().partykickoffline) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party settings kickoffline`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !kickoffline$/)
-
-register('chat', (rank, name, alias, player) => {
-	if (!Config().partyinvite) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party invite ${player}`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !(inv|invite|p|party) (.+)$/)
-
+    if (!command) return
+    ChatLib.command(command)
+    cancel(event)
+})

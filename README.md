@@ -7,7 +7,7 @@
   <a href="https://github.com/kiwidotzip/MeowAddons/releases" target="_blank">
     <img alt="downloads" src="https://img.shields.io/github/v/release/kiwidotzip/MeowAddons?color=ff54f9&style=flat-square" />
   </a>
-  <a href="https://github.com/Eclipse-5214/stella/">
+  <a href="https://github.com/kiwidotzip/meowaddons/">
     <img src="https://tokei.rs/b1/github/kiwidotzip/MeowAddons?category=code&color=ff54f9&style=flat-square" alt="lines">
   </a>
 </p>

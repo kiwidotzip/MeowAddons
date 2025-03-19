@@ -4,6 +4,18 @@ import { registerWhen } from "../../BloomCore/utils/Utils";
 import drawEntityBox from "./utils/renderhelper";
 
 let prefix = `&e[MeowAddons]`;
+let carryees = [];
+let checkCounter = 0;
+let lastTradePlayer = null;
+let lastTradeTime = 0;
+let isInInventory = false;
+let nextAvailableTime = 0;
+const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
+const carryCache = new Map();
+const hudEditor = new Gui();
+const processedEntities = new Set();
+
+// Carry class
 
 class Carryee {
     constructor(name, total) {
@@ -102,6 +114,7 @@ class Carryee {
             `&b${this.count}&f/&b${this.total}`,
             10, 100, 10
         );
+        cacheCarryee(this);
     }
 
     toString() {
@@ -115,9 +128,7 @@ class Carryee {
     }
 }
 
-let carryees = [];
-const hudEditor = new Gui();
-const processedEntities = new Set();
+// Nametag detection
 
 register("step", () => {
     const allEntities = World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"));
@@ -140,7 +151,7 @@ register("step", () => {
     });
 }).setFps(10);
 
-let checkCounter = 0;
+// Boss check
 
 register("step", () => {
     checkCounter++;
@@ -159,18 +170,22 @@ register("step", () => {
     }
 }).setFps(1);
 
+// Entity death detection
+
 register("entityDeath", (entity) => {
     const bossID = entity.entity.func_145782_y();
     carryees.forEach((carryee) => {
         if (carryee.bossID === bossID) { 
-            carryee.incrementTotal();
             carryee.recordBossTime();
+            carryee.incrementTotal();
             const timeTaken = carryee.getTimeTakenToKillBoss();
             ChatLib.chat(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&f.`);
             carryee.reset();
         }
     });
 });
+
+// Entity highlight
 
 registerWhen(
     register("postRenderEntity", (entity, pos) => { 
@@ -193,6 +208,8 @@ registerWhen(
     }), () => settings().renderbossoutline
 )
 
+// Player highlight
+
 registerWhen(
     register("postRenderEntity", (entity, pos) => { 
         const entityName = entity.getName(); 
@@ -212,6 +229,31 @@ registerWhen(
         }); 
     }), () => settings().renderplayeroutline
 )
+
+// Cache management
+
+function cacheCarryee(carryee) {
+    carryCache.set(carryee.name.toLowerCase(), { 
+        total: carryee.total, 
+        count: carryee.count,
+        firstBossTime: carryee.firstBossTime,
+        lastBossTime: carryee.lastBossTime,
+        timestamp: Date.now() 
+    });
+}
+
+// Clear cache
+
+register("step", () => {
+    const now = Date.now();
+    for (let [name, record] of carryCache.entries()) {
+        if (now - record.timestamp > 5 * 60 * 1000) {
+            carryCache.delete(name);
+        }
+    }
+}).setFps(1/5);
+
+// Carry death detection
 
 register("chat", (deadPlayer, entityName) => {
     const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
@@ -234,8 +276,7 @@ register("chat", (deadPlayer, entityName) => {
     });
 }).setCriteria(/^ ☠ (\w+) was killed by (.+).$/);
 
-let lastTradePlayer = null;
-let lastTradeTime = 0;
+// Trade detection
 
 register("chat", (lastplayer) => {
         lastTradePlayer = lastplayer;
@@ -298,8 +339,7 @@ register("chat", (totalCoins) => {
     });
 }).setCriteria(/^ \+ (\d+\.?\d*)M coins$/);
 
-const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
-let isInInventory = false;
+// GUI stuff
 
 register("guiOpened", (event) => {
     if (event.gui instanceof GuiInventory) { isInInventory = true; }
@@ -308,6 +348,8 @@ register("guiOpened", (event) => {
 register("guiClosed", (gui) => {
     if (gui instanceof GuiInventory) { isInInventory = false; }
 });
+
+// Render overlay
 
 register("renderOverlay", () => {
     if (isInInventory) return;
@@ -360,6 +402,8 @@ register("renderOverlay", () => {
     };
 });
 
+// Inventory GUI
+
 register("guiRender", () => {
     if (isInInventory && carryees.length > 0) {
         Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
@@ -380,6 +424,8 @@ register("guiRender", () => {
         });
     }
 });
+
+// Button clicks
 
 register("guiMouseclick", (mouseX, mouseY, mouseButton) => {
     if (mouseButton !== 0 || !isInInventory) return;
@@ -440,6 +486,8 @@ function isInArea(x, y, area) {
     return x >= area.x1 && x <= area.x2 && y >= area.y1 && y <= area.y2;
 }
 
+// GUI management 
+
 register("dragged", (dx, dy, x, y, button) => {
     if (hudEditor.isOpen() && button === 0) {
         pogData.CarryX = x;
@@ -448,14 +496,32 @@ register("dragged", (dx, dy, x, y, button) => {
     }
 });
 
+// Commands
+
 register("command", (...args = []) => {
     const [subcommand, name, count] = args;
     switch (subcommand?.toLowerCase()) {
         case "add":
             if (!name || !count) return syntaxError("add <name> <count>");
             if (findCarryee(name)) return ChatLib.chat(`${prefix} &c${name} already exists!`);
-            carryees.push(new Carryee(name, parseInt(count)));
-            ChatLib.chat(`${prefix} &aAdded &6${name} &afor &6${count} &acarries`);
+            
+            let newTotal = parseInt(count);
+            let newCarryee;
+            const cachedRecord = carryCache.get(name.toLowerCase());
+            if (cachedRecord && Date.now() - cachedRecord.timestamp < 5 * 60 * 1000) {
+                // Merge previous total and boss timing info with new addition
+                newTotal += cachedRecord.total;
+                newCarryee = new Carryee(name, newTotal);
+                newCarryee.count = cachedRecord.count;
+                newCarryee.firstBossTime = cachedRecord.firstBossTime;
+                newCarryee.lastBossTime = cachedRecord.lastBossTime;
+                carryCache.delete(name.toLowerCase());
+                ChatLib.chat(`${prefix} &aMerged previous record for &6${name}&a, new total: &6${newTotal}`);
+            } else {
+                newCarryee = new Carryee(name, newTotal);
+                ChatLib.chat(`${prefix} &aAdded &6${name} &afor &6${newTotal} &acarries`);
+            }
+            carryees.push(newCarryee);
             break;
         case "set":
             if (!name || !count) return syntaxError("set <name> <count>");
@@ -558,7 +624,8 @@ register("command", (...args = []) => {
     return [];
 }).setName("carry").setAliases(["macarry"]);
 
-let nextAvailableTime = 0;
+// Functions
+
 const sendPartyChatMessage = msg => {
     const now = Date.now();
     nextAvailableTime = Math.max(now, nextAvailableTime);
@@ -586,6 +653,8 @@ function showHelp() {
     ChatLib.chat("> &e/carry clear &7- Clears all active carries")
     ChatLib.chat("> &e/carry gui &7- Open HUD editor");
 }
+
+// Game unload
 
 register("gameUnload", () => {
     if (carryees.length === 0) return;

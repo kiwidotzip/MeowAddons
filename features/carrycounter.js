@@ -246,7 +246,7 @@ function cacheCarryee(carryee) {
 
 register("step", () => {
     const now = Date.now();
-    for (let [name, record] of carryCache.entries()) {
+    for (const [name, record] of carryCache.entries()) {
         if (now - record.timestamp > 5 * 60 * 1000) {
             carryCache.delete(name);
         }
@@ -428,7 +428,7 @@ register("guiRender", () => {
 // Button clicks
 
 register("guiMouseclick", (mouseX, mouseY, mouseButton) => {
-    if (mouseButton !== 0 || !isInInventory) return;
+    if (!isInInventory) return;
     
     const hudX = pogData.CarryX;
     const hudY = pogData.CarryY;
@@ -469,13 +469,19 @@ register("guiMouseclick", (mouseX, mouseY, mouseButton) => {
         };
         
         // Check clicks
-        if (isInArea(mouseX, mouseY, plusArea)) {
+        if (isInArea(mouseX, mouseY, plusArea) && mouseButton === 0) {
             carryee.count = Math.min(carryee.total, carryee.count + 1);
             ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's count to &6${carryee.count}`);
-        } else if (isInArea(mouseX, mouseY, minusArea)) {
+        } else if (isInArea(mouseX, mouseY, minusArea) && mouseButton === 0) {
             carryee.count = Math.max(0, carryee.count - 1);
             ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's count to &6${carryee.count}`);
-        } else if (isInArea(mouseX, mouseY, removeArea)) {
+        } else if (isInArea(mouseX, mouseY, plusArea) && mouseButton === 1) {
+            carryee.total = Math.min(9999, carryee.total + 1);
+            ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's total to &6${carryee.total}`);
+        } else if (isInArea(mouseX, mouseY, minusArea) && mouseButton === 1) {
+            carryee.total = Math.max(carryee.count + 1, carryee.total - 1);
+            ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's total to &6${carryee.total}`);
+        } else if (isInArea(mouseX, mouseY, removeArea) && mouseButton === 0) {
             carryees = carryees.filter(c => c !== carryee);
             ChatLib.chat(`${prefix} &aRemoved &6${carryee.name}`);
         }

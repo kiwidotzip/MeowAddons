@@ -588,10 +588,10 @@ register("command", (...args = []) => {
                 newCarryee.firstBossTime = cachedRecord.firstBossTime;
                 newCarryee.lastBossTime = cachedRecord.lastBossTime;
                 carryCache.delete(name.toLowerCase());
-                ChatLib.chat(`${prefix} &aMerged previous record for &6${name}&a, new total: &6${newTotal}`);
+                ChatLib.chat(`${prefix} &fMerged previous record &7(${cachedRecord.total})&f for &6${name}&f, new total: &6${newTotal}`);
             } else {
                 newCarryee = new Carryee(name, newTotal);
-                ChatLib.chat(`${prefix} &aAdded &6${name} &afor &6${newTotal} &acarries`);
+                ChatLib.chat(`${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries`);
             }
             carryees.push(newCarryee);
             break;
@@ -601,20 +601,32 @@ register("command", (...args = []) => {
             if (!carryee) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryee.count = Math.max(0, parseInt(count));
             carryee.reset();
-            ChatLib.chat(`${prefix} &aSet &6${name}&a's count to &6${count}`);
+            ChatLib.chat(`${prefix} &fSet &6${name}&f's count to &6${count}`);
+            break;
+        case "settotal": 
+            if (!name || !count) return syntaxError("settotal <name> <total>");
+            const carryeeSetTotal = findCarryee(name);
+            if (!carryeeSetTotal) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            const newSetTotal = parseInt(count);
+            if (newSetTotal < carryeeSetTotal.count) {
+                ChatLib.chat(`${prefix} &cNew total cannot be less than current count (${carryeeSetTotal.count})!`);
+                return;
+            }
+            carryeeSetTotal.total = newSetTotal;
+            ChatLib.chat(`${prefix} &fSet &6${name}&f's total to &6${newSetTotal}`);
             break;
         case "remove":
             if (!name) return syntaxError("remove <name>");
             carryees = carryees.filter(carryee => carryee.name !== name);
-            ChatLib.chat(`${prefix} &aRemoved &6${name}`);
+            ChatLib.chat(`${prefix} &fRemoved &6${name}`);
             break;
         case "list":
             if (carryees.length === 0) return ChatLib.chat(`${prefix} &cNo active carries!`);
-            ChatLib.chat(`${prefix} &aActive carries (&6${carryees.length}&a):`);
+            ChatLib.chat(`${prefix} &fActive carries (&6${carryees.length}&f):`);
             carryees.forEach((carryee, index) => {
                 const message = new Message()
                     .addTextComponent(
-                        new TextComponent(`&7> &e${carryee.name}: &b${carryee.count}/${carryee.total} &7| `)
+                        new TextComponent(`&7> &6${carryee.name}: &b${carryee.count}/${carryee.total} &7| `)
                     )
                     .addTextComponent(
                         new TextComponent("&a[+]")
@@ -642,7 +654,7 @@ register("command", (...args = []) => {
             if (!carryeeInc) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeInc.count = Math.min(carryeeInc.total, carryeeInc.count + 1);
             carryeeInc.reset()
-            ChatLib.chat(`${prefix} &aIncreased &6${name}&a's count to &6${carryeeInc.count}`);
+            ChatLib.chat(`${prefix} &fIncreased &6${name}&f's count to &6${carryeeInc.count}`);
             break;
         case "decrease":
             if (!name) return syntaxError("decrease <name>");
@@ -650,7 +662,7 @@ register("command", (...args = []) => {
             if (!carryeeDec) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeDec.count = Math.max(0, carryeeDec.count - 1);
             carryeeDec.reset()
-            ChatLib.chat(`${prefix} &aDecreased &6${name}&a's count to &6${carryeeDec.count}`);
+            ChatLib.chat(`${prefix} &fDecreased &6${name}&f's count to &6${carryeeDec.count}`);
             break;
         case "gui":
             hudEditor.open();
@@ -661,7 +673,7 @@ register("command", (...args = []) => {
             if (!carryeeConfirm) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeConfirm.incrementTotal();
             carryeeConfirm.recordBossTime();
-            ChatLib.chat(`${prefix} &aCount incremented for &6${name}`);
+            ChatLib.chat(`${prefix} &fCount incremented for &6${name}`);
             break;
         case "canceldeath":
             if (!name) return syntaxError("canceldeath <name>");
@@ -670,7 +682,7 @@ register("command", (...args = []) => {
             ChatLib.chat(`${prefix} &7Ignored death for &6${name}`);
             break;
         case "clear":
-            const message = carryees.length ? `${prefix} &aCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
+            const message = carryees.length ? `${prefix} &fCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
             carryees = [];
             ChatLib.chat(message);
             break; 
@@ -681,16 +693,16 @@ register("command", (...args = []) => {
     const subcommand = args[0]?.toLowerCase();
     const currentArg = args[args.length - 1]?.toLowerCase();
     const playerNames = World.getAllPlayers()
-    .filter(player => player.getUUID().version() === 4)
-    .map(player => ChatLib.removeFormatting(player.getName()));
+        .filter(player => player.getUUID().version() === 4)
+        .map(player => ChatLib.removeFormatting(player.getName()));
     
-    if (subcommand === "add" || subcommand === "remove" || subcommand === "set") {
+    if (subcommand === "add" || subcommand === "remove" || subcommand === "set" || subcommand === "settotal") {
         if (args.length === 2) {
             return playerNames.filter(name => name.toLowerCase().startsWith(currentArg));
         }
     }
     if (args.length === 1) {
-        return ["add", "remove", "set", "list", "gui", "increase", "decrease"].filter(cmd => cmd.startsWith(currentArg));
+        return ["add", "remove", "set", "settotal", "list", "gui", "increase", "decrease", "clear", "confirmdeath", "canceldeath"].filter(cmd => cmd.startsWith(currentArg));
     }
 
     return [];
@@ -718,6 +730,7 @@ function showHelp() {
     ChatLib.chat(`${prefix} &aCarry Commands:`);
     ChatLib.chat("> &e/carry add &c<name> <count> &7- Add new carry");
     ChatLib.chat("> &e/carry set &c<name> <count> &7- Update carry count");
+    ChatLib.chat("> &e/carry settotal &c<name> <total> &7- Update carry total");
     ChatLib.chat("> &e/carry remove &c<name> &7- Remove carry");
     ChatLib.chat("> &e/carry increase &c<name> &7- Increase carry count");
     ChatLib.chat("> &e/carry decrease &c<name> &7- Decrease carry count");

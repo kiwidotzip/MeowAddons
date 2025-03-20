@@ -2,6 +2,7 @@ import settings from "../config";
 import { pogData } from "./utils/pogdata";
 import { registerWhen } from "../../BloomCore/utils/Utils";
 import drawEntityBox from "./utils/renderhelper";
+import { Render2D } from "../../tska/rendering/Render2D";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -405,88 +406,154 @@ register("renderOverlay", () => {
 // Inventory GUI
 
 register("guiRender", () => {
-    if (isInInventory && carryees.length > 0) {
-        Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
-        carryees.forEach((carryee, index) => {
-            Renderer.drawString(
-                carryee.toString(),
-                pogData.CarryX + 4,
-                pogData.CarryY + 16 + (index * 10)
-            );
-        });
-        carryees.forEach((carryee, index) => {
-            const pixelwidth = Renderer.getStringWidth(carryee.toString());
-            Renderer.drawString(
-                "&7|&a [+] &7|&c [-] &7|&4 [×]",
-                pogData.CarryX + pixelwidth + 6,
-                pogData.CarryY + 16 + (index * 10)
-            );
-        });
-    }
+    if (!isInInventory || carryees.length === 0) return;
+
+    const hudX = pogData.CarryX;
+    const hudY = pogData.CarryY;
+
+    Renderer.drawString("&e[MA] &d&lCarries&f:", hudX + 4, hudY + 4);
+
+    carryees.forEach((carryee, index) => {
+        const yPos = hudY + 16 + (index * 10);
+        const textWidth = Renderer.getStringWidth(carryee.toString());
+        const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
+        const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
+
+        const isHoveringPlus = isInArea(mouseX, mouseY, plusArea);
+        const isHoveringMinus = isInArea(mouseX, mouseY, minusArea);
+        const isHoveringRemove = isInArea(mouseX, mouseY, removeArea);
+
+        Renderer.drawString(carryee.toString(), hudX + 4, yPos);
+
+        let currentX = hudX + textWidth + 6;
+
+        const colors = {
+            separator: [128, 128, 128, 255],       // Gray
+            plus: {
+                normal: [0, 255, 0, 255],          // Green
+                hover: [0, 128, 0, 255]            // Dark Green
+            },
+            minus: {
+                normal: [255, 0, 0, 255],          // Red
+                hover: [128, 0, 0, 255]            // Dark Red
+            },
+            remove: {
+                normal: [255, 69, 0, 255],         // Orange Red
+                hover: [139, 0, 0, 255]            // Dark Red
+            }
+        };
+
+        Renderer.colorize(...colors.separator);
+        Renderer.drawString("|", currentX, yPos);
+        currentX += Renderer.getStringWidth("|");
+
+        Renderer.colorize(...(isHoveringPlus ? colors.plus.hover : colors.plus.normal));
+        Renderer.drawString(" [+] ", currentX, yPos);
+        currentX += Renderer.getStringWidth(" [+] ");
+
+        Renderer.colorize(...colors.separator);
+        Renderer.drawString("|", currentX, yPos);
+        currentX += Renderer.getStringWidth("|");
+
+        Renderer.colorize(...(isHoveringMinus ? colors.minus.hover : colors.minus.normal));
+        Renderer.drawString(" [-] ", currentX, yPos);
+        currentX += Renderer.getStringWidth(" [-] ");
+
+        Renderer.colorize(...colors.separator);
+        Renderer.drawString("|", currentX, yPos);
+        currentX += Renderer.getStringWidth("|");
+
+        Renderer.colorize(...(isHoveringRemove ? colors.remove.hover : colors.remove.normal));
+        Renderer.drawString(" [×]", currentX, yPos);
+    });
 });
 
-// Button clicks
+// Buttons
 
-register("guiMouseclick", (mouseX, mouseY, mouseButton) => {
+register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
     if (!isInInventory) return;
     
     const hudX = pogData.CarryX;
     const hudY = pogData.CarryY;
     
     carryees.forEach((carryee, index) => {
-        const entryY = hudY + 16 + (index * 10);
-        const mainTextWidth = Renderer.getStringWidth(carryee.toString());
-        const buttonBaseX = hudX + 4 + mainTextWidth + 6;
+        const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
         
-        // [+] Button
-        const plusButtonText = " [+] ";
-        const plusWidth = Renderer.getStringWidth(plusButtonText);
-        const plusArea = {
-            x1: buttonBaseX,
-            y1: entryY,
-            x2: buttonBaseX + plusWidth,
-            y2: entryY + 8
-        };
-        
-        // [-] Button
-        const minusButtonText = " [-] ";
-        const minusWidth = Renderer.getStringWidth(minusButtonText);
-        const minusArea = {
-            x1: plusArea.x2,
-            y1: entryY,
-            x2: plusArea.x2 + minusWidth,
-            y2: entryY + 8
-        };
-        
-        // [×] Button
-        const removeButtonText = "[×]";
-        const removeWidth = Renderer.getStringWidth(removeButtonText);
-        const removeArea = {
-            x1: minusArea.x2,
-            y1: entryY,
-            x2: minusArea.x2 + removeWidth,
-            y2: entryY + 8
-        };
-        
-        // Check clicks
-        if (isInArea(mouseX, mouseY, plusArea) && mouseButton === 0) {
-            carryee.count = Math.min(carryee.total, carryee.count + 1);
-            ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's count to &6${carryee.count}`);
-        } else if (isInArea(mouseX, mouseY, minusArea) && mouseButton === 0) {
-            carryee.count = Math.max(0, carryee.count - 1);
-            ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's count to &6${carryee.count}`);
-        } else if (isInArea(mouseX, mouseY, plusArea) && mouseButton === 1) {
-            carryee.total = Math.min(9999, carryee.total + 1);
-            ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's total to &6${carryee.total}`);
-        } else if (isInArea(mouseX, mouseY, minusArea) && mouseButton === 1) {
-            carryee.total = Math.max(carryee.count + 1, carryee.total - 1);
-            ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's total to &6${carryee.total}`);
+        if (isInArea(mouseX, mouseY, plusArea)) {
+            if (mouseButton === 0) {
+                carryee.count = Math.min(carryee.total, carryee.count + 1);
+                ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's count to &6${carryee.count}`);
+            } else if (mouseButton === 1) {
+                carryee.total = Math.min(9999, carryee.total + 1);
+                ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's total to &6${carryee.total}`);
+            }
+        } else if (isInArea(mouseX, mouseY, minusArea)) {
+            if (mouseButton === 0) {
+                carryee.count = Math.max(0, carryee.count - 1);
+                ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's count to &6${carryee.count}`);
+            } else if (mouseButton === 1) {
+                carryee.total = Math.max(carryee.count + 1, carryee.total - 1);
+                ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's total to &6${carryee.total}`);
+            }
         } else if (isInArea(mouseX, mouseY, removeArea) && mouseButton === 0) {
             carryees = carryees.filter(c => c !== carryee);
             ChatLib.chat(`${prefix} &aRemoved &6${carryee.name}`);
         }
     });
 });
+
+// Tooltip
+
+register("postguiRender", () => {
+    if (!isInInventory) return;
+    
+    const hudX = pogData.CarryX;
+    const hudY = pogData.CarryY;
+    const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
+    
+    carryees.forEach((carryee, index) => {
+        const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
+    
+        if (isInArea(mouseX, mouseY, plusArea)) {
+            Render2D.drawHoveringText(["&bIncrease", "&cLeft click: Count | Right click: Total"]);
+        } else if (isInArea(mouseX, mouseY, minusArea)) {
+            Render2D.drawHoveringText(["&bDecrease", "&cLeft click: Count | Right click: Total"]);
+        } else if (isInArea(mouseX, mouseY, removeArea)) {
+            Render2D.drawHoveringText(["&bRemove Player", "&cClick to remove from carry list"]);
+        }
+    });
+});
+
+function getButtonAreas(hudX, hudY, carryee, index) {
+    const entryY = hudY + 16 + (index * 10);
+    const textWidth = Renderer.getStringWidth(carryee.toString());
+    const buttonBaseX = hudX + textWidth + 10;
+    
+    const plusWidth = Renderer.getStringWidth(" [+] ");
+    const minusWidth = Renderer.getStringWidth(" [-] ");
+    const removeWidth = Renderer.getStringWidth("[×] ");
+
+    return {
+        plusArea: {
+            x1: buttonBaseX,
+            y1: entryY,
+            x2: buttonBaseX + plusWidth,
+            y2: entryY + 8
+        },
+        minusArea: {
+            x1: buttonBaseX + plusWidth,
+            y1: entryY,
+            x2: buttonBaseX + plusWidth + minusWidth,
+            y2: entryY + 8
+        },
+        removeArea: {
+            x1: buttonBaseX + plusWidth + minusWidth,
+            y1: entryY,
+            x2: buttonBaseX + plusWidth + minusWidth + removeWidth,
+            y2: entryY + 8
+        }
+    };
+}
 
 function isInArea(x, y, area) {
     return x >= area.x1 && x <= area.x2 && y >= area.y1 && y <= area.y2;
@@ -515,7 +582,6 @@ register("command", (...args = []) => {
             let newCarryee;
             const cachedRecord = carryCache.get(name.toLowerCase());
             if (cachedRecord && Date.now() - cachedRecord.timestamp < 5 * 60 * 1000) {
-                // Merge previous total and boss timing info with new addition
                 newTotal += cachedRecord.total;
                 newCarryee = new Carryee(name, newTotal);
                 newCarryee.count = cachedRecord.count;

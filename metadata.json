@@ -2,7 +2,7 @@
     "name"          : "MeowAddons",
     "author"        : "Kiwi",
     "description"   : "QOL features and some dumb ones",
-    "version"       : "2.2.4",
+    "version"       : "2.2.5",
     "entry"         : "index.js",
-    "requires"      : ["Amaterasu", "BloomCore", "PogData", "requestV2"]
+    "requires"      : ["Amaterasu", "BloomCore", "PogData", "requestV2", "tska"]
 }

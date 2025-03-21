@@ -588,7 +588,7 @@ register("command", (...args = []) => {
                 newCarryee.firstBossTime = cachedRecord.firstBossTime;
                 newCarryee.lastBossTime = cachedRecord.lastBossTime;
                 carryCache.delete(name.toLowerCase());
-                ChatLib.chat(`${prefix} &fMerged previous record &7(${cachedRecord.total})&f for &6${name}&f, new total: &6${newTotal}`);
+                ChatLib.chat(`${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7&o- Merged ${cachedRecord.total}`);
             } else {
                 newCarryee = new Carryee(name, newTotal);
                 ChatLib.chat(`${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries`);

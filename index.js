@@ -28,24 +28,22 @@ import "./features/terminalcallouts";
 
 // Update checker
 
-import request from "../requestV2"
+import { fetch } from "../tska/polyfill/Fetch"
 
 const VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version;
 const API_URL = 'https://api.github.com/repos/kiwidotzip/meowaddons/releases';
 
 function checkUpdate() {
-    request({
-        url: API_URL,
+    fetch(API_URL, {
         headers: { 'User-Agent': 'MeowAddons' },
         json: true
     })
-    .then(function(response) {
+    .then(response => {
         if (!response.length) {
             ChatLib.chat('&e[MeowAddons] &cNo releases found!');
             return;
         }
-
-        ChatLib.chat(`&e[MeowAddons] &aChecking for updates...`);
+        ChatLib.chat('&e[MeowAddons] &aChecking for updates...');
         const latest = response[0];
         const remoteVersion = latest.tag_name.replace(/^v/, '');
         const localVersion = VERSION.replace(/^v/, '');
@@ -55,12 +53,12 @@ function checkUpdate() {
         } else if (localVersion < remoteVersion) {
             ChatLib.chat(`&e[MeowAddons] &aUpdate available: &bv${remoteVersion}&a! Current: &ev${localVersion}`);
             ChatLib.chat(new TextComponent(`&e[MeowAddons] &aClick here to go to the Github release page!`)
-            .setClick("open_url", `https://github.com/kiwidotzip/meowaddons/releases/latest`));
+                .setClick("open_url", `https://github.com/kiwidotzip/meowaddons/releases/latest`));
         } else {
             ChatLib.chat('&e[MeowAddons] &aYou\'re running the latest version!');
         }
     })
-    .catch(function(error) {
+    .catch(error => {
         ChatLib.chat(`&e[MeowAddons] &cUpdate check failed: ${error}`);
     });
 }

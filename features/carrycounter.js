@@ -162,7 +162,7 @@ register("step", () => {
             if (settings().debug) {ChatLib.chat(`${prefix} &fChecking for boss entity.`)}
             if (carryee.bossID !== null) {
                 const entity = World.getWorld().func_73045_a(carryee.bossID);
-                if (!entity || entity.isDead()) {
+                if (!entity || entity.entity.isDead()) {
                     if (settings().debug) ChatLib.chat(`${prefix} &cBoss entity for ${carryee.name} not found/reset.`);
                     carryee.reset();
                 }

@@ -214,7 +214,7 @@ registerWhen(
 registerWhen(
     register("postRenderEntity", (entity, pos) => { 
         const entityName = entity.getName(); 
-        const isPlayer = entity.entity instanceof net.minecraft.entity.player. EntityPlayer; 
+        const isPlayer = entity.entity instanceof net.minecraft.entity.player.EntityPlayer; 
         if (!isPlayer) return; 
         carryees.forEach((carryee) => { 
             if (carryee.name === entityName) { 

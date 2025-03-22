@@ -5,4 +5,5 @@ export const pogData = new PogObject("MeowAddons", {
     CarryX: 0,
     CarryY: 0,
     bloodCampPB: 9999,
+    firstInstall: true,
 });

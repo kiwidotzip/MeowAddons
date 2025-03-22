@@ -1,12 +1,12 @@
 import Config from "../config";
-import { InDungeon } from "./helperfunction";
+import Dungeon from "../../BloomCore/dungeons/Dungeon";
 import { pogData } from "./utils/pogdata";
 
 let bloodopen = false
 let starttime = 0
 var blooddone = false
 
-register("worldLoad", function () {
+register("worldLoad", () => {
     bloodopen = false;
     starttime = 0;
     blooddone = false;
@@ -19,8 +19,7 @@ function getWatcherRating(diftime) {
 }
 
 register("chat", (event) => {
-  if (!Config().blood) return;
-
+  if (!Config().blood || !Dungeon.inDungeon) return;
   const message = ChatLib.getChatMessage(event);
   const now = Date.now();
 
@@ -82,18 +81,8 @@ register("chat", (event) => {
   for (const handler of handlers) {
     if (message.startsWith(handler.key)) {
       if (handler.condition && !handler.condition()) continue;
-      handler.action();
+      Client.scheduleTask(1, () => handler.action());
       break;
     }
   }
-});
-
-//DEBUG WORLD LOAD
-register("worldLoad", () => {
-  Client.scheduleTask(150, () => {
-      if (Config().debug) {
-          const indungeondebug = InDungeon();
-          ChatLib.chat(`&c&lMeowAddons-DEBUG &8» &rInDungeon: &c${indungeondebug}`);
-      }
-  });
 });

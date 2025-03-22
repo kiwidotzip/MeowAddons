@@ -1,86 +1,42 @@
 import { pogData } from "./utils/pogdata";
 
+const thresholds = [
+    { value: 1e9, symbol: "B", precision: 0 },
+    { value: 1e7, symbol: "M", precision: 0 },
+    { value: 1e6, symbol: "M", precision: 1 },
+    { value: 1e5, symbol: "K", precision: 0 },
+    { value: 1e3, symbol: "K", precision: 1 }
+];
+
 register("worldLoad", () => {
     pogData.goldorsection = 0;
-    pogData.save();
 });
 
-register("chat", (message, rest) => {
-    if (message.startsWith("[BOSS] Storm: I should have known that I stood no chance.")) {
-        pogData.goldorsection = 1;
-        pogData.save();
-    } else if ((message.includes("(7/7)") || message.includes("(8/8)")) && !message.includes(":")) {
-        pogData.goldorsection += 1;
-        pogData.save();
-    } else if (message == "The Core entrance is opening!") {
-        pogData.goldorsection = 5;
-        pogData.save();
-    } else if (message == "[BOSS] Necron: You went further than any human before, congratulations.") {
-        pogData.goldorsection = 0;
-        pogData.save();
-    }
-}).setCriteria("${message}");
+register("chat", message =>
+    [
+      {
+        predicate: msg => msg.startsWith("[BOSS] Storm: I should have known that I stood no chance."),
+        action: () => pogData.goldorsection = 1
+      },
+      {
+        predicate: msg => (msg.includes("(7/7)") || msg.includes("(8/8)")) && !msg.includes(":"),
+        action: () => pogData.goldorsection += 1
+      },
+      {
+        predicate: msg => msg === "The Core entrance is opening!",
+        action: () => pogData.goldorsection = 5
+      },
+      {
+        predicate: msg => msg === "[BOSS] Necron: You went further than any human before, congratulations.",
+        action: () => pogData.goldorsection = 0
+      }
+    ].find(({ predicate }) => predicate(message))?.action()
+).setCriteria("${message}");  
 
-export function formatNumber(number, uppercase = false) {
-    let formattedNumber;
-    if(number < 1000) return number
-    number = parseFloat(number.toString().replace(/,/g, '').replace(/,/g, ''));
-
-    if (number >= 1000000000) {
-        formattedNumber = (number / 1000000000).toFixed(0) + (uppercase ? "B" : "b");
-    } else if (number >= 10000000) {
-        formattedNumber = (number / 1000000).toFixed(0) + (uppercase ? "M" : "m");
-    } else if (number >= 1000000) {
-        formattedNumber = (number / 1000000).toFixed(1) + (uppercase ? "M" : "m");
-    } else if (number >= 100000) {
-        formattedNumber = (number / 1000).toFixed(0) + (uppercase ? "K" : "k");
-    } else if (number >= 1000) {
-        formattedNumber = (number / 1000).toFixed(1) + (uppercase ? "K" : "k");
-    } 
-
-    return formattedNumber;
+export function formatNumber(number) {
+    const num = parseFloat(number.toString().replace(/,/g, ''));
+    const threshold = thresholds.find(({ value }) => num >= value);
+    return threshold
+      ? `${(num / threshold.value).toFixed(threshold.precision)}${threshold.symbol}`
+      : num;
 }
-
-//Credit to jcnlk for inDungeon and getCryptCountFromTablist
-
-export function InDungeon() {
-    try {
-        const tabList = TabList.getNames();
-        if (!tabList) return false;
-        return tabList.some(line => 
-            ChatLib.removeFormatting(line).includes("Dungeon:")
-        );
-    } catch (error) {
-        ChatLib.chat(`&c&lMeowAddons &8» &rError in checkInDungeon: ${error}`);
-        return false;
-    }
-}
-
-export function getCryptCountFromTablist() {
-    try {
-        const tabList = TabList.getNames();
-        if (!tabList) {
-            if (!Config().debug) {
-                return 0;
-            } else {
-                ChatLib.chat(`&cMeowAddons &8» &rFailed to get Crypt amount`);
-                return 0;
-            }
-        }
-        for (let line of tabList) {
-            line = ChatLib.removeFormatting(line);
-            if (line.includes("Crypts: ")) {
-                const count = parseInt(line.split("Crypts: ")[1]);
-                return isNaN(count) ? 0 : count;
-            }
-        }
-    } catch (error) {
-        if (!Config().debug) { 
-            return 0;
-        } else {
-            ChatLib.chat(`&cMeowAddons &8» &rFailed to get Crypt amount ${error}`);
-            return 0;
-        }
-    }
-}
-

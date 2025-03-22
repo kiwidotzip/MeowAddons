@@ -64,7 +64,6 @@ function checkUpdate() {
 }
 
 let UpdateChecked = false;
-
 register("worldLoad", () => {
     if (!UpdateChecked) {
         UpdateChecked = true;
@@ -74,10 +73,30 @@ register("worldLoad", () => {
     }
 });
 
-register("gameLoad", () => {
-    UpdateChecked = false;
-});
-
 register('command', () => {
     checkUpdate();
 }).setName('meowupdate');
+
+// First install
+
+import { pogData } from "./features/utils/pogdata";
+
+register("worldLoad", () => {
+    if (pogData.firstInstall) {
+        Client.scheduleTask(20, () => {
+        ChatLib.chat(`&7&l-----------------------------------------------------`)
+        ChatLib.chat(ChatLib.getCenteredText("&bThanks for installing &e&lMeowAddons&b!"))
+        ChatLib.chat(`&b`)
+        ChatLib.chat(`&b> Commands&f:`)
+        ChatLib.chat(`&7> &7/&bmeowaddons &7- &fOpen the settings menu &7&o(Aliases: /meowa, /ma)`)
+        ChatLib.chat(`&7> &7/&bmacarry help &7- &fView carry commands &7&o(Aliases: /carry)`)
+        ChatLib.chat(`&7> &7/&bmeowupdate &7- &fCheck for updates`)
+        ChatLib.chat(`&b`)
+        ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
+        ChatLib.chat(`&b> Discord&f:&f&o Coming Soon`)
+        ChatLib.chat(`&7&l-----------------------------------------------------`)
+        pogData.firstInstall = false;
+        pogData.save();
+        });
+    }
+});

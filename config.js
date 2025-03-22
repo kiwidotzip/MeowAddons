@@ -353,14 +353,12 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Dungeons - Terminal
 
-.addDropDown({
+.addSwitch({
     category: "Dungeons",
     configName: "showTerm",
     title: "Terminal labels",
-    description: "Select the terminal number that you want!",
+    description: "Shows terminal number that belons to the terminal",
     subcategory: "Terminals",
-    options: ['None', '1', '2', '3', '4', 'Device', 'All'],
-    value: 0
 })
 .addSwitch({
     category: "Dungeons",
@@ -368,7 +366,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Show class",
     description: "Shows the class that should be doing the terminal",
     subcategory: "Terminals",
-    shouldShow: data => data.showTerm != 0
+    shouldShow: data => data.showTerm
 })
 .addSlider({
     category: "Dungeons",
@@ -386,7 +384,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Box terminal",
     description: "Boxes the terminal",
     subcategory: "Terminals",
-    shouldShow: data => data.showTerm != 0
+    shouldShow: data => data.showTerm
 })
 .addDropDown({
     category: "Dungeons",

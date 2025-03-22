@@ -1,8 +1,8 @@
 import settings from "../config";
 import { pogData } from "./utils/pogdata";
 import { registerWhen } from "../../BloomCore/utils/Utils";
-import drawEntityBox from "./utils/renderhelper";
 import { Render2D } from "../../tska/rendering/Render2D";
+import { Render3D } from "../../tska/rendering/Render3D";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -196,15 +196,15 @@ registerWhen(
         if (!bossEntityNames.includes(entityName)) return; 
         carryees.forEach((carryee) => { 
             if (carryee.bossID === entityID) { 
-                drawEntityBox( 
-                    pos.getX(), 
-                    pos.getY(), 
-                    pos.getZ(), 
-                    entity.getWidth(), 
-                    entity.getHeight(), 
-                    0, 255, 255, 255, 2, false
-                    ); 
-            } 
+                Render3D.renderEntityBox(
+                    pos.getX(),
+                    pos.getY(),
+                    pos.getZ(),
+                    entity.getWidth(),
+                    entity.getHeight(),
+                    0, 255, 255, 255, 2, false, false
+                );
+            }
         }); 
     }), () => settings().renderbossoutline
 )
@@ -218,14 +218,14 @@ registerWhen(
         if (!isPlayer) return; 
         carryees.forEach((carryee) => { 
             if (carryee.name === entityName) { 
-                drawEntityBox( 
-                    pos.getX(), 
-                    pos.getY(), 
-                    pos.getZ(), 
-                    entity.getWidth(), 
-                    entity.getHeight(), 
-                    0, 255, 255, 255, 2, false
-                    ); 
+                Render3D.renderEntityBox(
+                    pos.getX(),
+                    pos.getY(),
+                    pos.getZ(),
+                    entity.getWidth(),
+                    entity.getHeight(),
+                    0, 255, 255, 255, 2, false, false
+                );
             } 
         }); 
     }), () => settings().renderplayeroutline

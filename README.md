@@ -12,15 +12,15 @@
   </a>
 </p>
 
-<p align="center"><b>Total Downloads:</b> 1993 </p>
+<p align="center"><b>Total Downloads:</b> 2087 </p>
 
-<p align="center" id="description"><em>MeowAddons</em> is a Silly chattriggers module that has some QOL features</p>
+<p align="center" id="description"><b>MeowAddons</b> is a Silly chattriggers module that has some QOL features</p>
 
 ---
 
 <h2 align="center">Features List</h2>
 
-<p align="center">Here are some of the standout features that <em>MeowAddons</em> has so far</p>
+<p align="center">Here are some of the standout features that <b>MeowAddons</b> has so far</p>
 
 ## *General*
  

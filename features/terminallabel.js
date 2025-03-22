@@ -61,8 +61,8 @@ const getLabel = (text) => {
 
 const renderTerm = ({ text, x, y, z }) => {
   if (!Dungeon.inDungeon || !Config().showTerm) return;
-  const label = Config().showTermClass ? getLabel(text) : "";
   Render3D.renderString(text, x, y + 0.5, z, 0xffffff, true, 0.05, false, true, true);
+  const label = Config().showTermClass ? getLabel(text) : "";
   if (label && pdistance(x, y, z) < Config().showTermClassDistance) {
     Render3D.renderString(label, x, y, z, 0xffffff, true, 0.05, false, true, true);
   }
@@ -70,7 +70,7 @@ const renderTerm = ({ text, x, y, z }) => {
 
 const renderPhase = () => {phases[pogData.goldorsection]?.forEach(renderTerm)};
 
-registerWhen(register("renderWorld", renderPhase), () => !Config().showTerm);
+registerWhen(register("renderWorld", renderPhase), () => Config().showTerm);
 
 register("command", () => {
   if (Config().forcerenderterm || Config().debug) renderPhase();

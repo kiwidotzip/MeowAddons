@@ -12,7 +12,7 @@ register("worldLoad", () => {
     pogData.goldorsection = 0;
 });
 
-register("chat", message =>
+register("chat", (message) =>
     [
       {
         predicate: msg => msg.startsWith("[BOSS] Storm: I should have known that I stood no chance."),

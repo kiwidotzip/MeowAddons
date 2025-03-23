@@ -1,5 +1,5 @@
 import Config from "../config";
-test
+
 const Normalregex = /^(.+)? ?(>)? ?(\[.+\])? ?(.+?) ?(\[.+?\])?: meow$/i;
 const BridgeBotregex = /Guild > ?(\[.+\])? ?(.+?) ?(\[.+?\])?: (.+?) » meow$/i;
 const meow = ["mroww", "purr", "meowwwwww", "meow :3", "mrow", "moew", "mrow :3", "purrr :3"]

@@ -1,11 +1,9 @@
 import { pogData } from "./utils/pogdata";
 
 const thresholds = [
-    { value: 1e9, symbol: "B", precision: 0 },
-    { value: 1e7, symbol: "M", precision: 0 },
-    { value: 1e6, symbol: "M", precision: 1 },
-    { value: 1e5, symbol: "K", precision: 0 },
-    { value: 1e3, symbol: "K", precision: 1 }
+  { value: 1e9, symbol: "B", precision: 1 },
+  { value: 1e6, symbol: "M", precision: 1 },
+  { value: 1e3, symbol: "K", precision: 1 }
 ];
 
 register("worldLoad", () => {

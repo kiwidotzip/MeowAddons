@@ -312,6 +312,23 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Highlights the palyer you're carrying when they're in render distance",
     subcategory: "Carrying - Rendering"
 })
+.addSwitch({
+    category: "Slayers",
+    configName: "sendcarrycountdc",
+    title: "Send discord message",
+    description: "Sends a discord message using your webhook that you provide.",
+    subcategory: "Carrying - Misc"
+})
+.addTextInput({
+    category: "Slayers",
+    configName: "webhookurlcarry",
+    title: "Webhook URL",
+    description: "Enter your discord webhook URL",
+    subcategory: "Carrying - Misc",
+    placeHolder: "None",
+    value: "None",
+    shouldShow: data => data.sendcarrycountdc
+})
 
 // Dungeons - Mask notifications
 

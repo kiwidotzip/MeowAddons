@@ -3,6 +3,7 @@ import { pogData } from "./utils/pogdata";
 import { registerWhen } from "../../BloomCore/utils/Utils";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";
+import { SendMsg } from "./helperfunction"
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -11,6 +12,7 @@ let lastTradePlayer = null;
 let lastTradeTime = 0;
 let isInInventory = false;
 let nextAvailableTime = 0;
+const webhookUrl = settings().webhookurlcarry
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
 const carryCache = new Map();
 const hudEditor = new Gui();
@@ -37,6 +39,7 @@ class Carryee {
         }
         if (settings().debug) { ChatLib.chat(`${prefix} &fLogged 1 carry for &6${this.name} &7(${this.count}/${this.total})`); }
         if (settings().sendcarrycount) { sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`); }
+        sendcarrymsg(`${this.name}: ${this.count}/${this.total}`)
     }
 
     recordBossStartTime(bossID) {
@@ -725,7 +728,11 @@ function findCarryee(name) {
 function syntaxError(usage) {
     ChatLib.chat(`${prefix} &cUsage: /carry ${usage}`);
 }
-
+function sendcarrymsg(msg) {
+    if (!settings().sendcarrycountdc) return;
+    if (settings().webhookurlcarry == `None`) return;
+    SendMsg(webhookUrl, msg)
+}
 function showHelp() {
     ChatLib.chat(`${prefix} &aCarry Commands:`);
     ChatLib.chat("> &e/carry add &c<name> <count> &7- Add new carry");

@@ -40,3 +40,10 @@ export function formatNumber(number) {
       ? `${(num / threshold.value).toFixed(threshold.precision)}${threshold.symbol}`
       : num;
 }
+
+export function SendMsg(webhookUrl, message) {
+  return fetch(webhookUrl, {
+      method: "POST",
+      body: { content: message }
+  });
+}

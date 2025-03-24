@@ -93,7 +93,7 @@ register("worldLoad", () => {
         ChatLib.chat(`&7> &7/&bmeowupdate &7- &fCheck for updates`)
         ChatLib.chat(`&b`)
         ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
-        ChatLib.chat(`&b> Discord&f:&f&o Coming Soon`)
+        ChatLib.chat(`&b> Discord&f:&7 https://discord.gg/KPmHQUC97G`)
         ChatLib.chat(`&7&l-----------------------------------------------------`)
         pogData.firstInstall = false;
         pogData.save();

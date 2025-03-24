@@ -26,35 +26,66 @@ import "./features/terminallabel";
 import "./features/leapannounce";
 import "./features/terminalcallouts";
 
-// Update checker
+// Update Checker
 
-import { fetch } from "../tska/polyfill/Fetch"
+import { fetch } from "../tska/polyfill/Fetch";
 
-const VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version;
+const LOCAL_VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version.replace(/^v/, '');
 const API_URL = 'https://api.github.com/repos/kiwidotzip/meowaddons/releases';
+let updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
 
-function checkUpdate() {
+function compareVersions (v1, v2) {
+    const a = v1.split('.').map(Number), b = v2.split('.').map(Number);
+    for (let i = 0; i < Math.max(a.length, b.length); i++) {
+      if ((a[i]||0) > (b[i]||0)) return 1;
+      if ((a[i]||0) < (b[i]||0)) return -1;
+    }
+    return 0;
+};
+
+function buildUpdateMessage(releases) {
+    let message = `&9&m${ChatLib.getChatBreak("-")}\n`;
+    message += `&e&lMeowAddons Changelog: \n&fChanges since &bv${LOCAL_VERSION}&e:\n`;
+    releases
+        .filter(release => compareVersions(release.tag_name.replace(/^v/, ''), LOCAL_VERSION) > 0)
+        .forEach(release => {
+            release.body.split("\n").forEach(line => {
+                const trimmedLine = line.trim();
+                if (trimmedLine !== "" && !trimmedLine.includes("**Full Changelog**")) {
+                    message += `&b${trimmedLine}\n`;
+                }
+            });
+        });
+    return message + `&9&m${ChatLib.getChatBreak("-")}`;
+}
+
+function checkUpdate(silent = false) {
     fetch(API_URL, {
         headers: { 'User-Agent': 'MeowAddons' },
         json: true
     })
-    .then(response => {
-        if (!response.length) {
+    .then(releases => {
+        if (!releases.length && !silent) {
             ChatLib.chat('&e[MeowAddons] &cNo releases found!');
             return;
         }
-        ChatLib.chat('&e[MeowAddons] &aChecking for updates...');
-        const latest = response[0];
-        const remoteVersion = latest.tag_name.replace(/^v/, '');
-        const localVersion = VERSION.replace(/^v/, '');
+        
+        const latestRelease = releases[0];
+        const remoteVersion = latestRelease.tag_name.replace(/^v/, '');
+        updateMessage = buildUpdateMessage(releases);
 
-        if (localVersion > remoteVersion) {
+        if (!silent) ChatLib.chat('&e[MeowAddons] &aChecking for updates...');
+
+        if (compareVersions(LOCAL_VERSION, remoteVersion) > 0 && !silent) {
             ChatLib.chat('&e[MeowAddons] &aYou\'re running a development build that is newer than the latest release!');
-        } else if (localVersion < remoteVersion) {
-            ChatLib.chat(`&e[MeowAddons] &aUpdate available: &bv${remoteVersion}&a! Current: &ev${localVersion}`);
+        } else if (compareVersions(LOCAL_VERSION, remoteVersion) < 0 && !silent) {
+            ChatLib.chat(`&e[MeowAddons] &aUpdate available: &bv${remoteVersion}&a! Current: &ev${LOCAL_VERSION}`);
             ChatLib.chat(new TextComponent(`&e[MeowAddons] &aClick here to go to the Github release page!`)
+                .setHoverValue(`&bOpens the release page - Github`)
                 .setClick("open_url", `https://github.com/kiwidotzip/meowaddons/releases/latest`));
-        } else {
+            ChatLib.chat(new TextComponent(`&e[MeowAddons] &aHover over this message to view changelogs!`)
+                .setHoverValue(updateMessage));
+        } else if (!silent) {
             ChatLib.chat('&e[MeowAddons] &aYou\'re running the latest version!');
         }
     })
@@ -63,18 +94,26 @@ function checkUpdate() {
     });
 }
 
-let UpdateChecked = false;
+let updateChecked = false;
 register("worldLoad", () => {
-    if (!UpdateChecked) {
-        UpdateChecked = true;
+    if (!updateChecked) {
+        if (pogData.version < LOCAL_VERSION) {
+            checkUpdate(true);
+            Client.scheduleTask(40, () => ChatLib.chat(updateMessage));
+            pogData.version = LOCAL_VERSION;
+            pogData.save();
+        }
+        updateChecked = true;
         Client.scheduleTask(1000, () => {
             checkUpdate();
+            updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
         });
     }
 });
 
 register('command', () => {
     checkUpdate();
+    updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
 }).setName('meowupdate');
 
 // First install

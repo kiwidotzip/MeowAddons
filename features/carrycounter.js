@@ -3,7 +3,8 @@ import { pogData } from "./utils/pogdata";
 import { registerWhen } from "../../BloomCore/utils/Utils";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";
-import { SendMsg } from "./helperfunction"
+import { SendMsg } from "./helperfunction";
+import PogObject from "../../PogData";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -17,6 +18,9 @@ const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory"
 const carryCache = new Map();
 const hudEditor = new Gui();
 const processedEntities = new Set();
+const CarryLog = new PogObject("MeowAddons",{
+    data: []
+}, "carrylog.json")
 
 // Carry class
 
@@ -235,7 +239,7 @@ registerWhen(
 )
 
 // Cache management
-
+const date = new Date();
 function cacheCarryee(carryee) {
     carryCache.set(carryee.name.toLowerCase(), { 
         total: carryee.total, 
@@ -244,6 +248,12 @@ function cacheCarryee(carryee) {
         lastBossTime: carryee.lastBossTime,
         timestamp: Date.now() 
     });
+    CarryLog.data.push(carryee.name, {
+        "Total carries done": carryee.total, 
+        "Date": `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
+        "Time": `${date.getHours()}:${date.getMinutes()}`
+    });
+    CarryLog.save()
 }
 
 // Clear cache

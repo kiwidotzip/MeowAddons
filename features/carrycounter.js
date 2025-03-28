@@ -806,7 +806,7 @@ register("command", (...args = []) => {
                     : new TextComponent("&7[>]").setHoverValue("&cNo next page!"));
             }
         
-            ChatLib.chat("&8&m⏤".repeat(40));
+            ChatLib.chat("&8&m⏤&r".repeat(40));
             ChatLib.chat(pageMsg);
         
             if (totalCarries === 0) {

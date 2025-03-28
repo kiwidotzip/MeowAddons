@@ -6,5 +6,5 @@ export const pogData = new PogObject("MeowAddons", {
     CarryY: 0,
     bloodCampPB: 9999,
     firstInstall: true,
-    version: "2.2.7",
+    version: "2.2.6",
 });

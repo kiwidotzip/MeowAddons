@@ -235,7 +235,17 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Slayers",
     shouldShow: data => data.slayermaintoggle
 })
-
+.addButton({
+    category: "Slayers",
+    configName: "slayerbossdisplayedit",
+    title: "Edit GUI",
+    description: "Edit slayer boss display GUI",
+    subcategory: "Slayers",
+    shouldShow: data => data.slayerbossdisplay,
+    onClick() {
+        ChatLib.command(`meowdevonlypls`)
+    }
+})
 .addSwitch({
     category: "Slayers",
     configName: "slayerbosshighlight",

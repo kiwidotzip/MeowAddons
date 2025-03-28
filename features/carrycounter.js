@@ -18,9 +18,15 @@ const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory"
 const carryCache = new Map();
 const hudEditor = new Gui();
 const processedEntities = new Set();
+const DateMEOW = new Date()
 const CarryLog = new PogObject("MeowAddons",{
     data: []
-}, "carrylog.json")
+}, "./data/carrylog.json")
+const CarryProfit = new PogObject("MeowAddons", {
+    date: 0,
+    profit: 0
+
+}, "./data/carryprofit.json")
 
 // Carry class
 
@@ -323,22 +329,24 @@ function resetTrade() {
     lastTradeTime = 0;
 }
 
-register("chat", (totalCoins) => {
+const handleTradeCoins = (totalCoins, isAdding) => {
     Client.scheduleTask(1, () => {
         if (!lastTradePlayer || Date.now() - lastTradeTime >= 1000) return;
-
+        
         const totalCoinsFloat = parseFloat(totalCoins);
         const carryValues = settings().carryvalue
             .split(',')
             .map(v => parseFloat(v))
             .filter(v => !isNaN(v));
-
+        
         if (carryValues.length === 0) {
-            if (settings().debug) { ChatLib.chat(`${prefix} &cInvalid carryvalue in config!`); }
+            if (settings().debug) { 
+                ChatLib.chat(`${prefix} &cInvalid carryvalue in config!`); 
+            }
             resetTrade();
             return;
         }
-
+        
         let integerCarries = null;
         for (const value of carryValues) {
             const adjusted = totalCoinsFloat / value;
@@ -347,31 +355,73 @@ register("chat", (totalCoins) => {
                 break;
             }
         }
+        
         if (integerCarries === null) {
             resetTrade();
-            if (settings().debug) { ChatLib.chat(`${prefix} &cNull amount.`)}
+            if (settings().debug) { 
+                ChatLib.chat(`${prefix} &cNull amount.`);
+            }
             return;
         }
-
+        
+        CarryProfit.profit += isAdding ? totalCoinsFloat : -totalCoinsFloat;
+        CarryProfit.save();
+        
         const carryee = findCarryee(lastTradePlayer);
-        if (!carryee) {
+        
+        if (isAdding && !carryee) {
             ChatLib.chat(new Message(
                 `${prefix}&f Add &b${lastTradePlayer}&f for &b${integerCarries}&f carries? `
             )
-                .addTextComponent(
-                    new TextComponent("&a[Yes]")
-                        .setClick("run_command", `/carry add ${lastTradePlayer} ${integerCarries}`)
-                        .setHoverValue("Click to add player")
-                )
-                .addTextComponent(" &7| ")
-                .addTextComponent(
-                    new TextComponent("&c[No]")
-                        .setHoverValue("Click to ignore")
-                ));
+            .addTextComponent(
+                new TextComponent("&a[Yes]")
+                .setClick("run_command", `/carry add ${lastTradePlayer} ${integerCarries}`)
+                .setHoverValue("Click to add player")
+            )
+            .addTextComponent(" &7| ")
+            .addTextComponent(
+                new TextComponent("&c[No]")
+                .setHoverValue("Click to ignore")
+            ));
         }
+        
+        if (!isAdding && carryee) {
+            ChatLib.chat(new Message(
+                `${prefix}&f Remove &b${lastTradePlayer}&f? `
+            )
+            .addTextComponent(
+                new TextComponent("&a[Yes]")
+                .setClick("run_command", `/carry remove ${lastTradePlayer}`)
+                .setHoverValue("Click to remove player")
+            )
+            .addTextComponent(" &7| ")
+            .addTextComponent(
+                new TextComponent("&c[No]")
+                .setHoverValue("Click to ignore")
+            ));
+        }
+        
         resetTrade();
     });
+};
+
+register("chat", (totalCoins) => {
+    handleTradeCoins(totalCoins, true);
 }).setCriteria(/^ \+ (\d+\.?\d*)M coins$/);
+
+register("chat", (totalCoins) => {
+    handleTradeCoins(totalCoins, false);
+}).setCriteria(/^ \- (\d+\.?\d*)M coins$/);
+
+// Carry profit
+
+register("worldLoad", () => {
+    if (!CarryProfit.date || CarryProfit.date !== DateMEOW.getDate()) {
+        CarryProfit.date = DateMEOW.getDate();
+        CarryProfit.profit = 0;
+        CarryProfit.save()
+    }
+})
 
 // GUI stuff
 
@@ -777,7 +827,8 @@ register("command", (...args = []) => {
                 : `${(totalCarries * carryValue).toFixed(1)}M`;
             
             ChatLib.chat(`&b| &fTotal carries tracked: &a${totalCarries}`);
-            ChatLib.chat(`&b| &fEstimated profit: &a${formattedProfit}`);
+            ChatLib.chat(`&b| &fEstimated total profit: &a${formattedProfit}`);
+            ChatLib.chat(`&b| &fEstimated daily profit: &b${parseInt(CarryProfit.profit)}M`)
             ChatLib.chat("&8&m⏤".repeat(40));
             break;
         case "clearlog": 
@@ -825,7 +876,7 @@ register("command", (...args = []) => {
         }
     }
     if (args.length === 1) {
-        return ["add", "remove", "set", "settotal", "list", "gui", "increase", "decrease", "clear", "confirmdeath", "canceldeath", "logs"].filter(cmd => cmd.startsWith(currentArg));
+        return ["add", "remove", "set", "settotal", "list", "gui", "increase", "decrease", "clear", "confirmdeath", "canceldeath", "logs", "clearlogs"].filter(cmd => cmd.startsWith(currentArg));
     }
     return [];
 }).setName("carry").setAliases(["macarry"]);
@@ -860,6 +911,8 @@ function showHelp() {
     ChatLib.chat("> &e/carry remove &c<name> &7- Remove carry");
     ChatLib.chat("> &e/carry increase &c<name> &7- Increase carry count");
     ChatLib.chat("> &e/carry decrease &c<name> &7- Decrease carry count");
+    ChatLib.chat("> &e/carry logs &7- See all tracked carries and profit");
+    ChatLib.chat("> &e/carry clearlogs &7- Clear ALL carry logs");
     ChatLib.chat("> &e/carry list &7- Show active carries");
     ChatLib.chat("> &e/carry clear &7- Clears all active carries")
     ChatLib.chat("> &e/carry gui &7- Open HUD editor");

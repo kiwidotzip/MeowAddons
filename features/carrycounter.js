@@ -25,10 +25,10 @@ const CarryLog = new PogObject("MeowAddons",{
 // Carry class
 
 class Carryee {
-    constructor(name, total) {
+    constructor(name, total, initial = 0) {
         this.name = name;
         this.total = total;
-        this.count = 0;
+        this.count = initial;
         this.lastBossTime = null;
         this.firstBossTime = null;
         this.startTime = null;
@@ -239,7 +239,7 @@ registerWhen(
 )
 
 // Cache management
-const date = new Date();
+
 function cacheCarryee(carryee) {
     carryCache.set(carryee.name.toLowerCase(), { 
         total: carryee.total, 
@@ -248,14 +248,34 @@ function cacheCarryee(carryee) {
         lastBossTime: carryee.lastBossTime,
         timestamp: Date.now() 
     });
-    CarryLog.data.push(carryee.name, {
-        "Total carries done": carryee.total, 
-        "Date": `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
-        "Time": `${date.getHours()}:${date.getMinutes()}`
-    });
-    CarryLog.save()
-}
 
+    let found = false;
+    const date = new Date();
+    for (let i = 0; i < CarryLog.data.length; i += 2) {
+        if (CarryLog.data[i] === carryee.name) {
+            const existing = CarryLog.data[i + 1];
+            const newCompletions = carryee.count - existing.lastKnownCount;
+            CarryLog.data[i + 1] = {
+                "Total carries done": existing["Total carries done"] + newCompletions,
+                "Date": `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+                "Time": `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`,
+                "lastKnownCount": carryee.count
+            };
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        CarryLog.data.push(carryee.name, {
+            "Total carries done": carryee.count,
+            "Date": `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+            "Time": `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`,
+            "lastKnownCount": carryee.count
+        });
+    }
+    CarryLog.save();
+}
 // Clear cache
 
 register("step", () => {
@@ -265,7 +285,7 @@ register("step", () => {
             carryCache.delete(name);
         }
     }
-}).setFps(1/5);
+}).setFps(1);
 
 // Carry death detection
 
@@ -590,23 +610,37 @@ register("command", (...args = []) => {
         case "add":
             if (!name || !count) return syntaxError("add <name> <count>");
             if (findCarryee(name)) return ChatLib.chat(`${prefix} &c${name} already exists!`);
-            
-            let newTotal = parseInt(count);
-            let newCarryee;
+
+            const existingEntry = CarryLog.data.find((entry, i) => 
+                i % 2 === 0 && entry === name
+            );
+            const existingTotal = existingEntry 
+                ? CarryLog.data[CarryLog.data.indexOf(existingEntry) + 1]["Total carries done"] || 0 
+                : 0;
+            const lastKnownCount = existingEntry 
+                ? CarryLog.data[CarryLog.data.indexOf(existingEntry) + 1]["lastKnownCount"] || 0 
+                : 0;
             const cachedRecord = carryCache.get(name.toLowerCase());
-            if (cachedRecord && Date.now() - cachedRecord.timestamp < 5 * 60 * 1000) {
-                newTotal += cachedRecord.total;
-                newCarryee = new Carryee(name, newTotal);
-                newCarryee.count = cachedRecord.count;
+            const isCacheValid = cachedRecord && Date.now() - cachedRecord.timestamp < 5 * 60 * 1000;
+            let newCarryee, newTotal, messageADD;
+        
+            if (isCacheValid) {
+                newTotal = Math.max(cachedRecord.total, existingTotal + parseInt(count));
+                newCarryee = new Carryee(name, newTotal, cachedRecord.count);
                 newCarryee.firstBossTime = cachedRecord.firstBossTime;
                 newCarryee.lastBossTime = cachedRecord.lastBossTime;
                 carryCache.delete(name.toLowerCase());
-                ChatLib.chat(`${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7&o- Merged ${cachedRecord.total}`);
+                messageADD = `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged cache`;
             } else {
-                newCarryee = new Carryee(name, newTotal);
-                ChatLib.chat(`${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries`);
+                newTotal = existingTotal + parseInt(count);
+                newCarryee = new Carryee(name, newTotal, lastKnownCount);
+                messageADD = existingTotal > 0
+                    ? `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged logs`
+                    : `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries`;
             }
+        
             carryees.push(newCarryee);
+            ChatLib.chat(messageADD);
             break;
         case "set":
             if (!name || !count) return syntaxError("set <name> <count>");
@@ -688,6 +722,82 @@ register("command", (...args = []) => {
             carryeeConfirm.recordBossTime();
             ChatLib.chat(`${prefix} &fCount incremented for &6${name}`);
             break;
+        case "logs": 
+            const entriesPerPage = 10;
+            const page = Math.min(Math.max(1, parseInt(args[1]) || 1), 
+                Math.ceil(CarryLog.data.length / 2 / entriesPerPage) || 1);
+        
+            const sortedEntries = CarryLog.data.reduce((sorted, entry, i) => {
+                if (i % 2 === 0 && CarryLog.data[i + 1]?.Date) {
+                    const [day, month, year] = CarryLog.data[i + 1].Date.split('/').map(Number);
+                    const [hours, minutes] = CarryLog.data[i + 1].Time.split(':').map(Number);
+                    sorted.push({
+                        name: entry,
+                        details: CarryLog.data[i + 1],
+                        timestamp: new Date(year, month - 1, day, hours, minutes).getTime()
+                     });
+                }
+                return sorted;
+            }, []).sort((a, b) => b.timestamp - a.timestamp);
+        
+            const totalCarries = sortedEntries.reduce((sum, entry) => 
+                sum + (entry.details["Total carries done"] || 0), 0);
+        
+            const pageMsg = new Message(`&e[MeowAddons] &fCarry Logs &7- `)
+                .addTextComponent(`&ePage &a${page}&e/&a${Math.ceil(sortedEntries.length / entriesPerPage)}`);
+        
+            if (sortedEntries.length > entriesPerPage) {
+                pageMsg.addTextComponent(page > 1
+                    ? new TextComponent("&c[<]").setClick("run_command", `/carry logs ${page - 1}`).setHoverValue("&6Previous Page")
+                    : new TextComponent("&7[<]").setHoverValue("&cNo Previous page!"));
+                
+                pageMsg.addTextComponent(page < Math.ceil(sortedEntries.length / entriesPerPage)
+                    ? new TextComponent("&a[>]").setClick("run_command", `/carry logs ${page + 1}`).setHoverValue("&6Next Page")
+                    : new TextComponent("&7[>]").setHoverValue("&cNo next page!"));
+            }
+        
+            ChatLib.chat("&8&m⏤".repeat(40));
+            ChatLib.chat(pageMsg);
+        
+            if (totalCarries === 0) {
+                ChatLib.chat("&cNo carry logs found.");
+            } else {
+                const startIdx = (page - 1) * entriesPerPage;
+                const pageEntries = sortedEntries.slice(startIdx, startIdx + entriesPerPage);
+         
+                pageEntries.forEach(entry => 
+                    ChatLib.chat(`&7> &b${entry.name} &7- &e${entry.details.Date} ` +
+                                 `&7at &b${entry.details.Time} &7- &a${entry.details["Total carries done"]} carries`)
+                );
+            }
+            
+            const carryValue = parseFloat(settings().carryvalue?.split(',')[0]) || 1.3;
+            const formattedProfit = totalCarries * carryValue >= 1000
+                ? `${((totalCarries * carryValue)/1000).toFixed(1)}B`
+                : `${(totalCarries * carryValue).toFixed(1)}M`;
+            
+            ChatLib.chat(`&b| &fTotal carries tracked: &a${totalCarries}`);
+            ChatLib.chat(`&b| &fEstimated profit: &a${formattedProfit}`);
+            ChatLib.chat("&8&m⏤".repeat(40));
+            break;
+        case "clearlog": 
+            const confirmMsg = new Message(
+                `${prefix} &cClear ALL carry logs? `,
+                new TextComponent("&a[✔]")
+                    .setClick("run_command", "/carry clearlog_confirm")
+                    .setHoverValue("&eClick to confirm log deletion"),
+                " ",
+                new TextComponent("&c[✕]")
+                    .setHoverValue("&eCancel log deletion")
+                );
+            ChatLib.chat(confirmMsg);
+            break;
+        case "clearlog_confirm": 
+            CarryLog.data = [];
+            if (carryCache) carryCache.clear();
+            CarryLog.save();
+            ChatLib.chat(`${prefix} &aAll carry logs have been cleared.`);
+            break;
         case "canceldeath":
             if (!name) return syntaxError("canceldeath <name>");
             const carryeeCancel = findCarryee(name);
@@ -715,9 +825,8 @@ register("command", (...args = []) => {
         }
     }
     if (args.length === 1) {
-        return ["add", "remove", "set", "settotal", "list", "gui", "increase", "decrease", "clear", "confirmdeath", "canceldeath"].filter(cmd => cmd.startsWith(currentArg));
+        return ["add", "remove", "set", "settotal", "list", "gui", "increase", "decrease", "clear", "confirmdeath", "canceldeath", "logs"].filter(cmd => cmd.startsWith(currentArg));
     }
-
     return [];
 }).setName("carry").setAliases(["macarry"]);
 

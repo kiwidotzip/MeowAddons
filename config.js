@@ -204,6 +204,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.meowhitsound
 })
 
+// Slayers - Main
+
+.addSwitch({
+    category: "Slayers",
+    configName: "slayermaintoggle",
+    title: "Slayer toggles",
+    description: "The main toggle for slayer code",
+    subcategory: "Slayers"
+})
+
 // Slayers - Kill timer
 
 .addSwitch({
@@ -211,7 +221,28 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "slayerkilltimer",
     title: "Slayer kill timer",
     description: "Sends the slayer kill time in chat, not party chat",
-    subcategory: "Slayers"
+    subcategory: "Slayers",
+    shouldShow: data => data.slayermaintoggle
+})
+
+// Slayers - Rendering
+
+.addSwitch({
+    category: "Slayers",
+    configName: "slayerbossdisplay",
+    title: "Slayer boss display",
+    description: "Displays the timer, health and the boss name in a clean hud",
+    subcategory: "Slayers",
+    shouldShow: data => data.slayermaintoggle
+})
+
+.addSwitch({
+    category: "Slayers",
+    configName: "slayerbosshighlight",
+    title: "Slayer boss highlight",
+    description: "Highlights your slayer boss",
+    subcategory: "Slayers",
+    shouldShow: data => data.slayermaintoggle
 })
 
 // Slayers - Carrying

@@ -798,8 +798,8 @@ register("command", (...args = []) => {
         
             if (sortedEntries.length > entriesPerPage) {
                 pageMsg.addTextComponent(page > 1
-                    ? new TextComponent("&c[<]").setClick("run_command", `/carry logs ${page - 1}`).setHoverValue("&6Previous Page")
-                    : new TextComponent("&7[<]").setHoverValue("&cNo Previous page!"));
+                    ? new TextComponent("&c [<] ").setClick("run_command", `/carry logs ${page - 1}`).setHoverValue("&6Previous Page")
+                    : new TextComponent("&7 [<] ").setHoverValue("&cNo Previous page!"));
                 
                 pageMsg.addTextComponent(page < Math.ceil(sortedEntries.length / entriesPerPage)
                     ? new TextComponent("&a[>]").setClick("run_command", `/carry logs ${page + 1}`).setHoverValue("&6Next Page")

@@ -1,4 +1,5 @@
 import { pogData } from "./utils/pogdata";
+import { fetch } from "../../tska/polyfill/Fetch";
 
 const thresholds = [
   { value: 1e9, symbol: "B", precision: 1 },

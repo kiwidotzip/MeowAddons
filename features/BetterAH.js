@@ -8,6 +8,10 @@ const AHPrefix = (msg) => {
     ChatLib.chat(`§6[AH]§r ` + msg);
 };
 
+register("chat", (event) => {
+    if (Config().betterah) cancel(event)
+}).setCriteria("§b-----------------------------------------------------")
+
 register("chat", (item, price, event) => {
     if (!Config().betterah) return;
     AHPrefix(`Bought §c${item} §rfor §6${formatNumber(price)}§r coins!`);

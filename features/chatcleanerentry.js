@@ -8,6 +8,7 @@ const uselessMsgs = [
 /./,
 /./,
 /./,
+/Be careful! Using Ender Pearls on this island will anger nearby Endermen!/,
 /[Bazaar] Executing instant buy.../,
 /[Bazaar] Executing instant sell.../,
 /[Bazaar] The Buy Orders for this item changed too much!/,

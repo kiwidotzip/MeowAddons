@@ -338,7 +338,8 @@ const handleTradeCoins = (totalCoins, isAdding) => {
             .split(',')
             .map(v => parseFloat(v))
             .filter(v => !isNaN(v));
-        
+        CarryProfit.profit += isAdding ? totalCoinsFloat : -totalCoinsFloat;
+        CarryProfit.save();
         if (carryValues.length === 0) {
             if (settings().debug) { 
                 ChatLib.chat(`${prefix} &cInvalid carryvalue in config!`); 

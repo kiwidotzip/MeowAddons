@@ -364,9 +364,6 @@ const handleTradeCoins = (totalCoins, isAdding) => {
             return;
         }
         
-        CarryProfit.profit += isAdding ? totalCoinsFloat : -totalCoinsFloat;
-        CarryProfit.save();
-        
         const carryee = findCarryee(lastTradePlayer);
         
         if (isAdding && !carryee) {
@@ -898,11 +895,13 @@ function findCarryee(name) {
 function syntaxError(usage) {
     ChatLib.chat(`${prefix} &cUsage: /carry ${usage}`);
 }
+
 function sendcarrymsg(msg) {
     if (!settings().sendcarrycountdc) return;
     if (settings().webhookurlcarry == `None`) return;
     SendMsg(webhookUrl, msg)
 }
+
 function showHelp() {
     ChatLib.chat(`${prefix} &aCarry Commands:`);
     ChatLib.chat("> &e/carry add &c<name> <count> &7- Add new carry");

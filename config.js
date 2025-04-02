@@ -243,7 +243,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Slayers",
     shouldShow: data => data.slayerbossdisplay,
     onClick() {
-        ChatLib.command(`meowdevonlypls`)
+        ChatLib.command(`meowdevonlypls`, true)
     }
 })
 .addSwitch({

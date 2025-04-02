@@ -25,7 +25,7 @@ import "./features/blood";
 import "./features/terminallabel";
 import "./features/leapannounce";
 import "./features/terminalcallouts";
-
+import "./features/dungeoncarry";
 // Update Checker
 
 import { fetch } from "../tska/polyfill/Fetch";

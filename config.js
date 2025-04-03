@@ -521,6 +521,45 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Sub Toggle",
     shouldShow: data => data.partycommands,
 })
+// Misc
+
+.addSwitch({
+    category: "Misc.",
+    configName: "customsize",
+    title: "Custom size",
+    description: "Custom size for your player entity",
+    subcategory: "Custom models"
+})
+.addTextInput({
+    category: "Misc.",
+    configName: "customX",
+    title: "X Size",
+    description: "Player X Size",
+    subcategory: "Custom models",
+    placeHolder: "1",
+    value: "1",
+    shouldShow: data => data.customsize
+})
+.addTextInput({
+    category: "Misc.",
+    configName: "customY",
+    title: "Y Size",
+    description: "Player Y Size",
+    subcategory: "Custom models",
+    placeHolder: "1",
+    value: "1",
+    shouldShow: data => data.customsize
+})
+.addTextInput({
+    category: "Misc.",
+    configName: "customZ",
+    title: "Z Size",
+    description: "Player Z Size",
+    subcategory: "Custom models",
+    placeHolder: "1",
+    value: "1",
+    shouldShow: data => data.customsize
+})
 
 // Dev
 

@@ -25,6 +25,9 @@ import "./features/blood";
 import "./features/terminallabel";
 import "./features/leapannounce";
 import "./features/terminalcallouts";
+// Misc
+import "./features/customsize";
+
 // Update Checker
 
 import { fetch } from "../tska/polyfill/Fetch";

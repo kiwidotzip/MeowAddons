@@ -40,7 +40,7 @@ register("chat", () => {
     Client.scheduleTask(20, () => {
         const tabList = TabList.getNames();
         carryees.forEach((carryee) => {
-            for (const line of tabList) {
+            for (let line of tabList) {
                 line = ChatLib.removeFormatting(line);
                 if (line.includes(carryee.name)) {
                     carryee.indungeon = true
@@ -48,6 +48,7 @@ register("chat", () => {
             }
         })
     })
+    print(`run started`)
 }).setCriteria(/Starting in 1 second\./)
 
 // End detection
@@ -57,6 +58,7 @@ register("chat", () => {
         if (!carryee.indungeon) return;
         carryee.indungeon = false;
         carryee.incrementTotal();
+        print(`run done`)
     })
 }).setCriteria(/       ☠ Defeated (?:.+) in (?:.+) ?(?:\(NEW RECORD!\))?/)
 
@@ -84,7 +86,6 @@ register("command", (...args = []) => {
             const carryee = findCarryee(name);
             if (!carryee) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryee.count = Math.max(0, parseInt(count));
-            carryee.reset();
             ChatLib.chat(`${prefix} &aSet &6${name}&a's count to &6${count}`);
             break;
         case "settotal": 
@@ -137,7 +138,6 @@ register("command", (...args = []) => {
             const carryeeInc = findCarryee(name);
             if (!carryeeInc) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeInc.count = Math.min(carryeeInc.total, carryeeInc.count + 1);
-            carryeeInc.reset()
             ChatLib.chat(`${prefix} &aIncreased &6${name}&a's count to &6${carryeeInc.count}`);
             break;
         case "decrease":
@@ -145,7 +145,6 @@ register("command", (...args = []) => {
             const carryeeDec = findCarryee(name);
             if (!carryeeDec) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeDec.count = Math.max(0, carryeeDec.count - 1);
-            carryeeDec.reset()
             ChatLib.chat(`${prefix} &aDecreased &6${name}&a's count to &6${carryeeDec.count}`);
             break;
   

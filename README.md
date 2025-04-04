@@ -12,7 +12,7 @@
   </a>
 </p>
 
-<p align="center"><b>Total Downloads:</b> 2087 </p>
+<p align="center"><b>Total Downloads:</b> 2784 </p>
 
 <p align="center" id="description"><b>MeowAddons</b> is a Silly chattriggers module that has some QOL features</p>
 
@@ -57,6 +57,10 @@
  
 - Slayer time
   - Shows the amount of time you took to kill your slayer boss, as accurate as skytils timer and always works unlike skytils smh
+- Slayer boss display
+  - Shows the timer, health and name of the boss spawned, better and cleaner than skytils
+- Slayer boss highlight
+  - Draws a box around your slayer boss
 
 ### **Carrying**
 
@@ -78,11 +82,19 @@
 - Carry time
   - Shows the amount of time you took to complete a carry
 
+- Carry Logs and Carry Cache
+
+- Automatically detect player trade and add the player based on the amount they've traded
+
 - Highlight Slayer boss
   - Highlights your carry/slayer boss
  
 - Highlight carry player
   - Highlights the player you're carrying
+
+- Works for dungeon carries too!
+
+- Kuudra support planned
 
 ### **Dungeons**
 
@@ -111,6 +123,9 @@
 
 - Meow kill sounds
   - Plays cat sounds when you kill a mob
+
+- Custom player sizes
+  - Allows you to change the size of your player model
 
 - Random meow (coming soon™)
 

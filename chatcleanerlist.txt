@@ -24,6 +24,7 @@ Strike using the (.+) attunement on your dagger!
 Your hit was reduced by Hellion Shield!
 
 // Auction house messages 
+The strip that remained
 Processing purchase...
 Claiming BIN auction...
 

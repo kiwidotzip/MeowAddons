@@ -399,6 +399,24 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.blood
 })
 
+// Dungeons - Carrying
+
+.addTextParagraph({
+    configName: "dgcarryinfo",
+    title: "DG Carry Info",
+    description: "Use /dgcarry help to see the commands",
+    centered: true,
+    category: "Dungeons",
+    subcategory: "Carrying"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "senddgcarrycount",
+    title: "Send carry count",
+    description: "Sends carry count in party chat",
+    subcategory: "Carrying - QOL"
+})
+
 // Dungeons - Leap announce
 
 .addSwitch({

@@ -8,6 +8,7 @@ import PogObject from "../../PogData";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
+let dungeonCarryees = [];
 let checkCounter = 0;
 let lastTradePlayer = null;
 let lastTradeTime = 0;
@@ -25,10 +26,11 @@ const CarryLog = new PogObject("MeowAddons",{
 const CarryProfit = new PogObject("MeowAddons", {
     date: 0,
     profit: 0
-
 }, "./data/carryprofit.json")
 
-// Carry class
+//////////////////
+///// SLAYER /////
+//////////////////
 
 class Carryee {
     constructor(name, total, initial = 0) {
@@ -61,45 +63,30 @@ class Carryee {
     }
 
     recordBossTime() {
-        if (this.firstBossTime === null) {
-            this.firstBossTime = Date.now();
-        }
+        if (this.firstBossTime === null) this.firstBossTime = Date.now();
         this.lastBossTime = Date.now();
     }
 
     getTimeSinceLastBoss() {
-        if (!this.lastBossTime) return "N/A";
-        return ((Date.now() - this.lastBossTime) / 1000).toFixed(1) + "s";
+        return this.lastBossTime ? `${((Date.now() - this.lastBossTime) / 1000).toFixed(1)}s` : "N/A";
     }
 
     getTimeTakenToKillBoss() {
-        if (!this.startTime) return "N/A";
-        return ((Date.now() - this.startTime) / 1000).toFixed(1) + "s";
+        return this.startTime ? `${((Date.now() - this.startTime) / 1000).toFixed(1)}s` : "N/A";
     }
 
     getBossPerHour() {
-        if (this.firstBossTime === null || this.count <= 2) {
-            return "N/A";
-        }
+        if (!this.firstBossTime || this.count <= 2) return "N/A";
         const endTime = this.count >= this.total ? this.lastBossTime : Date.now();
-        const durationMs = endTime - this.firstBossTime;
-        if (durationMs <= 0) {
-            return "N/A";
-        }
-        const hours = durationMs / 3600000;
-        const bph = this.count / hours;
-        return `${bph.toFixed(0)}/hr`;
+        const hours = (endTime - this.firstBossTime) / 3600000;
+        return hours > 0 ? `${(this.count / hours).toFixed(0)}/hr` : "N/A";
     }
 
     getMoneyPerHour() {
-        if (this.firstBossTime === null || this.count <= 2 || this.getBossPerHour() === "N/A") {
-            return "N/A";
-        }
-        const bphx = parseFloat(this.getBossPerHour().replace("/hr", ""));
-        const carryValue = parseFloat(settings().carryvalue.split(",")[0]) || 1.3
-        const mph = bphx * carryValue
-        return `${mph.toFixed(1)}M/hr`
-
+        const bph = this.getBossPerHour();
+        if (bph === "N/A") return "N/A";
+        const carryValue = parseFloat(settings().carryvalue.split(",")[0]) || 1.3;
+        return `${(parseFloat(bph) * carryValue).toFixed(1)}M/hr`;
     }
 
     reset() {
@@ -114,17 +101,14 @@ class Carryee {
             Client.scheduleTask(20, () => {
                 ChatLib.chat(
                     new Message(`${prefix} &fTrade with &b${this.name}&f? `)
-                    .addTextComponent(
-                        new TextComponent(`&a[Yes]`)
-                        .setClick("run_command", `/trade ${this.name}`)
-                        .setHoverValue(`&fClick to trade with &b${this.name}`)
-                    )
-                )
-            })
+                    .addTextComponent(new TextComponent("&a[Yes]")
+                    .setClick("run_command", `/trade ${this.name}`)
+                    .setHoverValue(`&fClick to trade with &b${this.name}`)));
+            });
         }
         World.playSound("note.pling", 5, 2);
         Client.showTitle(
-            `&aCarries Completed: &6${this.name}`,
+            `&aCarries Completed: &6${this.name}`, 
             `&b${this.count}&f/&b${this.total}`,
             10, 100, 10
         );
@@ -141,6 +125,73 @@ class Carryee {
         }
     }
 }
+
+////////////////////
+///// DUNGEON //////
+////////////////////
+
+class DungeonCarryee {
+    constructor(name, total) {
+        this.name = name;
+        this.total = total;
+        this.count = 0;
+        this.indungeon = false;
+    }
+
+    incrementTotal() {
+        if (++this.count >= this.total) {
+            this.complete();
+            dungeonCarryees = dungeonCarryees.filter(c => c !== this);
+        }
+        if (settings().debug) ChatLib.chat(`${prefix} &fLogged 1 dungeon carry for &6${this.name} &7(${this.count}/${this.total})`);
+        if (settings().senddgcarrycount) sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`);
+    }
+
+    complete() {
+        ChatLib.chat(`${prefix} &fDungeon carries completed for &b${this.name}`);
+        World.playSound("note.pling", 5, 2);
+        Client.showTitle(`&aCarries Completed: &6${this.name}`, `&b${this.count}&f/&b${this.total}`, 10, 100, 10);
+    }
+
+    toString() {
+        return `&b${this.name}&f: ${this.count}&8/&f${this.total}`;
+    }
+}
+
+// Dungeon start detection
+
+register("chat", () => {
+    Client.scheduleTask(20, () => {
+        const tabList = TabList.getNames();
+        dungeonCarryees.forEach(carryee => {
+            carryee.indungeon = tabList.some(line => 
+                ChatLib.removeFormatting(line).includes(carryee.name)
+            );
+        });
+    });
+}).setCriteria(/Starting in 1 second\./);
+
+// Dungeon end detection
+
+register("chat", () => {
+    dungeonCarryees.forEach(carryee => {
+        if (carryee.indungeon) {
+            carryee.indungeon = false;
+            carryee.incrementTotal();
+        }
+    });
+}).setCriteria(/ {7}☠ Defeated (?:.+) in (?:.+) ?(?:\(NEW RECORD!\))?/);
+
+// World load handling for dungeon carries
+
+register("worldLoad", () => {
+    dungeonCarryees.forEach(c => c.indungeon = false);
+    if (!CarryProfit.date || CarryProfit.date !== DateMEOW.getDate()) {
+        CarryProfit.date = DateMEOW.getDate();
+        CarryProfit.profit = 0;
+        CarryProfit.save();
+    }
+});
 
 // Nametag detection
 
@@ -431,17 +482,21 @@ register("guiClosed", (gui) => {
     if (gui instanceof GuiInventory) { isInInventory = false; }
 });
 
-// Render overlay
+
+function getAllCarryees() {
+    return [...carryees, ...dungeonCarryees];
+}
 
 register("renderOverlay", () => {
     if (isInInventory) return;
 
-    const longestWidth = Math.max(...carryees.map(carryee => 
+    const allCarryees = getAllCarryees();
+    const longestWidth = Math.max(...allCarryees.map(carryee =>
         Renderer.getStringWidth(carryee.toString())
     )) + 8;
-    const totalHeight = carryees.length * 10 + 20;
+    const totalHeight = allCarryees.length * 10 + 20;
 
-    if (settings().drawcarrybox && carryees.length > 0) {
+    if (settings().drawcarrybox && allCarryees.length > 0) {
         Renderer.drawRect(
             Renderer.color(...settings().carryboxcolor),
             pogData.CarryX,
@@ -450,9 +505,9 @@ register("renderOverlay", () => {
             totalHeight
         );
     }
-    if (!hudEditor.isOpen() && carryees.length > 0) {
+    if (!hudEditor.isOpen() && allCarryees.length > 0) {
         Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
-        carryees.forEach((carryee, index) => {
+        allCarryees.forEach((carryee, index) => {
             Renderer.drawString(
                 carryee.toString(),
                 pogData.CarryX + 4,
@@ -487,14 +542,15 @@ register("renderOverlay", () => {
 // Inventory GUI
 
 register("guiRender", () => {
-    if (!isInInventory || carryees.length === 0) return;
+    const allCarryees = getAllCarryees();
+    if (!isInInventory || allCarryees.length === 0) return;
 
     const hudX = pogData.CarryX;
     const hudY = pogData.CarryY;
 
     Renderer.drawString("&e[MA] &d&lCarries&f:", hudX + 4, hudY + 4);
 
-    carryees.forEach((carryee, index) => {
+    allCarryees.forEach((carryee, index) => {
         const yPos = hudY + 16 + (index * 10);
         const textWidth = Renderer.getStringWidth(carryee.toString());
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
@@ -553,46 +609,49 @@ register("guiRender", () => {
 
 register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
     if (!isInInventory) return;
-    
+    const allCarryees = getAllCarryees();
     const hudX = pogData.CarryX;
     const hudY = pogData.CarryY;
     
-    carryees.forEach((carryee, index) => {
+    allCarryees.forEach((carryee, index) => {
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
         
         if (isInArea(mouseX, mouseY, plusArea)) {
             if (mouseButton === 0) {
                 carryee.count = Math.min(carryee.total, carryee.count + 1);
-                ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's count to &6${carryee.count}`);
+                ChatLib.chat(`${prefix} &fIncreased &6${carryee.name}&f's count to &6${carryee.count}&f.`);
             } else if (mouseButton === 1) {
                 carryee.total = Math.min(9999, carryee.total + 1);
-                ChatLib.chat(`${prefix} &aIncreased &6${carryee.name}&a's total to &6${carryee.total}`);
+                ChatLib.chat(`${prefix} &fIncreased &6${carryee.name}&f's total to &6${carryee.total}&f.`);
             }
         } else if (isInArea(mouseX, mouseY, minusArea)) {
             if (mouseButton === 0) {
                 carryee.count = Math.max(0, carryee.count - 1);
-                ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's count to &6${carryee.count}`);
+                ChatLib.chat(`${prefix} &fDecreased &6${carryee.name}&f's count to &6${carryee.count}&f.`);
             } else if (mouseButton === 1) {
                 carryee.total = Math.max(carryee.count + 1, carryee.total - 1);
-                ChatLib.chat(`${prefix} &aDecreased &6${carryee.name}&a's total to &6${carryee.total}`);
+                ChatLib.chat(`${prefix} &fDecreased &6${carryee.name}&f's total to &6${carryee.total}&f.`);
             }
         } else if (isInArea(mouseX, mouseY, removeArea) && mouseButton === 0) {
-            carryees = carryees.filter(c => c !== carryee);
-            ChatLib.chat(`${prefix} &aRemoved &6${carryee.name}`);
+            if (carryees.includes(carryee)) {
+                carryees = carryees.filter(c => c !== carryee);
+            } else if (dungeonCarryees.includes(carryee)) {
+                dungeonCarryees = dungeonCarryees.filter(c => c !== carryee);
+            }
+            ChatLib.chat(`${prefix} &fRemoved &6${carryee.name}&f.`);
         }
     });
 });
 
-// Tooltip
-
 register("postguiRender", () => {
     if (!isInInventory) return;
     
+    const allCarryees = getAllCarryees();
     const hudX = pogData.CarryX;
     const hudY = pogData.CarryY;
     const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
     
-    carryees.forEach((carryee, index) => {
+    allCarryees.forEach((carryee, index) => {
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
     
         if (isInArea(mouseX, mouseY, plusArea)) {
@@ -678,13 +737,13 @@ register("command", (...args = []) => {
                 newCarryee.firstBossTime = cachedRecord.firstBossTime;
                 newCarryee.lastBossTime = cachedRecord.lastBossTime;
                 carryCache.delete(name.toLowerCase());
-                messageADD = `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged cache`;
+                messageADD = `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged cache.`;
             } else {
                 newTotal = existingTotal + parseInt(count);
                 newCarryee = new Carryee(name, newTotal, lastKnownCount);
                 messageADD = existingTotal > 0
-                    ? `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged logs`
-                    : `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries`;
+                    ? `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged logs.`
+                    : `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries&f.`;
             }
         
             carryees.push(newCarryee);
@@ -696,7 +755,7 @@ register("command", (...args = []) => {
             if (!carryee) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryee.count = Math.max(0, parseInt(count));
             carryee.reset();
-            ChatLib.chat(`${prefix} &fSet &6${name}&f's count to &6${count}`);
+            ChatLib.chat(`${prefix} &fSet &6${name}&f's count to &6${count}&f.`);
             break;
         case "settotal": 
             if (!name || !count) return syntaxError("settotal <name> <total>");
@@ -708,20 +767,20 @@ register("command", (...args = []) => {
                 return;
             }
             carryeeSetTotal.total = newSetTotal;
-            ChatLib.chat(`${prefix} &fSet &6${name}&f's total to &6${newSetTotal}`);
+            ChatLib.chat(`${prefix} &fSet &6${name}&f's total to &6${newSetTotal}&f.`);
             break;
         case "remove":
             if (!name) return syntaxError("remove <name>");
             carryees = carryees.filter(carryee => carryee.name !== name);
-            ChatLib.chat(`${prefix} &fRemoved &6${name}`);
+            ChatLib.chat(`${prefix} &fRemoved &6${name}&f.`);
             break;
         case "list":
             if (carryees.length === 0) return ChatLib.chat(`${prefix} &cNo active carries!`);
-            ChatLib.chat(`${prefix} &fActive carries (&6${carryees.length}&f):`);
+            ChatLib.chat(`${prefix} &fActive carries:`);
             carryees.forEach((carryee, index) => {
                 const message = new Message()
                     .addTextComponent(
-                        new TextComponent(`&7> &6${carryee.name}: &b${carryee.count}/${carryee.total} &7| `)
+                        new TextComponent(`&7> &f${carryee.name}: &b${carryee.count}/${carryee.total} &7| `)
                     )
                     .addTextComponent(
                         new TextComponent("&a[+]")
@@ -749,7 +808,7 @@ register("command", (...args = []) => {
             if (!carryeeInc) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeInc.count = Math.min(carryeeInc.total, carryeeInc.count + 1);
             carryeeInc.reset()
-            ChatLib.chat(`${prefix} &fIncreased &6${name}&f's count to &6${carryeeInc.count}`);
+            ChatLib.chat(`${prefix} &fIncreased &6${name}&f's count to &6${carryeeInc.count}&f.`);
             break;
         case "decrease":
             if (!name) return syntaxError("decrease <name>");
@@ -757,7 +816,7 @@ register("command", (...args = []) => {
             if (!carryeeDec) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeDec.count = Math.max(0, carryeeDec.count - 1);
             carryeeDec.reset()
-            ChatLib.chat(`${prefix} &fDecreased &6${name}&f's count to &6${carryeeDec.count}`);
+            ChatLib.chat(`${prefix} &fDecreased &6${name}&f's count to &6${carryeeDec.count}&f.`);
             break;
         case "gui":
             hudEditor.open();
@@ -768,7 +827,7 @@ register("command", (...args = []) => {
             if (!carryeeConfirm) return ChatLib.chat(`${prefix} &c${name} not found!`);
             carryeeConfirm.incrementTotal();
             carryeeConfirm.recordBossTime();
-            ChatLib.chat(`${prefix} &fCount incremented for &6${name}`);
+            ChatLib.chat(`${prefix} &fCount incremented for &6${name}&f.`);
             break;
         case "logs": 
             const entriesPerPage = 10;
@@ -851,7 +910,7 @@ register("command", (...args = []) => {
             if (!name) return syntaxError("canceldeath <name>");
             const carryeeCancel = findCarryee(name);
             if (!carryeeCancel) return ChatLib.chat(`${prefix} &c${name} not found!`);
-            ChatLib.chat(`${prefix} &7Ignored death for &6${name}`);
+            ChatLib.chat(`${prefix} &7Ignored death for &6${name}&f.`);
             break;
         case "clear":
             const message = carryees.length ? `${prefix} &fCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
@@ -879,7 +938,127 @@ register("command", (...args = []) => {
     return [];
 }).setName("carry").setAliases(["macarry"]);
 
-// Functions
+// Dungeon commands (/dgcarry)
+register("command", (...args = []) => {
+    const [subcommand, name, count] = args;
+    switch (subcommand?.toLowerCase()) {
+        case "add":
+            if (!name || !count) return dgSyntaxError("add <name> <count>");
+            if (findDungeonCarryee(name)) return ChatLib.chat(`${prefix} &c${name} already exists!`);
+            dungeonCarryees.push(new DungeonCarryee(name, parseInt(count)));
+            ChatLib.chat(`${prefix} &fAdded &6${name} &ffor &6${count} &fcarries.`);
+            break;
+        case "set":
+            if (!name || !count) return dgSyntaxError("set <name> <count>");
+            const carryee = findDungeonCarryee(name);
+            if (!carryee) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            carryee.count = Math.max(0, parseInt(count));
+            ChatLib.chat(`${prefix} &fSet &6${name}&f's count to &6${count}&f.`);
+            break;
+        case "settotal": 
+            if (!name || !count) return dgSyntaxError("settotal <name> <total>");
+            const carryeeSetTotal = findDungeonCarryee(name);
+            if (!carryeeSetTotal) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            const newSetTotal = parseInt(count);
+            if (newSetTotal < carryeeSetTotal.count) {
+                ChatLib.chat(`${prefix} &cNew total cannot be less than current count (${carryeeSetTotal.count})!`);
+                return;
+            }
+            carryeeSetTotal.total = newSetTotal;
+            ChatLib.chat(`${prefix} &fSet &6${name}&f's total to &6${newSetTotal}`);
+            break;
+        case "remove":
+            if (!name) return dgSyntaxError("remove <name>");
+            dungeonCarryees = dungeonCarryees.filter(carryee => carryee.name !== name);
+            ChatLib.chat(`${prefix} &fRemoved &6${name}&f.`);
+            break;
+        case "list":
+            if (dungeonCarryees.length === 0) return ChatLib.chat(`${prefix} &cNo active carries!`);
+            ChatLib.chat(`${prefix} &fActive carries:`);
+            dungeonCarryees.forEach((carryee, index) => {
+                const message = new Message()
+                    .addTextComponent(
+                        new TextComponent(`&7> &f${carryee.name}: &b${carryee.count}/${carryee.total} &7| `)
+                    )
+                    .addTextComponent(
+                        new TextComponent("&a[+]")
+                            .setClick("run_command", `/dgcarry increase ${carryee.name}`)
+                            .setHoverValue("&7Click to increase count.")
+                    )
+                    .addTextComponent(" &7| ")
+                    .addTextComponent(
+                        new TextComponent("&c[-]")
+                            .setClick("run_command", `/dgcarry decrease ${carryee.name}`)
+                            .setHoverValue("&7Click to decrease count.")
+                       )
+                    .addTextComponent(" &7| ")
+                    .addTextComponent(
+                        new TextComponent("&4[×]")
+                            .setClick("run_command", `/dgcarry remove ${carryee.name}`)
+                            .setHoverValue("&7Click to remove player.")
+                    );
+                ChatLib.chat(message);
+            });
+            break;
+        case "increase":
+            if (!name) return dgSyntaxError("increase <name>");
+            const carryeeInc = findDungeonCarryee(name);
+            if (!carryeeInc) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            carryeeInc.count = Math.min(carryeeInc.total, carryeeInc.count + 1);
+            ChatLib.chat(`${prefix} &fIncreased &6${name}&f's count to &6${carryeeInc.count}&f.`);
+            break;
+        case "decrease":
+            if (!name) return dgSyntaxError("decrease <name>");
+            const carryeeDec = findDungeonCarryee(name);
+            if (!carryeeDec) return ChatLib.chat(`${prefix} &c${name} not found!`);
+            carryeeDec.count = Math.max(0, carryeeDec.count - 1);
+            ChatLib.chat(`${prefix} &fDecreased &6${name}&f's count to &6${carryeeDec.count}&f.`);
+            break;
+        case "clear":
+            const message = dungeonCarryees.length ? `${prefix} &aCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
+            dungeonCarryees = [];
+            ChatLib.chat(message);
+            break; 
+        default:
+            showDgHelp();
+    }
+}).setTabCompletions((args) => {
+    const subcommand = args[0]?.toLowerCase();
+    const currentArg = args[args.length - 1]?.toLowerCase();
+    const playerNames = World.getAllPlayers()
+    .filter(player => player.getUUID().version() === 4)
+    .map(player => ChatLib.removeFormatting(player.getName()));
+    
+    if (subcommand === "add" || subcommand === "remove" || subcommand === "set") {
+        if (args.length === 2) {
+            return playerNames.filter(name => name.toLowerCase().startsWith(currentArg));
+        }
+    }
+    if (args.length === 1) {
+        return ["add", "remove", "set", "list", "increase", "decrease"].filter(cmd => cmd.startsWith(currentArg));
+    }
+
+    return [];
+}).setName("dgcarry").setAliases(["madgcarry"]);
+
+function findDungeonCarryee(name) {
+    return dungeonCarryees.find(c => c.name.toLowerCase() === name.toLowerCase());
+}
+
+function dgSyntaxError(usage) {
+    ChatLib.chat(`${prefix} &cUsage: /dgcarry ${usage}`);
+}
+
+function showDgHelp() {
+    ChatLib.chat(`${prefix} &aDungeon Carry Commands:`);
+    ChatLib.chat("> &e/dgcarry add &c<name> <count> &7- Add new carry");
+    ChatLib.chat("> &e/dgcarry set &c<name> <count> &7- Update carry count");
+    ChatLib.chat("> &e/dgcarry settotal &c<name> <total> &7- Update carry total")
+    ChatLib.chat("> &e/dgcarry remove &c<name> &7- Remove carry");
+    ChatLib.chat("> &e/dgcarry list &7- Show active carries");
+    ChatLib.chat("> &e/dgcarry clear &7- Clears all active carries")
+    ChatLib.chat("> &e/carry gui &7- Open HUD editor");
+}
 
 const sendPartyChatMessage = msg => {
     const now = Date.now();
@@ -904,7 +1083,7 @@ function sendcarrymsg(msg) {
 }
 
 function showHelp() {
-    ChatLib.chat(`${prefix} &aCarry Commands:`);
+    ChatLib.chat(`${prefix} &aSlayer Carry Commands:`);
     ChatLib.chat("> &e/carry add &c<name> <count> &7- Add new carry");
     ChatLib.chat("> &e/carry set &c<name> <count> &7- Update carry count");
     ChatLib.chat("> &e/carry settotal &c<name> <total> &7- Update carry total");

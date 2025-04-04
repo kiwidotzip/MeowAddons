@@ -177,10 +177,10 @@ register("chat", () => {
     dungeonCarryees.forEach(carryee => {
         if (carryee.indungeon) {
             carryee.indungeon = false;
-            carryee.incrementTotal();
+            Client.scheduleTask(20, () => carryee.incrementTotal());
         }
     });
-}).setCriteria(/ {7}☠ Defeated (?:.+) in (?:.+) ?(?:\(NEW RECORD!\))?/);
+}).setCriteria(/^\s*☠ Defeated (?:.+) in 0?(?:[\dhms ]+?)\s*(?:\(NEW RECORD!\))?$/i);
 
 // World load handling for dungeon carries
 
@@ -209,8 +209,9 @@ register("step", () => {
                 const bossID = armorStandID - 3;
                 carryee.recordBossStartTime(bossID);
                 if (settings().notifybossspawn) {
-                     Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1);
-                     World.playSound("mob.cat.meow", 5, 2)}
+                    Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1);
+                    World.playSound("mob.cat.meow", 5, 2);
+                }
             }
         }
     });

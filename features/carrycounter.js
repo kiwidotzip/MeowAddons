@@ -42,6 +42,8 @@ class Carryee {
         this.startTime = null;
         this.isFighting = false;
         this.bossID = null;
+        this.sessionStartTime = Date.now();
+        this.totalCarryTime = 0; 
     }
 
     incrementTotal() {
@@ -61,7 +63,14 @@ class Carryee {
             this.bossID = bossID;
         }
     }
-
+    endSession() {
+        if (this.firstBossTime) {
+            const sessionTime = (this.lastBossTime || Date.now()) - this.firstBossTime;
+            this.totalCarryTime += sessionTime;
+        }
+        this.firstBossTime = null;
+        this.sessionStartTime = null;
+    }
     recordBossTime() {
         if (this.firstBossTime === null) this.firstBossTime = Date.now();
         this.lastBossTime = Date.now();
@@ -76,12 +85,14 @@ class Carryee {
     }
 
     getBossPerHour() {
-        if (!this.firstBossTime || this.count <= 2) return "N/A";
-        const endTime = this.count >= this.total ? this.lastBossTime : Date.now();
-        const hours = (endTime - this.firstBossTime) / 3600000;
-        return hours > 0 ? `${(this.count / hours).toFixed(0)}/hr` : "N/A";
+        if (this.count <= 2) return "N/A";
+        let totalTime = this.totalCarryTime;
+        const liveSessionTime = this.firstBossTime ? (Date.now() - this.firstBossTime) : 0;
+        totalTime += liveSessionTime;
+        const totalTimeHours = totalTime / 3600000;
+        return totalTimeHours > 0 ? `${(this.count / totalTimeHours).toFixed(0)}/hr` : "N/A";
     }
-
+    
     getMoneyPerHour() {
         const bph = this.getBossPerHour();
         if (bph === "N/A") return "N/A";
@@ -113,6 +124,7 @@ class Carryee {
             10, 100, 10
         );
         cacheCarryee(this);
+        this.endSession();
     }
 
     toString() {
@@ -299,11 +311,11 @@ registerWhen(
 // Cache management
 
 function cacheCarryee(carryee) {
+    carryee.endSession();
     carryCache.set(carryee.name.toLowerCase(), { 
         total: carryee.total, 
         count: carryee.count,
-        firstBossTime: carryee.firstBossTime,
-        lastBossTime: carryee.lastBossTime,
+        totalCarryTime: carryee.totalCarryTime,
         timestamp: Date.now() 
     });
 
@@ -317,7 +329,8 @@ function cacheCarryee(carryee) {
                 "Total carries done": existing["Total carries done"] + newCompletions,
                 "Date": `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
                 "Time": `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`,
-                "lastKnownCount": carryee.count
+                "lastKnownCount": carryee.count,
+                "totalCarryTime": carryee.totalCarryTime
             };
             found = true;
             break;
@@ -329,7 +342,8 @@ function cacheCarryee(carryee) {
             "Total carries done": carryee.count,
             "Date": `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
             "Time": `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`,
-            "lastKnownCount": carryee.count
+            "lastKnownCount": carryee.count,
+            "totalCarryTime": carryee.totalCarryTime
         });
     }
     CarryLog.save();
@@ -718,7 +732,6 @@ register("command", (...args = []) => {
         case "add":
             if (!name || !count) return syntaxError("add <name> <count>");
             if (findCarryee(name)) return ChatLib.chat(`${prefix} &c${name} already exists!`);
-
             const existingEntry = CarryLog.data.find((entry, i) => 
                 i % 2 === 0 && entry === name
             );
@@ -735,21 +748,23 @@ register("command", (...args = []) => {
             if (isCacheValid) {
                 newTotal = Math.max(cachedRecord.total, existingTotal + parseInt(count));
                 newCarryee = new Carryee(name, newTotal, cachedRecord.count);
-                newCarryee.firstBossTime = cachedRecord.firstBossTime;
-                newCarryee.lastBossTime = cachedRecord.lastBossTime;
+                newCarryee.totalCarryTime = cachedRecord.totalCarryTime || 0;
                 carryCache.delete(name.toLowerCase());
                 messageADD = `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged cache.`;
-            } else {
+            } else if (existingEntry) {
                 newTotal = existingTotal + parseInt(count);
                 newCarryee = new Carryee(name, newTotal, lastKnownCount);
-                messageADD = existingTotal > 0
-                    ? `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged logs.`
-                    : `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries&f.`;
+                newCarryee.totalCarryTime = CarryLog.data[CarryLog.data.indexOf(existingEntry) + 1]["totalCarryTime"] || 0;
+                messageADD = `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries &7- &7&oMerged logs.`;
+            } else {
+                newTotal = parseInt(count);
+                newCarryee = new Carryee(name, newTotal, 0);
+                messageADD = `${prefix} &fAdded &6${name} &ffor &6${newTotal} &fcarries&f.`;
             }
         
             carryees.push(newCarryee);
             ChatLib.chat(messageADD);
-            break;
+            break;   
         case "set":
             if (!name || !count) return syntaxError("set <name> <count>");
             const carryee = findCarryee(name);

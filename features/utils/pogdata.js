@@ -8,3 +8,7 @@ export const pogData = new PogObject("MeowAddons", {
     firstInstall: true,
     version: "2.2.7",
 });
+
+export const meowc = new PogObject("MeowAddons", {
+    meowcount: 0
+}, "./data/meowcount.json");

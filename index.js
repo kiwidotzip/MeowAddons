@@ -76,7 +76,8 @@ function checkUpdate(silent = false) {
         const remoteVersion = latestRelease.tag_name.replace(/^v/, '');
         updateMessage = buildUpdateMessage(releases);
 
-        if (!silent) ChatLib.chat('&e[MeowAddons] &aChecking for updates...');
+
+        if (!silent && compareVersions(LOCAL_VERSION, remoteVersion) == 0) ChatLib.chat('&e[MeowAddons] &aChecking for updates...');
 
         if (compareVersions(LOCAL_VERSION, remoteVersion) > 0 && !silent) {
             ChatLib.chat('&e[MeowAddons] &aYou\'re running a development build that is newer than the latest release!');
@@ -87,8 +88,6 @@ function checkUpdate(silent = false) {
                 .setClick("open_url", `https://github.com/kiwidotzip/meowaddons/releases/latest`));
             ChatLib.chat(new TextComponent(`&e[MeowAddons] &aHover over this message to view changelogs!`)
                 .setHoverValue(updateMessage));
-        } else if (!silent) {
-            ChatLib.chat('&e[MeowAddons] &aYou\'re running the latest version!');
         }
     })
     .catch(error => {

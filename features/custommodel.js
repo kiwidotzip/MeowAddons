@@ -1,35 +1,68 @@
 import Settings from "../config";
 import { registerWhen } from "../../BloomCore/utils/Utils";
 import PogObject from "../../PogData"
-
-// Thanks Noamm99 <3 for helping out with like almost all this code
-
 const ResLoc = Java.type("net.minecraft.util.ResourceLocation");
-const storage = new PogObject("MeowAddons", {
-    texcst: "textures/entity/cat/ocelot.png",
-    modelcst: "net.minecraft.client.model.ModelOcelot",
+
+// Thanks noamm for helping out with like almost all of this <3
+
+const dataa = new PogObject("MeowAddons", {
+    selectedType: "ocelot",
+    selectedTexture: 0,
 }, "./data/meowcustommodel.json")
-const ModelOcelot = Java.type(storage.modelcst);
-const model = new ModelOcelot();
+
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp180 = a => ((a + 180) % 360 + 360) % 360 - 180;
-const textures = {
-    black: "textures/entity/cat/black.png",
-    red: "textures/entity/cat/red.png",
-    ocelot: "textures/entity/cat/ocelot.png",
-    siamese: "textures/entity/cat/siamese.png",
-    creeper: "textures/entity/creeper/creeper.png",
-};
 
+const types = {
+    ocelot: {
+        model: new net.minecraft.client.model.ModelOcelot(),
+        textures: [
+            new ResLoc("textures/entity/cat/ocelot.png"),  // 0
+            new ResLoc("textures/entity/cat/black.png"),   // 1
+            new ResLoc("textures/entity/cat/red.png"),     // 2
+            new ResLoc("textures/entity/cat/siamese.png")  // 3
+        ],
+    },
+    wolf: {
+        model: new net.minecraft.client.model.ModelWolf(),
+        textures: [new ResLoc("textures/entity/wolf/wolf.png")]
+    },
+    slime: {
+        model: new net.minecraft.client.model.ModelSlime(16),
+        textures: [new ResLoc("textures/entity/slime/slime.png")]
+    },
+    creeper: {
+        model: new net.minecraft.client.model.ModelCreeper(),
+        textures: [new ResLoc("textures/entity/creeper/creeper.png")]
+    }
+}
+
+// example /macattexture 0
 register("command", (arg) => {
-    if (textures[arg]) storage.texcst = textures[arg];
-    storage.save();
+    const int = parseInt(arg)
+    if (isNaN(int) || int < 0) return
+    if (types[dataa.selectedType].textures.length-1 < int) return
+
+    dataa.selectedTexture = int
+    dataa.save();
 }).setName("macattexture");
+
+
+// example /macatmodel ocelot
+register("command", (arg) => {
+    if (!types[arg]) return
+    dataa.selectedType = arg
+    dataa.selectedTexture = 0
+    dataa.save();
+}).setName("macatmodel");
+
 
 function drawCustomModel(pt) {
     if (Client.settings.getSettings().field_74320_O === 0) return;
 
-    const tex = new ResLoc(storage.texcst);
+    const tex = types[dataa.selectedType].textures[dataa.selectedTexture];
+    const model = types[dataa.selectedType].model
+
     const player = Player.getPlayer();
     const bodyYaw = lerp(player.field_70760_ar, player.field_70761_aq, pt);
     const headYaw = clamp180(lerp(player.field_70758_at, player.field_70759_as, pt) - bodyYaw);
@@ -40,6 +73,8 @@ function drawCustomModel(pt) {
     GlStateManager.func_179094_E(); // pushMatrix
     GlStateManager.func_179145_e(); // enableRescaleNormal
     GlStateManager.func_179129_p(); // enableAlpha
+    Tessellator.colorize(1, 1, 1, 1);
+    Tessellator.disableLighting()
     GlStateManager.func_179118_c(); // enableBlend
     GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10); // scale
     GlStateManager.func_179137_b(0, 0.24, 0); // translate
@@ -48,29 +83,29 @@ function drawCustomModel(pt) {
     Client.getMinecraft().func_110434_K().func_110577_a(tex);
 
     model.func_78088_a(
-      player,                        // entity
-      limb,                          // limb swing
-      limbAmt,                       // limb swing amount
-      player.func_70654_ax() + pt,   // ageInTicks
-      -Math.max(-90, Math.min(90, headYaw)), // netHeadYaw
-      pitch,                         // headPitch
-      -0.01                          // scale
+        player,                        // entity
+        limb,                          // limb swing
+        limbAmt,                       // limb swing amount
+        player.func_70654_ax() + pt,   // ageInTicks
+        -Math.max(-90, Math.min(90, headYaw)), // netHeadYaw
+        pitch,                         // headPitch
+        -0.01                          // scale
     );
 
     GlStateManager.func_179089_o(); // disableBlend
     GlStateManager.func_179141_d(); // disableAlpha
+    Tessellator.enableLighting()
     GlStateManager.func_179121_F(); // popMatrix
 }
-
 
 registerWhen(register("renderEntity", e => {
     if (e.entity != Player.getPlayer()) return
     GlStateManager.func_179094_E(); // pushMatrix
     GlStateManager.func_179137_b(0, 500, 0); // translate
-}), () => Settings().custommodel)
+}), () => Settings().custommodel && Settings().custommodeltype !== 0)
 
-registerWhen(register("renderEntity", (e, _, pt, event) => {
+registerWhen(register("postRenderEntity", (e, _, pt, event) => {
     if (e.entity != Player.getPlayer()) return
     GlStateManager.func_179121_F(); // popMatrix
     drawCustomModel(pt)
-}), () => Settings().custommodel)
+}), () => Settings().custommodel && Settings().custommodeltype !== 0)

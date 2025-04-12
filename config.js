@@ -433,7 +433,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Dungeons",
     configName: "showTerm",
     title: "Terminal labels",
-    description: "Shows terminal number that belongs to the terminal",
+    description: "Shows terminal number that belons to the terminal",
     subcategory: "Terminals",
 })
 .addSwitch({
@@ -589,18 +589,33 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addDropDown({
     category: "Misc.",
+    configName: "custommodeltype",
+    title: "Custom model type",
+    description: "Custom model type",
+    subcategory: "Custom model",
+    options: ['None', 'Cat', 'Wolf', 'Slime', 'Creeper'],
+    value: 0,
+    shouldShow: data => data.custommodel,
+    registerListener: (oldv, newv) => {
+        const keys = [null, 'ocelot', 'wolf', 'slime', 'creeper'];
+        const modelKey = keys[newv];
+        if (modelKey) {
+            ChatLib.command(`macatmodel ${modelKey}`, true);
+        }
+    }
+})
+.addDropDown({
+    category: "Misc.",
     configName: "catmodeltype",
     title: "Cat model type",
     description: "Cat model type",
     subcategory: "Custom model",
     options: ['Ocelot', 'Black', 'Orange', "Siamese"],
     value: 0,
-    shouldShow: data => data.custommodel,
-    registerListener(oldv, newv) {
-        if (newv === 0) ChatLib.command(`macattexture ocelot`, true);
-        if (newv === 1) ChatLib.command(`macattexture black`, true);
-        if (newv === 2) ChatLib.command(`macattexture red`, true);
-        if (newv === 3) ChatLib.command(`macattexture siamese`, true);
+    shouldShow: data => data.custommodel && data.custommodeltype == 1,
+    registerListener: (oldv, newv) => {
+     
+        ChatLib.command(`macattexture ${newv}`, true);
     }
 })
 

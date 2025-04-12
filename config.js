@@ -433,7 +433,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Dungeons",
     configName: "showTerm",
     title: "Terminal labels",
-    description: "Shows terminal number that belons to the terminal",
+    description: "Shows terminal number that belongs to the terminal",
     subcategory: "Terminals",
 })
 .addSwitch({

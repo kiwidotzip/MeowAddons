@@ -539,21 +539,22 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Sub Toggle",
     shouldShow: data => data.partycommands,
 })
-// Misc
+
+// Misc - Custom Size
 
 .addSwitch({
     category: "Misc.",
     configName: "customsize",
     title: "Custom size",
     description: "Custom size for your player entity",
-    subcategory: "Custom models"
+    subcategory: "Custom model size"
 })
 .addTextInput({
     category: "Misc.",
     configName: "customX",
     title: "X Size",
     description: "Player X Size",
-    subcategory: "Custom models",
+    subcategory: "Custom model size",
     placeHolder: "1",
     value: "1",
     shouldShow: data => data.customsize
@@ -563,7 +564,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "customY",
     title: "Y Size",
     description: "Player Y Size",
-    subcategory: "Custom models",
+    subcategory: "Custom model size",
     placeHolder: "1",
     value: "1",
     shouldShow: data => data.customsize
@@ -573,10 +574,34 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "customZ",
     title: "Z Size",
     description: "Player Z Size",
-    subcategory: "Custom models",
+    subcategory: "Custom model size",
     placeHolder: "1",
     value: "1",
     shouldShow: data => data.customsize
+})
+
+.addSwitch({
+    category: "Misc.",
+    configName: "custommodel",
+    title: "Custom model",
+    description: "Custom model for your player entity",
+    subcategory: "Custom model"
+})
+.addDropDown({
+    category: "Misc.",
+    configName: "catmodeltype",
+    title: "Cat model type",
+    description: "Cat model type",
+    subcategory: "Custom model",
+    options: ['Ocelot', 'Black', 'Orange', "Siamese"],
+    value: 0,
+    shouldShow: data => data.custommodel,
+    registerListener(oldv, newv) {
+        if (newv === 0) ChatLib.command(`macattexture ocelot`, true);
+        if (newv === 1) ChatLib.command(`macattexture black`, true);
+        if (newv === 2) ChatLib.command(`macattexture red`, true);
+        if (newv === 3) ChatLib.command(`macattexture siamese`, true);
+    }
 })
 
 // Dev

@@ -27,7 +27,7 @@ import "./features/leapannounce";
 import "./features/terminalcallouts";
 // Misc
 import "./features/customsize";
-
+import "./features/custommodel";
 // Update Checker
 
 import { fetch } from "../tska/polyfill/Fetch";

@@ -105,7 +105,7 @@ registerWhen(register("renderEntity", e => {
     GlStateManager.func_179137_b(0, 500, 0) // translate
 }), () => Settings().custommodel && Settings().custommodeltype !== 0)
 
-registerWhen(register("postRenderEntity", e => {
+registerWhen(register("postRenderEntity", (e, pos, pt, event)=> {
     if (e.entity != Player.getPlayer()) return
     GlStateManager.func_179121_F() // popMatrix
     drawCustomModel(pt)

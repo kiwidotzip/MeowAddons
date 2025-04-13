@@ -1,17 +1,18 @@
-import Settings from "../config";
-import { registerWhen } from "../../BloomCore/utils/Utils";
+import Settings from "../config"
+import { registerWhen } from "../../BloomCore/utils/Utils"
 import PogObject from "../../PogData"
-const ResLoc = Java.type("net.minecraft.util.ResourceLocation");
+const ResLoc = Java.type("net.minecraft.util.ResourceLocation")
 
-// Thanks noamm for helping out with like almost all of this <3
+// Thanks @Noamm9 for helping out with like almost all of this <3
 
-const dataa = new PogObject("MeowAddons", {
+const data = new PogObject("MeowAddons", {
     selectedType: "ocelot",
     selectedTexture: 0,
 }, "./data/meowcustommodel.json")
 
-const lerp = (a, b, t) => a + (b - a) * t;
-const clamp180 = a => ((a + 180) % 360 + 360) % 360 - 180;
+const lerp = (a, b, t) => a + (b - a) * t
+const clamp180 = a => ((a + 180) % 360 + 360) % 360 - 180
+const limit90 = a => Math.max(-90, Math.min(90, a))
 
 const types = {
     ocelot: {
@@ -41,71 +42,71 @@ const types = {
 register("command", (arg) => {
     const int = parseInt(arg)
     if (isNaN(int) || int < 0) return
-    if (types[dataa.selectedType].textures.length-1 < int) return
+    if (types[data.selectedType].textures.length-1 < int) return
 
-    dataa.selectedTexture = int
-    dataa.save();
-}).setName("macattexture");
+    data.selectedTexture = int
+    data.save()
+}).setName("macattexture")
 
 
 // example /macatmodel ocelot
 register("command", (arg) => {
     if (!types[arg]) return
-    dataa.selectedType = arg
-    dataa.selectedTexture = 0
-    dataa.save();
-}).setName("macatmodel");
+    data.selectedType = arg
+    data.selectedTexture = 0
+    data.save()
+}).setName("macatmodel")
 
 
 function drawCustomModel(pt) {
-    if (Client.settings.getSettings().field_74320_O === 0) return;
+    if (!Client.isInGui() && Client.settings.getSettings().field_74320_O === 0) return
 
-    const tex = types[dataa.selectedType].textures[dataa.selectedTexture];
-    const model = types[dataa.selectedType].model
+    const tex = types[data.selectedType].textures[data.selectedTexture]
+    const model = types[data.selectedType].model
 
-    const player = Player.getPlayer();
-    const bodyYaw = lerp(player.field_70760_ar, player.field_70761_aq, pt);
-    const headYaw = clamp180(lerp(player.field_70758_at, player.field_70759_as, pt) - bodyYaw);
-    const pitch = lerp(player.field_70127_C, player.field_70125_A, pt);
-    const limb = lerp(player.field_184619_aG ?? player.field_70754_ba, player.field_70754_ba, pt);
-    const limbAmt = lerp(player.field_184618_aF ?? player.field_70721_aZ, player.field_70721_aZ, pt);
+    const player = Player.getPlayer()
+    const bodyYaw = lerp(player.field_70760_ar, player.field_70761_aq, pt)
+    const headYaw = clamp180(lerp(player.field_70758_at, player.field_70759_as, pt) - bodyYaw)
+    const pitch = lerp(player.field_70127_C, player.field_70125_A, pt)
+    const limb = lerp(player.field_184619_aG ?? player.field_70754_ba, player.field_70754_ba, pt)
+    const limbAmt = lerp(player.field_184618_aF ?? player.field_70721_aZ, player.field_70721_aZ, pt)
 
-    GlStateManager.func_179094_E(); // pushMatrix
-    GlStateManager.func_179145_e(); // enableRescaleNormal
-    GlStateManager.func_179129_p(); // enableAlpha
-    Tessellator.colorize(1, 1, 1, 1);
+    GlStateManager.func_179094_E() // pushMatrix
+    GlStateManager.func_179145_e() // enableRescaleNormal
+    GlStateManager.func_179129_p() // enableAlpha
+    Tessellator.colorize(1, 1, 1, 1)
     Tessellator.disableLighting()
-    GlStateManager.func_179118_c(); // enableBlend
-    GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10); // scale
-    GlStateManager.func_179137_b(0, 0.24, 0); // translate
-    GlStateManager.func_179114_b(-bodyYaw, 0, 1, 0); // rotate
+    GlStateManager.func_179118_c() // enableBlend
+    GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10) // scale
+    GlStateManager.func_179137_b(0, 0.24, 0) // translate
+    GlStateManager.func_179114_b(-bodyYaw, 0, 1, 0) // rotate
 
-    Client.getMinecraft().func_110434_K().func_110577_a(tex);
+    Client.getMinecraft().func_110434_K().func_110577_a(tex)
 
     model.func_78088_a(
         player,                        // entity
         limb,                          // limb swing
         limbAmt,                       // limb swing amount
         player.func_70654_ax() + pt,   // ageInTicks
-        -Math.max(-90, Math.min(90, headYaw)), // netHeadYaw
+        -limit90(headYaw), // netHeadYaw
         pitch,                         // headPitch
         -0.01                          // scale
-    );
+    )
 
-    GlStateManager.func_179089_o(); // disableBlend
-    GlStateManager.func_179141_d(); // disableAlpha
+    GlStateManager.func_179089_o() // disableBlend
+    GlStateManager.func_179141_d() // disableAlpha
     Tessellator.enableLighting()
-    GlStateManager.func_179121_F(); // popMatrix
+    GlStateManager.func_179121_F() // popMatrix
 }
 
 registerWhen(register("renderEntity", e => {
     if (e.entity != Player.getPlayer()) return
-    GlStateManager.func_179094_E(); // pushMatrix
-    GlStateManager.func_179137_b(0, 500, 0); // translate
+    GlStateManager.func_179094_E() // pushMatrix
+    GlStateManager.func_179137_b(0, 500, 0) // translate
 }), () => Settings().custommodel && Settings().custommodeltype !== 0)
 
-registerWhen(register("postRenderEntity", (e, _, pt, event) => {
+registerWhen(register("postRenderEntity", e => {
     if (e.entity != Player.getPlayer()) return
-    GlStateManager.func_179121_F(); // popMatrix
+    GlStateManager.func_179121_F() // popMatrix
     drawCustomModel(pt)
 }), () => Settings().custommodel && Settings().custommodeltype !== 0)

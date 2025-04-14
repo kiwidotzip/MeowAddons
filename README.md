@@ -127,6 +127,9 @@
 - Custom player sizes
   - Allows you to change the size of your player model
 
+- Custom player models
+  - Allows you to change the player model, more models and the ability to change your camera location coming soon!
+
 - Random meow (coming soon™)
 
 <h2 align="center">Installation Steps</h2>

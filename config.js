@@ -475,21 +475,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Fishing - Fishing messagees
 
-.addSwitch({
-    category: "Fishing",
-    configName: "fishingmsgmaintoggle",
-    title: "Main toggle",
-    description: "Main toggle for fishing messages",
-    subcategory: "Fishing messages"
-})
-.addSwitch({
-    category: "Fishing",
-    configName: "fishingmsgsilly",
-    title: "Silly Fishing messages",
-    description: "Sends more lively messages when a fishing boss spawns",
-    subcategory: "Fishing messages",
-    shouldShow: data => data.fishingmsgmaintoggle
-})
+// Removed because me lazy and code unoptimized
 
 // Party commands
 

@@ -97,11 +97,11 @@ function checkUpdate(silent = false) {
 let updateChecked = false;
 register("worldLoad", () => {
     if (!updateChecked) {
-        if (pogData.version < LOCAL_VERSION) {
+        if (Data.version < LOCAL_VERSION) {
             checkUpdate(true);
             Client.scheduleTask(40, () => ChatLib.chat(updateMessage));
-            pogData.version = LOCAL_VERSION;
-            pogData.save();
+            Data.version = LOCAL_VERSION;
+            Data.save();
         }
         updateChecked = true;
         Client.scheduleTask(1000, () => {
@@ -122,10 +122,10 @@ register('command', () => {
 
 // First install
 
-import { pogData } from "./features/utils/pogdata";
+import { Data } from "./features/utils/data";
 
 register("worldLoad", () => {
-    if (pogData.firstInstall) {
+    if (Data.firstInstall) {
         Client.scheduleTask(20, () => {
         ChatLib.chat(`&7&l-----------------------------------------------------`)
         ChatLib.chat(ChatLib.getCenteredText("&bThanks for installing &e&lMeowAddons&b!"))
@@ -139,8 +139,8 @@ register("worldLoad", () => {
         ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
         ChatLib.chat(`&b> Discord&f:&7 https://discord.gg/KPmHQUC97G`)
         ChatLib.chat(`&7&l-----------------------------------------------------`)
-        pogData.firstInstall = false;
-        pogData.save();
+        Data.firstInstall = false;
+        Data.save();
         });
     }
 });

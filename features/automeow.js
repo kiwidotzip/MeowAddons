@@ -22,8 +22,7 @@ register("command", () => {
     ChatLib.chat(`${PREFIX} &fYou have meowed &b${meowc.meowcount} &ftimes :3`);
 }).setName("meowcount");
 
-register("chat", (message, event) => {
-    if (!Config().automeow) return;
+registerWhen(register("chat", (message, event) => {
     if (!message.includes("meow") || message.includes(Player.getName())) return;
     if (!NORMAL_REGEX.test(message) && !BRIDGE_REGEX.test(message)) return;
     const randomDelay = Config().randomdelayautomeow ? Math.floor(Math.random() * 2000 + 500) : 100;
@@ -37,4 +36,4 @@ register("chat", (message, event) => {
         ChatLib.command(`${cmd} ` + MEOW_RESPONSES[Math.floor(Math.random() * MEOW_RESPONSES.length)]);
         bump();
     }, randomDelay)
-}).setCriteria("${message}")
+}).setCriteria("${message}"), () => Config().automeow)

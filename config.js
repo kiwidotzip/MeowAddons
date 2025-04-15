@@ -1,4 +1,5 @@
 // Make sure these go to the right directory 
+import { setRegisters } from "./features/utils/renderutils"
 import Settings from "../Amaterasu/core/Settings"
 import DefaultConfig from "../Amaterasu/core/DefaultConfig"
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
@@ -655,4 +656,5 @@ const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json").
 config
       .setSize(60,60)
       .apply()
+      .onCloseGui(setRegisters)
 export default () => config.settings

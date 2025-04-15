@@ -1,11 +1,11 @@
 import Settings from "../config"
 import { registerWhen } from "./utils/renderutils"
-import PogObject from "../../PogData"
+import { LocalStore } from "../../tska/storage/LocalStore";
 const ResLoc = Java.type("net.minecraft.util.ResourceLocation")
 
 // Thanks @Noamm9 for helping out with like almost all of this <3
 
-const data = new PogObject("MeowAddons", {
+const data = new LocalStore("MeowAddons", {
     selectedType: "ocelot",
     selectedTexture: 0,
 }, "./data/meowcustommodel.json")

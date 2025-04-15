@@ -1,10 +1,10 @@
 import settings from "../config";
-import PogObject from "../../PogData";
+import { LocalStore } from "../../tska/storage/LocalStore";
 import { registerWhen } from "./utils/renderutils"
 import { Render3D } from "../../tska/rendering/Render3D"
 import { Huds } from "../../Krun/Huds";
 
-const data = new PogObject("Krun", {});
+const data = new LocalStore("Krun", {});
 const huds = new Huds(data);
 const GUI = huds.createTextHud("Slayer Display", 120, 10, "a\n☠ &bVoidgloom Seraph IV");
 const BOSS_HP_REGEX = /☠ (.+?)\s*(?:ᛤ\s*)?([\d\.]+[MK]?\s*(?:Hits|❤))(?:\s*✯)?/i;

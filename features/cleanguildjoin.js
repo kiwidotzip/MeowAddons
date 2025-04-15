@@ -1,4 +1,5 @@
 import Config from "../config";
+import { registerWhen } from "./utils/renderutils";
 
 registerWhen(register("chat", (color,username,joinleftmsg,event) => {
         cancel(event)

@@ -1,5 +1,5 @@
 import Config from "../config";
-import { meowc } from "./utils/pogdata";
+import { meowc } from "./utils/data";
 import { registerWhen } from "./utils/renderutils";
 
 const PREFIX = "&e[MeowAddons]";

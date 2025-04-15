@@ -1,4 +1,4 @@
-import { pogData } from "./utils/pogdata";
+import { Data } from "./utils/data";
 import { fetch } from "../../tska/polyfill/Fetch";
 
 const thresholds = [
@@ -8,26 +8,26 @@ const thresholds = [
 ];
 
 register("worldLoad", () => {
-    pogData.goldorsection = 0;
+    Data.goldorsection = 0;
 });
 
 register("chat", (message) =>
     [
       {
         predicate: msg => msg.startsWith("[BOSS] Storm: I should have known that I stood no chance."),
-        action: () => pogData.goldorsection = 1
+        action: () => Data.goldorsection = 1
       },
       {
         predicate: msg => (msg.includes("(7/7)") || msg.includes("(8/8)")) && !msg.includes(":"),
-        action: () => pogData.goldorsection += 1
+        action: () => Data.goldorsection += 1
       },
       {
         predicate: msg => msg === "The Core entrance is opening!",
-        action: () => pogData.goldorsection = 5
+        action: () => Data.goldorsection = 5
       },
       {
         predicate: msg => msg === "[BOSS] Necron: You went further than any human before, congratulations.",
-        action: () => pogData.goldorsection = 0
+        action: () => Data.goldorsection = 0
       }
     ].find(({ predicate }) => predicate(message))?.action()
 ).setCriteria("${message}");  

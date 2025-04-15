@@ -21,3 +21,4 @@ const setRegisters = () => {
 };
 
 Settings().onCloseGui(setRegisters);
+register("gameLoad", () => setRegisters());

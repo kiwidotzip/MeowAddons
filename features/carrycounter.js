@@ -20,6 +20,7 @@ const carryCache = new Map();
 const hudEditor = new Gui();
 const processedEntities = new Set();
 const DateMEOW = new Date()
+const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
 const CarryLog = new LocalStore("MeowAddons",{
     data: []
 }, "./data/carrylog.json")
@@ -362,7 +363,6 @@ register("step", () => {
 // Carry death detection
 
 register("chat", (deadPlayer, entityName) => {
-    const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
     if (!bossnames.includes(entityName)) return;
     carryees.forEach((carryee) => {
         if (carryee.name === deadPlayer) {

@@ -10,7 +10,7 @@ export const registerWhen = (trigger, dependency) => {
   entry.registered = true;
 };
 
-const setRegisters = () => {
+export const setRegisters = () => {
   registers.forEach(item => {
     const shouldRegister = item.dependency();
     if (shouldRegister === item.registered) return;
@@ -20,5 +20,5 @@ const setRegisters = () => {
   });
 };
 
-Settings().onCloseGui(setRegisters);
+// Settings().onCloseGui(setRegisters);
 register("gameLoad", () => setRegisters());

@@ -1,4 +1,4 @@
-import Settings from "../../config.js";
+//import Settings from "../../config.js";
 const registers = [];
 
 export const registerWhen = (trigger, dependency) => {

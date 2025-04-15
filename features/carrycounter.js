@@ -4,7 +4,7 @@ import { registerWhen } from "./utils/renderutils";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { SendMsg } from "./helperfunction";
-import PogObject from "../../PogData";
+import { LocalStore } from "../../tska/storage/LocalStore";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -20,10 +20,10 @@ const carryCache = new Map();
 const hudEditor = new Gui();
 const processedEntities = new Set();
 const DateMEOW = new Date()
-const CarryLog = new PogObject("MeowAddons",{
+const CarryLog = new LocalStore("MeowAddons",{
     data: []
 }, "./data/carrylog.json")
-const CarryProfit = new PogObject("MeowAddons", {
+const CarryProfit = new LocalStore("MeowAddons", {
     date: 0,
     profit: 0
 }, "./data/carryprofit.json")

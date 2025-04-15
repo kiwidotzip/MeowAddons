@@ -1,4 +1,3 @@
-//import Settings from "../../config.js";
 const registers = [];
 
 export const registerWhen = (trigger, dependency) => {
@@ -20,5 +19,4 @@ export const setRegisters = () => {
   });
 };
 
-// Settings().onCloseGui(setRegisters);
 register("gameLoad", () => setRegisters());

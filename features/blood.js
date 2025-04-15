@@ -18,8 +18,8 @@ function getWatcherRating(diftime) {
   return { title: "Slow Watcher", extra: "[SLOW]" };
 }
 
-register("chat", (event) => {
-  if (!Config().blood || !Dungeon.inDungeon) return;
+Dungeon.registerWhenInDungeon(register("chat", (event) => {
+  if (!Config().blood) return;
   const message = ChatLib.getChatMessage(event);
   const now = Date.now();
 
@@ -85,4 +85,4 @@ register("chat", (event) => {
       break;
     }
   }
-});
+}))

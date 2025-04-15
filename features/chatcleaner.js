@@ -1,9 +1,9 @@
 import Config from "../config";
-import uselessMsgs from "./chatcleanerentry"
+import uselessMsgs from "./chatcleanerentry";
+import { registerWhen } from "./utils/renderutils";
 
 uselessMsgs.forEach(msg => {
-    register("chat", event => {
-        if (!Config().chatcleaner) return
+    registerWhen(register("chat", event => {
        cancel(event)
-    }).setCriteria(msg)
+    }).setCriteria(msg), () => Config().chatcleaner)
 })

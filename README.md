@@ -12,7 +12,7 @@
   </a>
 </p>
 
-<p align="center"><b>Total Downloads:</b> 2784 </p>
+<p align="center"><b>Total Downloads:</b> 3158 </p>
 
 <p align="center" id="description"><b>MeowAddons</b> is a Silly chattriggers module that has some QOL features</p>
 

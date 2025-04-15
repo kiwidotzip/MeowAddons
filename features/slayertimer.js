@@ -15,8 +15,7 @@ const resetBossTracker = () => {
     [timestarted, bossID, hpEntity, timerEntity] = [0, null, null, null];
 };
 
-register("step", () => {
-    if (!settings().slayerbossdisplay) return;
+registerWhen(register("step", () => {
     World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"))
         .forEach(entity => {
             if (entity.entity.func_145782_y() !== bossID + 1) return;
@@ -26,9 +25,9 @@ register("step", () => {
                 [bossName, hp] = [match[1], match[2]];
             }
         });
-}).setFps(10);
+}).setFps(10), () => settings().slayerbossdisplay)
 
-register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (entity) => {
+registerWhen(register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (entity) => {
     if (settings().slayerbossdisplay || settings().slayerkilltimer) {
         Client.scheduleTask(1, () => {
             const name = ChatLib.removeFormatting(entity.entity.func_70005_c_());
@@ -41,7 +40,7 @@ register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (ent
             }
         });
     }
-});
+}), () => settings().slayerbossdisplay || settings().slayerkilltimer)
 
 register("entityDeath", (entity) => {
     const bossIDdeath = entity.entity.func_145782_y();

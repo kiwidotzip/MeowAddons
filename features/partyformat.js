@@ -1,7 +1,7 @@
 import Config from "../config";
+import { registerWhen } from "./utils/renderutils";
 
-
-register("chat", (hypixelrank, username, message, event) => {
+registerWhen(register("chat", (hypixelrank, username, message, event) => {
     if (!Config().partyformat) return;
     if (!Config().formatchatmessage) return;
     cancel(event);
@@ -20,4 +20,4 @@ register("chat", (hypixelrank, username, message, event) => {
     const rankName = rankNameMatch ? rankNameMatch[1] : null;
     const rankColor = rankName && rankColors[rankName] ? rankColors[rankName] : "&7";
     ChatLib.chat(`&9P &8> ${rankColor}${username}&f: ${message}`);
-}).setCriteria(/Party > (\[.+?\])? ?(.+?): (.+)/);
+}).setCriteria(/Party > (\[.+?\])? ?(.+?): (.+)/), () => Config().partyformat)

@@ -1,7 +1,7 @@
 import Config from "../config";
+import { registerWhen } from "./utils/renderutils";
 
-register("chat", (hypixelrank, username, guildrank, message, event) => {
-    if (!Config().guildformat) return;
+registerWhen(register("chat", (hypixelrank, username, guildrank, message, event) => {
     if (!Config().formatchatmessage) return;
     cancel(event);
     const rankColors = {
@@ -27,4 +27,4 @@ register("chat", (hypixelrank, username, guildrank, message, event) => {
     const sanitizedMessage = ChatLib.replaceFormatting(message || "");
 
     ChatLib.chat(`&2G &8> ${formattedGuildRank} ${rankColor}${sanitizedUsername}&f: ${sanitizedMessage}`);
-}).setCriteria(/Guild > ?(\[.+?\])? ?([a-zA-Z0-9_]+) ?(\[.+?\])?: (.+)/);
+}).setCriteria(/Guild > ?(\[.+?\])? ?([a-zA-Z0-9_]+) ?(\[.+?\])?: (.+)/), () => Config().guildformat && Config().guildformat)

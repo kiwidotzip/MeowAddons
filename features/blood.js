@@ -57,9 +57,9 @@ Dungeon.registerWhenInDungeon(register("chat", (event) => {
         const camptime = currentCampTime.toFixed(1);
         ChatLib.chat(`&dMeowAddons &8» &rBlood camp took &e${camptime}s&r!`);
 
-        if (currentCampTime < pogData.bloodCampPB) {
-          pogData.bloodCampPB = currentCampTime;
-          pogData.save();
+        if (currentCampTime < Data.bloodCampPB) {
+          Data.bloodCampPB = currentCampTime;
+          Data.save();
           ChatLib.chat(`&dMeowAddons &8» &rNew PB: &e${pogData.bloodCampPB.toFixed(1)}s&r!`);
         }
 

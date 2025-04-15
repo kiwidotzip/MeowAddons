@@ -3,7 +3,7 @@ import { meowc } from "./utils/data";
 import { registerWhen } from "./utils/renderutils";
 
 const PREFIX = "&e[MeowAddons]";
-const ACHIEVEMENTS = [10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000];
+const ACHIEVEMENTS = [10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000, 25000, 50000, 100000];
 const MEOW_RESPONSES = ["mroww", "purr", "meowwwwww", "meow :3", "mrow", "moew", "mrow :3", "purrr :3"];
 const NORMAL_REGEX = /^(.+)? ?(>)? ?(.+.+)? ?(.+?) ?(.+?.+?)?: meow$/i;
 const BRIDGE_REGEX = /Guild > ?(.+.+)? ?(.+?) ?(.+?.+?)?: (.+?) » meow$/i;

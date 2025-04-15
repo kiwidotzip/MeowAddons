@@ -1,6 +1,6 @@
 import Config from "../config";
 import Dungeon from "../../BloomCore/dungeons/Dungeon";
-import { pogData } from "./utils/pogdata";
+import { Data } from "./utils/data";
 
 let bloodopen = false
 let starttime = 0

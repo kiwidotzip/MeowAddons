@@ -8,9 +8,7 @@ import "./features/cleanfriendjoin";
 import "./features/cleanguildjoin";
 import "./features/cleanpartyjoin";
 import "./features/partyformat";
-import "./features/guildformat";
-// Fishing
-import "./features/fishingmsgsilly";
+import "./features/guildformat";
 // Party command
 import "./features/partycmd";
 // Skyblock General

@@ -1,5 +1,5 @@
 import Settings from "../config";
-import { registerWhen } from "../../BloomCore/utils/Utils";
+import { registerWhen } from "./utils/renderutils";
 
 registerWhen(
   register("renderEntity", entity => {

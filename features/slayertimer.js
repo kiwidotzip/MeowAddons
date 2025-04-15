@@ -1,6 +1,6 @@
 import settings from "../config";
 import PogObject from "../../PogData";
-import { registerWhen } from "../../BloomCore/utils/Utils"
+import { registerWhen } from "./utils/renderutils"
 import { Render3D } from "../../tska/rendering/Render3D"
 import { Huds } from "../../Krun/Huds";
 

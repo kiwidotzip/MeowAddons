@@ -1,6 +1,6 @@
 import settings from "../config";
 import { pogData } from "./utils/pogdata";
-import { registerWhen } from "../../BloomCore/utils/Utils";
+import { registerWhen } from "./utils/renderutils";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { SendMsg } from "./helperfunction";

@@ -1,7 +1,7 @@
 import Config from "../config";
 import Dungeon from "../../BloomCore/dungeons/Dungeon";
 import { pogData } from "./utils/pogdata";
-import { registerWhen } from "../../BloomCore/utils/Utils";
+import { registerWhen } from "./utils/renderutils";
 import { Render3D } from "../../tska/rendering/Render3D";
 
 const pdistance = (x, y, z) =>

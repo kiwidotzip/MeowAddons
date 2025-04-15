@@ -1,5 +1,5 @@
 import Settings from "../config"
-import { registerWhen } from "../../BloomCore/utils/Utils"
+import { registerWhen } from "./utils/renderutils"
 import PogObject from "../../PogData"
 const ResLoc = Java.type("net.minecraft.util.ResourceLocation")
 

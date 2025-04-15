@@ -1,7 +1,7 @@
 // Make sure these go to the right directory 
-import { setRegisters } from "./features/utils/renderutils"
-import Settings from "../Amaterasu/core/Settings"
-import DefaultConfig from "../Amaterasu/core/DefaultConfig"
+import { setRegisters } from "./features/utils/renderutils";
+import Settings from "../Amaterasu/core/Settings";
+import DefaultConfig from "../Amaterasu/core/DefaultConfig";
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Chat - General
@@ -652,9 +652,8 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Debug"
 })
 
-const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json").setCommand("MeowAddons", ["ma", "meowa"])
+const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json").setCommand("MeowAddons", ["ma", "meowa"]).onCloseGui(setRegisters)
 config
       .setSize(60,60)
       .apply()
-      .onCloseGui(setRegisters)
 export default () => config.settings

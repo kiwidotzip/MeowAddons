@@ -28,8 +28,6 @@ import "./features/terminalcallouts";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";
-// Utils
-import "./features/utils/renderutils";
 // Update Checker
 
 import { fetch } from "../tska/polyfill/Fetch";

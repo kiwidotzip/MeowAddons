@@ -1,16 +1,17 @@
-import Config from "../config"
+import Config from "../config";
+import { registerWhen } from "./utils/renderutils";
 
 const ArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand");
 const sounds = ["mob.cat.meow", "mob.cat.purreow", "mob.cat.straymeow"]
 
-register("entityDeath", (entity) => {
-    if (!Config().meowhitsound || entity == null) return
+registerWhen(register("entityDeath", (entity) => {
+    if (entity == null) return
     if (entity.distanceTo(Player.getPlayer()) > Config().meowhitradius) return
     if (entity.getEntity() instanceof ArmorStand) return;
 
     playSFX()
     playParticles(entity)
-})
+}), () => Config().meowhitsound)
 
 // Credit to Xynth 
 

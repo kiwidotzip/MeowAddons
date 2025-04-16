@@ -35,7 +35,7 @@ import { fetch } from "../tska/polyfill/Fetch";
 const Data = new LocalStore("MeowAddons", {
     firstInstall: true,
     DiscordSent: false
-})
+}, "./data/indexData.json")
 
 
 const LOCAL_VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version.replace(/^v/, '');

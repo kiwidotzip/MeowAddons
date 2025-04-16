@@ -1,5 +1,5 @@
 import settings from "../config";
-import { pogData } from "./utils/pogdata";
+import { Data } from "./utils/data";
 import { registerWhen } from "./utils/renderutils";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";

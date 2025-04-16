@@ -12,8 +12,8 @@ import "./features/guildformat";
 // Party command
 import "./features/partycmd";
 // Skyblock General
-import "./features/BetterAH";
-import "./features/BetterBZ";
+//import "./features/BetterAH";
+//import "./features/BetterBZ";
 // Skyblock Slayer
 import "./features/carrycounter";
 import "./features/slayertimer";

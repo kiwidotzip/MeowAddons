@@ -13,7 +13,7 @@ import "./features/guildformat";
 import "./features/partycmd";
 // Skyblock General
 import "./features/BetterAH";
-//import "./features/BetterBZ";
+import "./features/BetterBZ";
 // Skyblock Slayer
 import "./features/carrycounter";
 import "./features/slayertimer";

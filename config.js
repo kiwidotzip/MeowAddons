@@ -605,6 +605,31 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
         ChatLib.command(`macattexture ${newv}`, true);
     }
 })
+// Misc - Block Overlay
+.addSwitch({
+    category: "Misc.",
+    configName: "blockoverlay",
+    title: "Block overlay",
+    description: "Draws an overlay over the block you highlight",
+    subcategory: "Block overlay",
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "blockoverlayfill",
+    title: "Filled block overlay",
+    description: "Draws a filled block overlay",
+    subcategory: "Block overlay",
+    shouldShow: data => data.blockoverlay
+})
+.addColorPicker({
+    category: "Misc.",
+    configName: "blockoverlaycolor",
+    title: "Color Picker",
+    description: "Pick a color for the block overlay",
+    subcategory: "Block overlay",
+    value: [0, 0, 0, 255],
+    shouldShow: data => data.blockoverlay
+})
 
 // Dev
 

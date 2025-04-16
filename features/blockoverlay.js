@@ -25,7 +25,6 @@ registerWhen(register("blockHighlight", ({x, y, z}, event) => {
     const pticks = event.partialTicks
 
     const [ r, g, b, a ] = [color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()]
-    const [ r1, g1, b1 ] = [color.getRed(), color.getGreen(), color.getBlue()]
 
     cancel(event)
     

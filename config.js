@@ -667,4 +667,4 @@ const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json").
 config
       .setSize(60,60)
       .apply()
-export default config.settings
+export default () => config.settings

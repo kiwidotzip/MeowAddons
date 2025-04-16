@@ -8,7 +8,7 @@ import "./features/cleanfriendjoin";
 import "./features/cleanguildjoin";
 import "./features/cleanpartyjoin";
 import "./features/partyformat";
-import "./features/guildformat";
+import "./features/guildformat";
 // Party command
 import "./features/partycmd";
 // Skyblock General
@@ -26,9 +26,16 @@ import "./features/terminalcallouts";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";
+
 // Update Checker
 
+import { LocalStore } from "../tska/storage/LocalStore";
 import { fetch } from "../tska/polyfill/Fetch";
+const Data = new LocalStore("MeowAddons", {
+    firstInstall: true,
+    DiscordSent: false
+})
+
 
 const LOCAL_VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version.replace(/^v/, '');
 const API_URL = 'https://api.github.com/repos/kiwidotzip/meowaddons/releases';
@@ -69,7 +76,7 @@ function checkUpdate(silent = false) {
             ChatLib.chat('&e[MeowAddons] &cNo releases found!');
             return;
         }
-        
+
         const latestRelease = releases[0];
         const remoteVersion = latestRelease.tag_name.replace(/^v/, '');
         updateMessage = buildUpdateMessage(releases);
@@ -104,10 +111,12 @@ register("worldLoad", () => {
         updateChecked = true;
         Client.scheduleTask(1000, () => {
             checkUpdate();
-            // Only in for this version :pray:
-            ChatLib.chat(new TextComponent(`&7&oPsssst &7- &e&lMeowAddons&f now has a discord - Click to join!`)
+            if(!Data.DiscordSent) { 
+                ChatLib.chat(new TextComponent(`&7&oPsssst &7- &e&lMeowAddons&f now has a discord - Click to join!`)
                             .setHoverValue(`Click to join!`)
                             .setClick("open_url", `https://discord.gg/KPmHQUC97G`))
+                Data.save()
+            }
             updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
         });
     }
@@ -119,8 +128,6 @@ register('command', () => {
 }).setName('meowupdate');
 
 // First install
-
-import { Data } from "./features/utils/data";
 
 register("worldLoad", () => {
     if (Data.firstInstall) {
@@ -139,6 +146,10 @@ register("worldLoad", () => {
         ChatLib.chat(`&7&l-----------------------------------------------------`)
         Data.firstInstall = false;
         Data.save();
-        });
+        If (FileLib.exists("MeowAddons", ".data.json")) {
+            ChatLib.chat(`&cYou may be seeing this message again because your data file can no longer be accessed.`)
+            ChatLib.chat(`&cDeleting old MeowAddons Data file...`)
+            FileLib.delete("MeowAddons", ".data.json")
+        }});
     }
 });

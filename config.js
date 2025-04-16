@@ -663,8 +663,10 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Debug"
 })
 
-const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json").setCommand("MeowAddons", ["ma", "meowa"]).onCloseGui(setRegisters)
+const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json")
 config
       .setSize(60,60)
+      .setCommand("MeowAddons", ["ma", "meowa"])
+      .onCloseGui(setRegisters)
       .apply()
 export default () => config.settings

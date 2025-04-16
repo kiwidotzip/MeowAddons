@@ -3,14 +3,14 @@ import { registerWhen } from "./utils/renderutils";
 import { Render3D } from "../../tska/rendering/Render3D";
 
 // Credit to DocilElm's Doc module for like 70% of the code lmao <3
-const {
-  field_150350_a: Air,
-  field_150356_k: FlowingLava,
-  field_150353_l: Lava,
-  field_150358_i: FlowingWater,
-  field_150355_j: Water,
-} = net.minecraft.init.Blocks;
-const ignored = new Set([Air, FlowingLava, Lava, FlowingWater, Water]);
+
+const Blocks = net.minecraft.init.Blocks
+const BlockFlowingLava = Blocks.field_150356_k
+const BlockLava = Blocks.field_150353_l
+const BlockFlowingWater = Blocks.field_150358_i
+const BlockWater = Blocks.field_150355_j
+const BlockAir = Blocks.field_150350_a
+
 const cachedColors = new Map()
 const getColor = (colors) => {
     const [ r, g, b, a ] = colors
@@ -26,7 +26,12 @@ const getColor = (colors) => {
 
 registerWhen(register("drawBlockHighlight", ({x, y, z}, event) => { 
     const ctBlock = World.getBlockAt(x, y, z)
-    if (ignored.has(ctBlock.type.mcBlock)) return;
+    const mcBlock = ctBlock.type.mcBlock
+    if (mcBlock == BlockAir ||
+        mcBlock == BlockFlowingLava ||
+        mcBlock == BlockFlowingWater ||
+        mcBlock == BlockLava ||
+        mcBlock == BlockWater) return;
     const phase = !(Client.settings.getSettings()?.field_74320_O === 1)
     const color = getColor(Config().blockoverlaycolor)
     const pticks = event.partialTicks

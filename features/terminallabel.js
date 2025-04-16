@@ -68,7 +68,7 @@ const renderTerm = ({ text, x, y, z }) => {
   }
 };
 
-const renderPhase = () => {phases[pogData.goldorsection]?.forEach(renderTerm)};
+const renderPhase = () => {phases[Data.goldorsection]?.forEach(renderTerm)};
 
 registerWhen(register("renderWorld", renderPhase), () => Config().showTerm);
 

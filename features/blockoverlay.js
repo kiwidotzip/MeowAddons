@@ -21,7 +21,7 @@ registerWhen(register("blockHighlight", ({x, y, z}, event) => {
     const ctBlock = World.getBlockAt(x, y, z)
 
     const phase = !(Client.settings.getSettings()?.field_74320_O === 1)
-    const color = getColor(config().blockoverlaycolor)
+    const color = getColor(Config().blockoverlaycolor)
     const pticks = event.partialTicks
 
     const [ r, g, b, a ] = [color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()]

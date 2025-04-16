@@ -26,7 +26,7 @@ const getColor = (colors) => {
 
 registerWhen(register("drawBlockHighlight", ({x, y, z}, event) => { 
     const ctBlock = World.getBlockAt(x, y, z)
-    if (ignored.has(ctBlock.type.mcBlock)) return cancel(event);
+    if (ignored.has(ctBlock.type.mcBlock)) return;
     const phase = !(Client.settings.getSettings()?.field_74320_O === 1)
     const color = getColor(Config().blockoverlaycolor)
     const pticks = event.partialTicks

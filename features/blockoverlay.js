@@ -35,6 +35,6 @@ registerWhen(register("drawBlockHighlight", ({x, y, z}, event) => {
 
     cancel(event)
     
-    Render3D.outlineBlock(ctBlock, r, g, b, a, phase, 2, true, pticks)
-    if (Config().blockoverlayfill) Render3D.filledBlock(ctBlock, r, g, b, a, phase, 2, true, pticks)
+    if (!Config().blockoverlayfill) Render3D.outlineBlock(ctBlock, r, g, b, a, phase, 2, true, pticks);
+    if (Config().blockoverlayfill) Render3D.filledBlock(ctBlock, r, g, b, a, phase, 2, true, pticks);
 }), () => Config().blockoverlay)

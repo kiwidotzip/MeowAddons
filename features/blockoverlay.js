@@ -3,7 +3,14 @@ import { registerWhen } from "./utils/renderutils";
 import { Render3D } from "../../tska/rendering/Render3D";
 
 // Credit to DocilElm's Doc module for like 70% of the code lmao <3
-
+const {
+  field_150350_a: Air,
+  field_150356_k: FlowingLava,
+  field_150353_l: Lava,
+  field_150358_i: FlowingWater,
+  field_150355_j: Water,
+} = net.minecraft.init.Blocks;
+const ignored = new Set([Air, FlowingLava, Lava, FlowingWater, Water]);
 const cachedColors = new Map()
 const getColor = (colors) => {
     const [ r, g, b, a ] = colors
@@ -17,9 +24,9 @@ const getColor = (colors) => {
     return javaColor
 }
 
-registerWhen(register("blockHighlight", ({x, y, z}, event) => { 
+registerWhen(register("drawBlockHighlight", ({x, y, z}, event) => { 
     const ctBlock = World.getBlockAt(x, y, z)
-
+    if (ignored.has(ctBlock.type.mcBlock)) return cancel(event);
     const phase = !(Client.settings.getSettings()?.field_74320_O === 1)
     const color = getColor(Config().blockoverlaycolor)
     const pticks = event.partialTicks

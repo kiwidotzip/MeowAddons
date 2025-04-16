@@ -19,6 +19,7 @@ register("worldLoad", () => {
                 .addTextComponent(new TextComponent(" [Delete]")
                 .setClick("run_command", "/madeleteolddata")
                 .setHoverValue("&cDelete the old data file."))
+    ChatLib.chat("&e[MeowAddons] &fPlease re-configure the gui location using &c/carry gui&f.")
     );
 });
 

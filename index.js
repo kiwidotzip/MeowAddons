@@ -26,6 +26,7 @@ import "./features/terminalcallouts";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";
+import "./features/blockoverlay";
 
 // Update Checker
 

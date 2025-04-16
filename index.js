@@ -147,7 +147,7 @@ register("worldLoad", () => {
         ChatLib.chat(`&7&l-----------------------------------------------------`)
         Data.firstInstall = false;
         Data.save();
-        If (FileLib.exists("MeowAddons", ".data.json")) {
+        if (FileLib.exists("MeowAddons", ".data.json")) {
             ChatLib.chat(`&cYou may be seeing this message again because your data file can no longer be accessed.`)
             ChatLib.chat(`&cDeleting old MeowAddons Data file...`)
             FileLib.delete("MeowAddons", ".data.json")

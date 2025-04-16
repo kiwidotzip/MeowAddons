@@ -521,7 +521,7 @@ register("renderOverlay", () => {
         );
     }
     if (!hudEditor.isOpen() && allCarryees.length > 0) {
-        Renderer.drawString("&e[MA] &d&lCarries&f:", pogData.CarryX + 4, pogData.CarryY + 4);
+        Renderer.drawString("&e[MA] &d&lCarries&f:", Data.CarryX + 4, Data.CarryY + 4);
         allCarryees.forEach((carryee, index) => {
             Renderer.drawString(
                 carryee.toString(),

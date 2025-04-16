@@ -2,6 +2,8 @@ import Config from "../config";
 import { registerWhen } from "./utils/renderutils";
 import { Render3D } from "../../tska/rendering/Render3D";
 
+// Credit to DocilElm's Doc module for like 70% of the code lmao <3
+
 const cachedColors = new Map()
 const getColor = (colors) => {
     const [ r, g, b, a ] = colors

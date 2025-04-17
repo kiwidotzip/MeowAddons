@@ -271,35 +271,33 @@ register("entityDeath", (entity) => {
 
 // Entity highlight
 
-registerWhen(
-    register("postRenderEntity", (entity, pos) => { 
-        const entityName = entity.getName(); 
-        const entityID = entity.entity.func_145782_y(); 
-        const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"] 
-        if (!bossEntityNames.includes(entityName)) return; 
-        carryees.forEach((carryee) => {
-            if (carryee.bossID === entityID) { 
-                const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
-                const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
-                let totalSeconds = 0;
-                if (timeMatch) {
-                    const minutes = parseInt(timeMatch[1], 10);
-                    const seconds = parseInt(timeMatch[2], 10);
-                    totalSeconds = minutes * 60 + seconds;
-                }
-                const color = totalSeconds > 200 ? [0, 255, 255] : [255, 127, 127];  // Blue or Red
-                Render3D.renderEntityBox(
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    entity.getWidth(),
-                    entity.getHeight(),
-                    color[0], color[1], color[2], 255, 2, false, false
-                );
-            }
-        }); 
-    }), () => settings().renderbossoutline
-)
+registerWhen(register("postRenderEntity", (entity, pos) => { 
+    const entityName = entity.getName(); 
+    const entityID = entity.entity.func_145782_y(); 
+    const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"]; 
+    if (!bossEntityNames.includes(entityName)) return; 
+    carryees.forEach((carryee) => {
+        if (carryee.bossID !== entityID) return;
+        const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
+        let entry = colorCache.get(carryee.timerID);
+        if (!entry || entry.timerStr !== timer) {
+            let color = [0, 255, 255];
+            const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
+            if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 200) color = [255, 127, 127];
+            entry = { timerStr: timer, color };
+            colorCache.set(carryee.timerID, entry);
+        }
+        const [r, g, b] = entry.color;
+        Render3D.renderEntityBox(
+            pos.getX(),
+            pos.getY(),
+            pos.getZ(),
+            entity.getWidth(),
+            entity.getHeight(),
+            r, g, b, 255, 2, false, false
+        );
+    });
+}), () => settings().renderbossoutline);
 
 // Player highlight
 

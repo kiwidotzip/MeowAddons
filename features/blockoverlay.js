@@ -3,10 +3,10 @@ import { registerWhen } from "./utils/renderutils";
 import { Render3D } from "../../tska/rendering/Render3D";
 // Credit to DocilElm's Doc module for like 70% of the code lmao <3
 const Blocks = net.minecraft.init.Blocks
-const BlockFlowingLava = Blocks.field_150356_k
-const BlockLava = Blocks.field_150353_l
-const BlockFlowingWater = Blocks.field_150358_i
-const BlockWater = Blocks.field_150355_j
+const FlowLava = Blocks.field_150356_k
+const StillLava = Blocks.field_150353_l
+const FlowWater = Blocks.field_150358_i
+const StillWater = Blocks.field_150355_j
 const BlockAir = Blocks.field_150350_a
 const excludedBlocks = new Set([BlockAir, FlowLava, StillLava, FlowWater, StillWater]);
 const colorCache = new Map();

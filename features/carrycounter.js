@@ -14,6 +14,8 @@ let lastTradePlayer = null;
 let lastTradeTime = 0;
 let isInInventory = false;
 let nextAvailableTime = 0;
+
+const timePattern = /\b(\d+):([0-5]\d)\b/;
 const webhookUrl = settings().webhookurlcarry
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
 const carryCache = new Map();
@@ -43,6 +45,7 @@ class Carryee {
         this.startTime = null;
         this.isFighting = false;
         this.bossID = null;
+        this.timerID = null;
         this.sessionStartTime = Date.now();
         this.totalCarryTime = 0; 
     }
@@ -62,6 +65,7 @@ class Carryee {
             this.startTime = Date.now();
             this.isFighting = true;
             this.bossID = bossID;
+            this.timerID = bossID + 2;
         }
     }
     endSession() {
@@ -105,6 +109,7 @@ class Carryee {
         this.isFighting = false;
         this.startTime = null;
         this.bossID = null;
+        this.timerID = null;
     }
 
     complete() {
@@ -272,15 +277,24 @@ registerWhen(
         const entityID = entity.entity.func_145782_y(); 
         const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"] 
         if (!bossEntityNames.includes(entityName)) return; 
-        carryees.forEach((carryee) => { 
+        carryees.forEach((carryee) => {
             if (carryee.bossID === entityID) { 
+                const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
+                const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
+                let totalSeconds = 0;
+                if (timeMatch) {
+                    const minutes = parseInt(timeMatch[1], 10);
+                    const seconds = parseInt(timeMatch[2], 10);
+                    totalSeconds = minutes * 60 + seconds;
+                }
+                const color = totalSeconds > 200 ? [0, 255, 255] : [255, 127, 127];  // Blue or Red
                 Render3D.renderEntityBox(
                     pos.getX(),
                     pos.getY(),
                     pos.getZ(),
                     entity.getWidth(),
                     entity.getHeight(),
-                    0, 255, 255, 255, 2, false, false
+                    color[0], color[1], color[2], 255, 2, false, false
                 );
             }
         }); 

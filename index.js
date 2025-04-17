@@ -14,8 +14,9 @@ import "./features/partycmd";
 // Skyblock General
 import "./features/BetterAH";
 import "./features/BetterBZ";
-// Skyblock Slayer
+// Skyblock Carrying
 import "./features/carrycounter";
+// Skyblock Slayers
 import "./features/slayertimer";
 // Dungeons
 import "./features/masknotifiers";
@@ -140,6 +141,7 @@ register("worldLoad", () => {
         ChatLib.chat(`&7> &7/&bmeowaddons &7- &fOpen the settings menu &7&o(Aliases: /meowa, /ma)`)
         ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
         ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
+        ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
         ChatLib.chat(`&7> &7/&bmeowupdate &7- &fCheck for updates`)
         ChatLib.chat(`&b`)
         ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)

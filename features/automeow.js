@@ -21,15 +21,16 @@ register("command", () => {
     ChatLib.chat(`${PREFIX} &fYou have meowed &b${meowc.meowcount} &ftimes :3`);
 }).setName("meowcount");
 
-registerWhen(register("chat", (user, event) => 
+registerWhen(register("chat", (user, event) => {
     if (user == Player.getName()) return;
+    const message = ChatLib.getChatMessage(event)
     setTimeout(() => {
         let cmd = "ac";
         if (message.startsWith("Party >")) cmd = "pc";
         else if (message.startsWith("Guild >") && Config().guildchattoggleautomeow) cmd = "gc";
         else if (message.startsWith("Officer >") && Config().guildchattoggleautomeow) cmd = "oc";
-        
+
         ChatLib.command(`${cmd} ` + MEOW_RESPONSES[Math.floor(Math.random() * MEOW_RESPONSES.length)]);
         bump();
-    }, Config().randomdelayautomeow ? Math.floor(Math.random() * 2000 + 500) : 100)
-}).setCriteria(/^(?:\w+(?:-\w+)?\s>\s)?(?:\[[^\]]+\]\s)?([A-Za-z0-9_.-]+)(?:\s[^\s\[\]:]+)?(?:\s\[[^\]]+\])?:\s(?:[A-Za-z0-9_.-]+(?:\s[^\s\[\]:]+)?(?:\s\[[^\]]+\])?\s?(?:[»>]|:)\s)?meow$/i), () => Config().automeow)
+    }, Config().randomdelayautomeow ? Math.floor(Math.random() * 2000 + 500) : 100);
+}), () => Config().automeow).setCriteria(/^(?:\w+(?:-\w+)?\s>\s)?(?:\[[^\]]+\]\s)?([A-Za-z0-9_.-]+)(?:\s[^\s\[\]:]+)?(?:\s\[[^\]]+\])?:\s(?:[A-Za-z0-9_.-]+(?:\s[^\s\[\]:]+)?(?:\s\[[^\]]+\])?\s?(?:[»>]|:)\s)?meow$/i);

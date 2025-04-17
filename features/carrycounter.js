@@ -283,7 +283,7 @@ registerWhen(register("postRenderEntity", (entity, pos) => {
         if (!entry || entry.timerStr !== timer) {
             let color = [0, 255, 255];
             const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
-            if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 200) color = [255, 127, 127];
+            if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127];
             entry = { timerStr: timer, color };
             colorCache.set(carryee.timerID, entry);
         }

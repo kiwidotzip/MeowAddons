@@ -15,7 +15,7 @@ let lastTradeTime = 0;
 let isInInventory = false;
 let nextAvailableTime = 0;
 
-const timePattern = /\b(\d+):([0-5]\d)\b/;
+const colorCache = new Map();
 const webhookUrl = settings().webhookurlcarry
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
 const carryCache = new Map();

@@ -2,13 +2,12 @@ import Config from "../config";
 import { registerWhen } from "./utils/renderutils";
 import { Render3D } from "../../tska/rendering/Render3D";
 // Credit to DocilElm's Doc module for like 70% of the code lmao <3
-const { 
-    field_150350_a: BlockAir,
-    field_150356_k: FlowLava,
-    field_150353_l: StillLava,
-    field_150358_i: FlowWater,
-    field_150355_j: StillWater 
-} = net.minecraft.init.Blocks;
+const Blocks = net.minecraft.init.Blocks
+const FlowLava = Blocks.field_150356_k
+const StillLava = Blocks.field_150353_l
+const FlowWater = Blocks.field_150358_i
+const StillWater = Blocks.field_150355_j
+const BlockAir = Blocks.field_150350_a
 const excludedBlocks = new Set([BlockAir, FlowLava, StillLava, FlowWater, StillWater]);
 const colorCache = new Map();
 const getColor = ([r, g, b, a]) => {

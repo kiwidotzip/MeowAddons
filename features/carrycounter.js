@@ -14,6 +14,8 @@ let lastTradePlayer = null;
 let lastTradeTime = 0;
 let isInInventory = false;
 let nextAvailableTime = 0;
+
+const colorCache = new Map();
 const webhookUrl = settings().webhookurlcarry
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
 const carryCache = new Map();
@@ -43,6 +45,7 @@ class Carryee {
         this.startTime = null;
         this.isFighting = false;
         this.bossID = null;
+        this.timerID = null;
         this.sessionStartTime = Date.now();
         this.totalCarryTime = 0; 
     }
@@ -62,6 +65,7 @@ class Carryee {
             this.startTime = Date.now();
             this.isFighting = true;
             this.bossID = bossID;
+            this.timerID = bossID + 2;
         }
     }
     endSession() {
@@ -105,6 +109,7 @@ class Carryee {
         this.isFighting = false;
         this.startTime = null;
         this.bossID = null;
+        this.timerID = null;
     }
 
     complete() {
@@ -266,26 +271,33 @@ register("entityDeath", (entity) => {
 
 // Entity highlight
 
-registerWhen(
-    register("postRenderEntity", (entity, pos) => { 
-        const entityName = entity.getName(); 
-        const entityID = entity.entity.func_145782_y(); 
-        const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"] 
-        if (!bossEntityNames.includes(entityName)) return; 
-        carryees.forEach((carryee) => { 
-            if (carryee.bossID === entityID) { 
-                Render3D.renderEntityBox(
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    entity.getWidth(),
-                    entity.getHeight(),
-                    0, 255, 255, 255, 2, false, false
-                );
-            }
-        }); 
-    }), () => settings().renderbossoutline
-)
+registerWhen(register("postRenderEntity", (entity, pos) => { 
+    const entityName = entity.getName(); 
+    const entityID = entity.entity.func_145782_y(); 
+    const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"]; 
+    if (!bossEntityNames.includes(entityName)) return; 
+    carryees.forEach((carryee) => {
+        if (carryee.bossID !== entityID) return;
+        const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
+        let entry = colorCache.get(carryee.timerID);
+        if (!entry || entry.timerStr !== timer) {
+            let color = [0, 255, 255];
+            const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
+            if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127];
+            entry = { timerStr: timer, color };
+            colorCache.set(carryee.timerID, entry);
+        }
+        const [r, g, b] = entry.color;
+        Render3D.renderEntityBox(
+            pos.getX(),
+            pos.getY(),
+            pos.getZ(),
+            entity.getWidth(),
+            entity.getHeight(),
+            r, g, b, 255, 2, false, false
+        );
+    });
+}), () => settings().renderbossoutline);
 
 // Player highlight
 

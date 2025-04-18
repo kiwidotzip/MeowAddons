@@ -670,9 +670,9 @@ const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json")
 const rcolor = Renderer.color(187, 134, 252)
 config.getHandler().registers.onDraw(() => {
     const mainBlockLeft = config.mainBlock.getLeft();
-const mainBlockRight = config.mainBlock.getRight();
-const mainBlockTop = config.mainBlock.getTop();
-const mainBlockBottom = config.mainBlock.getBottom();
+    const mainBlockRight = config.mainBlock.getRight();
+    const mainBlockTop = config.mainBlock.getTop();
+    const mainBlockBottom = config.mainBlock.getBottom();
     Renderer.drawLine(rcolor, mainBlockLeft + 130, mainBlockTop + 10, mainBlockLeft + 130, mainBlockBottom - 10, 2);
 })
 config

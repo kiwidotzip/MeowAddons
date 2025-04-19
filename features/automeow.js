@@ -23,12 +23,13 @@ register("command", () => {
 
 registerWhen(register("chat", (user, event) => {
     if (user == Player.getName()) return;
-    const message = ChatLib.getChatMessage(event)
+    const message = ChatLib.getChatMessage(event).removeFormatting()
     setTimeout(() => {
         let cmd = "ac";
         if (message.startsWith("Party >")) cmd = "pc";
         else if (message.startsWith("Guild >")) cmd = "gc";
         else if (message.startsWith("Officer >")) cmd = "oc";
+        else if (message.startsWith("Co-op >")) cmd = "cc";
         ChatLib.command(`${cmd} ` + MEOW_RESPONSES[Math.floor(Math.random() * MEOW_RESPONSES.length)]);
         bump();
     }, Config().randomdelayautomeow ? Math.floor(Math.random() * 2000 + 500) : 100);

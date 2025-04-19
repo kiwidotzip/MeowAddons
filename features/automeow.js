@@ -27,8 +27,8 @@ registerWhen(register("chat", (user, event) => {
     setTimeout(() => {
         let cmd = "ac";
         if (message.startsWith("Party >")) cmd = "pc";
-        else if (message.startsWith("Guild >") && Config().guildchattoggleautomeow) cmd = "gc";
-        else if (message.startsWith("Officer >") && Config().guildchattoggleautomeow) cmd = "oc";
+        else if (message.startsWith("Guild >")) cmd = "gc";
+        else if (message.startsWith("Officer >")) cmd = "oc";
         ChatLib.command(`${cmd} ` + MEOW_RESPONSES[Math.floor(Math.random() * MEOW_RESPONSES.length)]);
         bump();
     }, Config().randomdelayautomeow ? Math.floor(Math.random() * 2000 + 500) : 100);

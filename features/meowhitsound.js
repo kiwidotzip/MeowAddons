@@ -1,17 +1,16 @@
 import Config from "../config";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
 
+const meowhitsound = FeatManager.createFeature("meowhitsound");
 const ArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand");
 const sounds = ["mob.cat.meow", "mob.cat.purreow", "mob.cat.straymeow"]
 
-registerWhen(register("entityDeath", (entity) => {
-    if (entity == null) return
-    if (entity.distanceTo(Player.getPlayer()) > Config().meowhitradius) return
-    if (entity.getEntity() instanceof ArmorStand) return;
+meowhitsound.register("entityDeath", (e) => {
+    if (!e || e.distanceTo(Player.getPlayer()) > Config().meowhitradius || e.getEntity() instanceof ArmorStand) return;
 
     playSFX()
-    playParticles(entity)
-}), () => Config().meowhitsound)
+    playParticles(e)
+})
 
 // Credit to Xynth 
 

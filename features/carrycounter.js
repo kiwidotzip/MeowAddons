@@ -1,10 +1,10 @@
 import settings from "../config";
 import { Data } from "./utils/data";
-import { registerWhen } from "./utils/renderutils";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { SendMsg } from "./helperfunction";
 import { LocalStore } from "../../tska/storage/LocalStore";
+import { FeatManager } from "./helperfunction";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -15,7 +15,12 @@ let lastTradeTime = 0;
 let isInInventory = false;
 let nextAvailableTime = 0;
 
-const colorCache = new Map();
+const BossChecker = FeatManager.createFeatureNo();
+const renderGuiNOTINV = FeatManager.createFeatureNo();
+const renderGuiINV = FeatManager.createFeatureNo();
+const BossOutline = FeatManager.createFeature("renderbossoutline");
+const PlayerOutline = FeatManager.createFeature("renderplayeroutline");
+
 const webhookUrl = settings().webhookurlcarry
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
 const carryCache = new Map();
@@ -58,6 +63,7 @@ class Carryee {
         if (settings().debug) { ChatLib.chat(`${prefix} &fLogged 1 carry for &6${this.name} &7(${this.count}/${this.total})`); }
         if (settings().sendcarrycount) { sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`); }
         sendcarrymsg(`${this.name}: ${this.count}/${this.total}`)
+        BossChecker.update();
     }
 
     recordBossStartTime(bossID) {
@@ -213,7 +219,7 @@ register("worldLoad", () => {
 
 // Nametag detection
 
-register("step", () => {
+BossChecker.registersub("stepFps", () => {
     const allEntities = World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"));
     allEntities.forEach(entity => {
         const id = entity.entity.func_145782_y();
@@ -233,8 +239,9 @@ register("step", () => {
             }
         }
     });
-}).setFps(10);
+}, () => carryees.length > 0, 10)
 
+register("command", () => print(carryees.length > 0)).setName("carryee")
 // Boss check
 
 register("step", () => {
@@ -271,11 +278,8 @@ register("entityDeath", (entity) => {
 
 // Entity highlight
 
-registerWhen(register("postRenderEntity", (entity, pos) => { 
-    const entityName = entity.getName(); 
+BossOutline.register("postRenderEntity", (entity, pos) => { 
     const entityID = entity.entity.func_145782_y(); 
-    const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"]; 
-    if (!bossEntityNames.includes(entityName)) return; 
     carryees.forEach((carryee) => {
         if (carryee.bossID !== entityID) return;
         const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
@@ -291,29 +295,26 @@ registerWhen(register("postRenderEntity", (entity, pos) => {
             color[0], color[1], color[2], 255, 2, false, false
         );
     });
-}), () => settings().renderbossoutline);
+}, net.minecraft.entity.monster.EntityEnderman || net.minecraft.entity.passive.EntityWolf || net.minecraft.entity.monster.EntitySpider || net.minecraft.entity.monster.EntityZombie);
 
 // Player highlight
 
-registerWhen(
-    register("postRenderEntity", (entity, pos) => { 
-        const entityName = entity.getName(); 
-        const isPlayer = entity.entity instanceof net.minecraft.entity.player.EntityPlayer; 
-        if (!isPlayer) return; 
-        carryees.forEach((carryee) => { 
-            if (carryee.name === entityName) { 
-                Render3D.renderEntityBox(
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    entity.getWidth(),
-                    entity.getHeight(),
-                    0, 255, 255, 255, 2, false, false
-                );
-            } 
-        }); 
-    }), () => settings().renderplayeroutline
-)
+PlayerOutline.register("postRenderEntity", (entity, pos) => { 
+    const entityName = entity.getName(); 
+    carryees.forEach((carryee) => { 
+        if (carryee.name === entityName) { 
+            Render3D.renderEntityBox(
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                entity.getWidth(),
+                entity.getHeight(),
+                0, 255, 255, 255, 2, false, false
+            );
+        } 
+    }); 
+}, net.minecraft.entity.player.EntityPlayer)
+
 
 // Cache management
 
@@ -495,22 +496,15 @@ register("worldLoad", () => {
 
 // GUI stuff
 
-register("guiOpened", (event) => {
-    if (event.gui instanceof GuiInventory) { isInInventory = true; }
-});
-
-register("guiClosed", (gui) => {
-    if (gui instanceof GuiInventory) { isInInventory = false; }
-});
-
+register("guiOpened", e => e.gui instanceof GuiInventory && (isInInventory = true, renderGuiNOTINV.update(), renderGuiINV.update()));
+register("guiClosed", gui => gui instanceof GuiInventory && (isInInventory = false, renderGuiNOTINV.update(), renderGuiINV.update()));
+const getInventoryState = () => isInInventory;
 
 function getAllCarryees() {
     return [...carryees, ...dungeonCarryees];
 }
 
-register("renderOverlay", () => {
-    if (isInInventory) return;
-
+renderGuiNOTINV.registersub("renderOverlay", () => {
     const allCarryees = getAllCarryees();
     const longestWidth = Math.max(...allCarryees.map(carryee =>
         Renderer.getStringWidth(carryee.toString())
@@ -558,13 +552,13 @@ register("renderOverlay", () => {
             Data.CarryY + 26
         );
     };
-});
+}, () => !getInventoryState());
 
 // Inventory GUI
 
-register("guiRender", () => {
+renderGuiINV.registersub("guiRender", () => {
     const allCarryees = getAllCarryees();
-    if (!isInInventory || allCarryees.length === 0) return;
+    if (allCarryees.length === 0) return;
 
     const hudX = Data.CarryX;
     const hudY = Data.CarryY;
@@ -624,7 +618,7 @@ register("guiRender", () => {
         Renderer.colorize(...(isHoveringRemove ? colors.remove.hover : colors.remove.normal));
         Renderer.drawString(" [×]", currentX, yPos);
     });
-});
+}, () => getInventoryState());
 
 // Buttons
 
@@ -659,19 +653,18 @@ register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
             } else if (dungeonCarryees.includes(carryee)) {
                 dungeonCarryees = dungeonCarryees.filter(c => c !== carryee);
             }
+            BossChecker.update();
             ChatLib.chat(`${prefix} &fRemoved &6${carryee.name}&f.`);
         }
     });
 });
 
-register("postguiRender", () => {
-    if (!isInInventory) return;
-    
+renderGuiINV.registersub("postGuiRender", () => {
     const allCarryees = getAllCarryees();
     const hudX = Data.CarryX;
     const hudY = Data.CarryY;
     const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
-    
+    if (hudEditor.isOpen()) return;
     allCarryees.forEach((carryee, index) => {
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
     
@@ -683,7 +676,7 @@ register("postguiRender", () => {
             Render2D.drawHoveringText(["&bRemove Player", "&cClick to remove from carry list"]);
         }
     });
-});
+}, () => getInventoryState());
 
 function getButtonAreas(hudX, hudY, carryee, index) {
     const entryY = hudY + 16 + (index * 10);
@@ -769,6 +762,7 @@ register("command", (...args = []) => {
             }
         
             carryees.push(newCarryee);
+            BossChecker.update();
             ChatLib.chat(messageADD);
             break;   
         case "set":
@@ -794,6 +788,7 @@ register("command", (...args = []) => {
         case "remove":
             if (!name) return syntaxError("remove <name>");
             carryees = carryees.filter(carryee => carryee.name !== name);
+            BossChecker.update();
             ChatLib.chat(`${prefix} &fRemoved &6${name}&f.`);
             break;
         case "list":
@@ -937,6 +932,7 @@ register("command", (...args = []) => {
         case "clear":
             const message = carryees.length ? `${prefix} &fCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
             carryees = [];
+            BossChecker.update();
             ChatLib.chat(message);
             break; 
         default:

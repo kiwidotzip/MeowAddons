@@ -1,6 +1,7 @@
 import Settings from "../config"
-import { registerWhen } from "./utils/renderutils"
 import { LocalStore } from "../../tska/storage/LocalStore";
+import { FeatManager } from "./helperfunction";
+const custommodel = FeatManager.createFeature("custommodel")
 const ResLoc = Java.type("net.minecraft.util.ResourceLocation")
 
 // Thanks @Noamm9 for helping out with like almost all of this <3
@@ -99,14 +100,12 @@ function drawCustomModel(pt) {
     GlStateManager.func_179121_F() // popMatrix
 }
 
-registerWhen(register("renderEntity", e => {
-    if (e.entity != Player.getPlayer()) return
+custommodel.register("renderEntity", () => {
     GlStateManager.func_179094_E() // pushMatrix
     GlStateManager.func_179137_b(0, 500, 0) // translate
-}), () => Settings().custommodel && Settings().custommodeltype !== 0)
+}, net.minecraft.client.entity.EntityPlayerSP)
 
-registerWhen(register("postRenderEntity", (e, pos, pt, event)=> {
-    if (e.entity != Player.getPlayer()) return
+custommodel.register("postRenderEntity", (e, pos, pt, event)=> {
     GlStateManager.func_179121_F() // popMatrix
     drawCustomModel(pt)
-}), () => Settings().custommodel && Settings().custommodeltype !== 0)
+}, net.minecraft.client.entity.EntityPlayerSP)

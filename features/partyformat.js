@@ -1,8 +1,8 @@
 import Config from "../config";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
+const partyformat = FeatManager.createFeature("partyformat");
 
-registerWhen(register("chat", (hypixelrank, username, message, event) => {
-    if (!Config().partyformat) return;
+partyformat.register("chat", (hypixelrank, username, message, event) => {
     if (!Config().formatchatmessage) return;
     cancel(event);
     const rankColors = {
@@ -20,4 +20,4 @@ registerWhen(register("chat", (hypixelrank, username, message, event) => {
     const rankName = rankNameMatch ? rankNameMatch[1] : null;
     const rankColor = rankName && rankColors[rankName] ? rankColors[rankName] : "&7";
     ChatLib.chat(`&9P &8> ${rankColor}${username}&f: ${message}`);
-}).setCriteria(/Party > (\[.+?\])? ?(.+?): (.+)/), () => Config().partyformat)
+}, /Party > (\[.+?\])? ?(.+?): (.+)/)

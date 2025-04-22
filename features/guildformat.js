@@ -1,7 +1,9 @@
 import Config from "../config";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
+const guildformat = FeatManager.createFeature("guildformat");
 
-registerWhen(register("chat", (hypixelrank, username, guildrank, message, event) => {
+guildformat.register("chat", (hypixelrank, username, guildrank, message, event) => {
+    if (!Config().formatchatmessage) return;
     cancel(event);
     const rankColors = {
         "Admin": "&c",
@@ -26,4 +28,4 @@ registerWhen(register("chat", (hypixelrank, username, guildrank, message, event)
     const sanitizedMessage = ChatLib.replaceFormatting(message || "");
 
     ChatLib.chat(`&2G &8> ${formattedGuildRank} ${rankColor}${sanitizedUsername}&f: ${sanitizedMessage}`);
-}).setCriteria(/Guild > ?(\[.+?\])? ?([a-zA-Z0-9_]+) ?(\[.+?\])?: (.+)/), () => Config().guildformat && Config().formatchatmessage)
+}, /Guild > ?(\[.+?\])? ?([a-zA-Z0-9_]+) ?(\[.+?\])?: (.+)/)

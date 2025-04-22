@@ -1,7 +1,7 @@
-import Config from "../config";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
+const masknotifier = FeatManager.createFeature("masknotifier");
 
-registerWhen(register("chat", (msg, event) => {
+masknotifier.register("chat", (msg, event) => {
     const mask = [
       [/Your (?:. )?Bonzo's Mask saved your life!/, "Bonzo Mask activated (3s)"],
       [/^Second Wind Activated! Your Spirit Mask saved your life!$/, "Spirit Mask activated (3s)"],
@@ -11,4 +11,4 @@ registerWhen(register("chat", (msg, event) => {
     if (!mask) return;
     ChatLib.command(`pc MeowAddons » ${mask[1]}`);
     cancel(event);
-}).setCriteria("${msg}"), () => Config().masknotifier)
+}, "${msg}")

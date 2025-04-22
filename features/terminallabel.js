@@ -1,9 +1,10 @@
 import Config from "../config";
 import Dungeon from "../../BloomCore/dungeons/Dungeon";
 import { Data } from "./utils/data";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
 import { Render3D } from "../../tska/rendering/Render3D";
 
+const showTerm = FeatManager.createFeature("showTerm");
 const pdistance = (x, y, z) =>
   Math.hypot(
     x - Math.floor(Player.getX() + 0.25),
@@ -70,7 +71,7 @@ const renderTerm = ({ text, x, y, z }) => {
 
 const renderPhase = () => {phases[Data.goldorsection]?.forEach(renderTerm)};
 
-registerWhen(register("renderWorld", renderPhase), () => Config().showTerm);
+showTerm.register("renderWorld", renderPhase)
 
 register("command", () => {
   if (Config().forcerenderterm || Config().debug) renderPhase();

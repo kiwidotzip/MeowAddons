@@ -1,6 +1,9 @@
 import { Data } from "./utils/data";
 import { fetch } from "../../tska/polyfill/Fetch";
+import { FeatureManager } from "../../tska/event/FeatureManager";
+import Config from "../config";
 
+export const FeatManager = new FeatureManager(Config().getConfig());
 const thresholds = [
   { value: 1e9, symbol: "B", precision: 1 },
   { value: 1e6, symbol: "M", precision: 1 },

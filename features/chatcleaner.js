@@ -1,7 +1,7 @@
-import Config from "../config";
 import uselessMsgs from "./chatcleanerentry";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
 
+const chatcleaner = FeatManager.createFeature("chatcleaner")
 uselessMsgs.forEach(msg => {
-    registerWhen(register("chat", e => cancel(e)).setCriteria(msg), () => Config().chatcleaner)
+    chatcleaner.register("chat", e => cancel(e), msg)
 })

@@ -1,10 +1,7 @@
-import Config from "../config"
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
+const meowsounds = FeatManager.createFeature("meowsounds");
 const sounds = ["mob.cat.meow", "mob.cat.purreow", "mob.cat.straymeow"]
 
-registerWhen(register("chat", (message, event) => {
-        if (message.toLowerCase().includes("meow")) {
-            let random = Math.floor(Math.random() * sounds.length)
-            World.playSound(sounds[random], 1, 1);
-        }
-    }).setCriteria(/(?:Guild|Party|Co-op|From|To)? ?(?:>)? ?(?:\[.+?\])? ?(?:[a-zA-Z0-9_]+) ?(?:\[.+?\])?: (.+)/), () => Config().meowsounds)
+meowsounds.register("chat", (msg) => {
+    if (msg.toLowerCase().includes("meow")) World.playSound(sounds[Math.floor(Math.random() * sounds.length)], 1, 1);
+}, /(?:Guild|Party|Co-op|From|To)? ?(?:>)? ?(?:\[.+?\])? ?(?:[a-zA-Z0-9_]+) ?(?:\[.+?\])?: (.+)/);

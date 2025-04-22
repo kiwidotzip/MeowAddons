@@ -1,9 +1,8 @@
 import Settings from "../config";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
+const customsize = FeatManager.createFeature("customsize");
 
-registerWhen(
-  register("renderEntity", entity => {
-    if (entity.getName() !== Player.getName()) return;
+customsize.register("renderEntity", entity => {
     Tessellator.pushMatrix();
     const { customX: x, customY: y, customZ: z } = Settings();
     if (y < 0) {
@@ -12,12 +11,6 @@ registerWhen(
       Tessellator.rotate(2 * entity.getYaw() + 180, 0, 1, 0);
     }
     Tessellator.scale(x, Math.abs(y), z);
-  }), () => Settings().customsize
-);
+}, net.minecraft.client.entity.EntityPlayerSP)
 
-registerWhen(
-  register("postRenderEntity", entity => {
-    if (entity.getName() !== Player.getName()) return;
-    Tessellator.popMatrix();
-  }), () => Settings().customsize
-);
+customsize.register("postRenderEntity", () => Tessellator.popMatrix(), net.minecraft.client.entity.EntityPlayerSP)

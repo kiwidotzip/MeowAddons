@@ -1,5 +1,4 @@
 // Make sure these go to the right directory 
-import { setRegisters } from "./features/utils/renderutils";
 import Settings from "../Amaterasu/core/Settings";
 import DefaultConfig from "../Amaterasu/core/DefaultConfig";
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
@@ -664,17 +663,22 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json")
         .setCommand("MeowAddons", ["ma", "meowa"])
-        .onCloseGui(() => {
-            setRegisters();
-        })
+        .onOpenGui(() => config.mainRightBlock.setWidth((80).percent()))
 const rcolor = Renderer.color(187, 134, 252)
+const bcolor = Renderer.color(13, 13, 13)
 config.getHandler().registers.onDraw(() => {
-    const mainBlockLeft = config.mainBlock.getLeft();
-    const mainBlockRight = config.mainBlock.getRight();
-    const mainBlockTop = config.mainBlock.getTop();
-    const mainBlockBottom = config.mainBlock.getBottom();
-    Renderer.drawLine(rcolor, mainBlockLeft + 130, mainBlockTop + 10, mainBlockLeft + 130, mainBlockBottom - 10, 2);
+    // Line
+    const mb = config.mainBlock;
+    const width = mb.getRight() - mb.getLeft();
+    const height = mb.getBottom() - mb.getTop();
+    Renderer.drawLine(rcolor, mb.getLeft() + width * 0.20, mb.getTop() + height * 0.05, mb.getLeft() + width * 0.20, mb.getBottom() - height * 0.05, 2);
+    // Box
+    Renderer.drawRect(bcolor, mb.getLeft() + (width - width * 0.3) / 2, mb.getTop() + height * 0.0008, width * 0.5, height * 0.09)
+    // Title
+    Renderer.colorize(187, 134, 252, 255)
+    Renderer.drawString(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`, mb.getLeft() + (width - width * 0.3) / 2 + width * 0.5 / 2 - Renderer.getStringWidth(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`) / 2, mb.getTop() + height * 0.0004 + height * 0.075 / 2)
 })
+config.AmaterasuGui.searchBar.x = 200 // yay no search bar
 config
       .setSize(60,60)
       .apply()

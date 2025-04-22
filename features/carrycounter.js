@@ -279,22 +279,16 @@ registerWhen(register("postRenderEntity", (entity, pos) => {
     carryees.forEach((carryee) => {
         if (carryee.bossID !== entityID) return;
         const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
-        let entry = colorCache.get(carryee.timerID);
-        if (!entry || entry.timerStr !== timer) {
-            let color = [0, 255, 255];
-            const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
-            if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127];
-            entry = { timerStr: timer, color };
-            colorCache.set(carryee.timerID, entry);
-        }
-        const [r, g, b] = entry.color;
+        let color = [0, 255, 255];
+        const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
+        if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127];
         Render3D.renderEntityBox(
             pos.getX(),
             pos.getY(),
             pos.getZ(),
             entity.getWidth(),
             entity.getHeight(),
-            r, g, b, 255, 2, false, false
+            color[0], color[1], color[2], 255, 2, false, false
         );
     });
 }), () => settings().renderbossoutline);

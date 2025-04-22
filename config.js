@@ -52,14 +52,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Join/Leave format",
     shouldShow: data => data.cleantoggle
 })
-.addSwitch({
-    category: "Chat",
-    configName: "cleanpartyjoin",
-    title: "Clean party join messages",
-    description: "Formats party join messages",
-    subcategory: "Join/Leave format",
-    shouldShow: data => data.cleantoggle
-})
 
 // Chat - Chat format
 

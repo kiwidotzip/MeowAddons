@@ -265,7 +265,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Slayers",
     subcategory: "Carrying"
 })
-
+.addButton({
+    configName: "carryedit",
+    title: "Edit GUI",
+    description: "Edit carry GUI",
+    category: "Slayers",
+    subcategory: "Carrying",
+    onClick() {
+        ChatLib.command(`meowdevonlypls`, true)
+    }
+})
 .addTextInput({
     configName: "carryvalue",
     title: "Carry price",
@@ -425,6 +434,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Livid vulnerability timer",
     description: "Timer until livid is hitable/can be icesprayed",
     subcategory: "Livid"
+})
+.addButton({
+    category: "Dungeons",
+    configName: "lividvulnedit",
+    title: "Edit GUI",
+    description: "Edit livid vulnerability timer GUI",
+    subcategory: "Livid",
+    onClick() {
+        ChatLib.command(`meowdevonlypls`, true)
+    }
 })
 
 // Dungeons - Leap announce

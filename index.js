@@ -28,6 +28,7 @@ import "./features/lividvuln";
 import "./features/customsize";
 import "./features/custommodel";
 import "./features/blockoverlay";
+import "./features/noclutter";
 
 // Update Checker
 

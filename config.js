@@ -612,7 +612,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Misc.",
     configName: "NoClutter",
     title: "No clutter",
-    description: "Disables a lot of useless things",
+    description: "Disables a lot of useless things\n&cCredit to DocilElm for this <3",
     subcategory: "No Clutter"
 })
 .addSwitch({

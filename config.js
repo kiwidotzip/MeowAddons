@@ -417,6 +417,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Carrying - QOL"
 })
 
+// Dungeons - Livid 
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "lividvuln",
+    title: "Livid vulnerability timer",
+    description: "Timer until livid is hitable/can be icesprayed",
+    subcategory: "Livid"
+})
+
 // Dungeons - Leap announce
 
 .addSwitch({

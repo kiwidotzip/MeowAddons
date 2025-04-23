@@ -1,5 +1,4 @@
 import Config from "../config";
-import Dungeon from "../../BloomCore/dungeons/Dungeon";
 import { Data } from "./utils/data";
 import { FeatManager } from "./helperfunction";
 import { Render3D } from "../../tska/rendering/Render3D";

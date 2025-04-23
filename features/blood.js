@@ -1,7 +1,8 @@
 import Config from "../config";
-import Dungeon from "../../BloomCore/dungeons/Dungeon";
+import { FeatManager } from "./helperfunction";
 import { Data } from "./utils/data";
 
+const Blood = FeatManager.createFeature("blood", "catacombs");
 let bloodopen = false
 let starttime = 0
 var blooddone = false
@@ -18,9 +19,7 @@ function getWatcherRating(diftime) {
   return { title: "Slow Watcher", extra: "[SLOW]" };
 }
 
-Dungeon.registerWhenInDungeon(register("chat", (event) => {
-  if (!Config().blood) return;
-  const message = ChatLib.getChatMessage(event);
+Blood.register("chat", (message, event) => {
   const now = Date.now();
 
   const handlers = [
@@ -85,4 +84,4 @@ Dungeon.registerWhenInDungeon(register("chat", (event) => {
       break;
     }
   }
-}))
+}, "${message}")

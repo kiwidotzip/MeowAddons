@@ -4,7 +4,7 @@ import { Data } from "./utils/data";
 import { FeatManager } from "./helperfunction";
 import { Render3D } from "../../tska/rendering/Render3D";
 
-const showTerm = FeatManager.createFeature("showTerm");
+const showTerm = FeatManager.createFeature("showTerm", "catacombs");
 const pdistance = (x, y, z) =>
   Math.hypot(
     x - Math.floor(Player.getX() + 0.25),
@@ -61,7 +61,6 @@ const getLabel = (text) => {
 };
 
 const renderTerm = ({ text, x, y, z }) => {
-  if (!Dungeon.inDungeon || !Config().showTerm) return;
   Render3D.renderString(text, x, y + 0.5, z, 0xffffff, true, 0.05, false, true, true);
   const label = Config().showTermClass ? getLabel(text) : "";
   if (label && pdistance(x, y, z) < Config().showTermClassDistance) {
@@ -73,6 +72,3 @@ const renderPhase = () => {phases[Data.goldorsection]?.forEach(renderTerm)};
 
 showTerm.register("renderWorld", renderPhase)
 
-register("command", () => {
-  if (Config().forcerenderterm || Config().debug) renderPhase();
-}).setName("renderterm");

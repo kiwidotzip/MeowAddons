@@ -1,6 +1,7 @@
 import { Data } from "./utils/data";
 import { fetch } from "../../tska/polyfill/Fetch";
 import { FeatureManager } from "../../tska/event/FeatureManager";
+import { Event } from "../../tska/event/Event";
 import Config from "../config";
 
 export const FeatManager = new FeatureManager(Config().getConfig());
@@ -10,6 +11,8 @@ const thresholds = [
   { value: 1e3, symbol: "K", precision: 1 }
 ];
 
+Event.createEvent("ma:renderEntity", (cb, entityType) => register("renderEntity", cb).setFilteredClasses(entityType));
+Event.createEvent("ma:postRenderEntity", (cb, entityType) => register("postRenderEntity", cb).setFilteredClasses(entityType));
 register("worldLoad", () => {
     Data.goldorsection = 0;
 });

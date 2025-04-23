@@ -12,7 +12,7 @@ let dungeonCarryees = [];
 let checkCounter = 0;
 let lastTradePlayer = null;
 let lastTradeTime = 0;
-let isInInventory = false;
+let isInInventory = true;
 let nextAvailableTime = 0;
 
 const BossChecker = FeatManager.createFeatureNo();
@@ -241,7 +241,6 @@ BossChecker.registersub("stepFps", () => {
     });
 }, () => carryees.length > 0, 10)
 
-register("command", () => print(carryees.length > 0)).setName("carryee")
 // Boss check
 
 register("step", () => {
@@ -276,9 +275,7 @@ register("entityDeath", (entity) => {
     });
 });
 
-// Entity highlight
-
-BossOutline.register("postRenderEntity", (entity, pos) => { 
+BossOutline.register("ma:postRenderEntity", (entity, pos) => { 
     const entityID = entity.entity.func_145782_y(); 
     carryees.forEach((carryee) => {
         if (carryee.bossID !== entityID) return;
@@ -295,14 +292,13 @@ BossOutline.register("postRenderEntity", (entity, pos) => {
             color[0], color[1], color[2], 255, 2, false, false
         );
     });
-}, net.minecraft.entity.monster.EntityEnderman || net.minecraft.entity.passive.EntityWolf || net.minecraft.entity.monster.EntitySpider || net.minecraft.entity.monster.EntityZombie);
+}, [net.minecraft.entity.monster.EntityEnderman, net.minecraft.entity.passive.EntityWolf, net.minecraft.entity.monster.EntitySpider, net.minecraft.entity.monster.EntityZombie]);
 
 // Player highlight
 
 PlayerOutline.register("postRenderEntity", (entity, pos) => { 
-    const entityName = entity.getName(); 
     carryees.forEach((carryee) => { 
-        if (carryee.name === entityName) { 
+        if (carryee.name === entity.getName()) { 
             Render3D.renderEntityBox(
                 pos.getX(),
                 pos.getY(),
@@ -497,7 +493,7 @@ register("worldLoad", () => {
 // GUI stuff
 
 register("guiOpened", e => e.gui instanceof GuiInventory && (isInInventory = true, renderGuiNOTINV.update(), renderGuiINV.update()));
-register("guiClosed", gui => gui instanceof GuiInventory && (isInInventory = false, renderGuiNOTINV.update(), renderGuiINV.update()));
+register("guiClosed", () => (isInInventory = false, renderGuiNOTINV.update(), renderGuiINV.update()));
 const getInventoryState = () => isInInventory;
 
 function getAllCarryees() {

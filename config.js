@@ -52,6 +52,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Join/Leave format",
     shouldShow: data => data.cleantoggle
 })
+.addSwitch({
+    category: "Chat",
+    configName: "cleanpartyjoin",
+    title: "Clean party join messages",
+    description: "Formats party join messages",
+    subcategory: "Join/Leave format",
+    shouldShow: data => data.cleantoggle
+})
 
 // Chat - Chat format
 
@@ -472,50 +480,38 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 .addSwitch({
     category: "Party Commands",
-    configName: "partycommands",
-    title: "Party Commands",
-    description: "Enables party commands",
-    subcategory: "Main toggle"
-})
-.addSwitch({
-    category: "Party Commands",
     configName: "partytransfer",
     title: "Party Transfer",
     description: "Transfers the party to the player that ran !ptme",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
+    subcategory: "Toggles",
 })
 .addSwitch({
     category: "Party Commands",
     configName: "partywarp",
     title: "Party Warp",
     description: "Warps the party when someone says !warp",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
+    subcategory: "Toggles",
 })
 .addSwitch({
     category: "Party Commands",
     configName: "partyinvite",
     title: "Party Invite",
     description: "Runs the party invite command when someone says !inv, !invite, !party, !p username in chat",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
+    subcategory: "Toggles",
 })
 .addSwitch({
     category: "Party Commands",
     configName: "partyallinvite",
     title: "AllInvite",
     description: "Toggles allinvite when someone says !allinv or !allinvite",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
+    subcategory: "Toggles",
 })
 .addSwitch({
     category: "Party Commands",
     configName: "partykickoffline",
     title: "KickOffline",
     description: "Kicks all offline players from the party when someone says !kickoffline",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
+    subcategory: "Toggles",
 })
 
 // Misc - Custom Size

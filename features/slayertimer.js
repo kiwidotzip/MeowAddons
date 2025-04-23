@@ -18,7 +18,8 @@ let bossName = "", hp = "", timestarted = 0;
 const eHpEntity = () => !!hpEntity;
 const resetBossTracker = () => [timestarted, bossID, hpEntity, timerEntity] = [0, null, null, null];
 
-slayerbossdisplay.register("stepFps", () => {
+slayerbossdisplay
+    .register("stepFps", () => {
     World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"))
         .forEach(entity => {
             if (entity.entity.func_145782_y() !== bossID + 1) return;
@@ -26,9 +27,22 @@ slayerbossdisplay.register("stepFps", () => {
             const match = name.match(BOSS_HP_REGEX);
             if (match) {
                 [bossName, hp] = [match[1], match[2]];
+                slayerbossdisplay.update()
             }
         });
 }, 10)
+    .registersub("renderOverlay", () => {
+    const hpOffset = Renderer.getStringWidth(`&c☠ &b${bossName}`) - Renderer.getStringWidth(hp);
+    const timerText = timerEntity?.func_70005_c_().removeFormatting();
+    Renderer.translate(GUI.getX(), GUI.getY());
+    Renderer.scale(GUI.getScale());
+    Renderer.retainTransforms(true);
+    Renderer.drawStringWithShadow(`&c${timerText}`, 0, 0);
+    Renderer.drawStringWithShadow(`&c${hp}`, hpOffset, 0);
+    Renderer.drawStringWithShadow(`&c☠ &b${bossName}`, 0, 10);
+    Renderer.retainTransforms(false);
+    Renderer.finishDraw()
+}, () => eHpEntity())
 
 register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (entity) => {
     if (settings().slayerbossdisplay || settings().slayerkilltimer) {
@@ -53,25 +67,11 @@ register("entityDeath", (entity) => {
             ChatLib.chat(`&e[MeowAddons] &fYou killed your boss in &b${(timeTaken / 1000).toFixed(2)}s&f.`)
         };
         resetBossTracker();
+        slayerbossdisplay.update();
     }
 });
 
-
-slayerbossdisplay.registersub("renderOverlay", () => {
-    Renderer.translate(GUI.getX(), GUI.getY());
-    Renderer.scale(GUI.getScale());
-    Renderer.retainTransforms(true);
-    const hpOffset = Renderer.getStringWidth(`&c☠ &b${bossName}`) - Renderer.getStringWidth(hp);
-    const timerText = ChatLib.removeFormatting(timerEntity.func_70005_c_());
-    Renderer.drawStringWithShadow(`&c${timerText}`, 0, 0);
-    Renderer.drawStringWithShadow(`&c${hp}`, hpOffset, 0);
-    Renderer.drawStringWithShadow(`&c☠ &b${bossName}`, 0, 10);
-    Renderer.retainTransforms(false);
-    Renderer.finishDraw()
-}, () => eHpEntity())
-
-
-slayerbosshighlight.register("postRenderEntity", (ent, pos) => {
+slayerbosshighlight.register("ma:postRenderEntity", (ent, pos) => {
     if (ent.entity.func_145782_y() !== bossID) return;
     Render3D.renderEntityBox(
         pos.getX(),
@@ -81,7 +81,7 @@ slayerbosshighlight.register("postRenderEntity", (ent, pos) => {
         ent.getHeight(),
         0, 255, 255, 255, 2, false, false
     )
-}, net.minecraft.entity.monster.EntityEnderman || net.minecraft.entity.passive.EntityWolf || net.minecraft.entity.monster.EntitySpider || net.minecraft.entity.monster.EntityZombie);
+}, [net.minecraft.entity.monster.EntityEnderman, net.minecraft.entity.passive.EntityWolf, net.minecraft.entity.monster.EntitySpider, net.minecraft.entity.monster.EntityZombie]);
 
 register("command", () => huds.open()).setName(`meowdevonlypls`);
 register("chat", () => resetBossTracker()).setCriteria(/&r  &r&c&lSLAYER QUEST FAILED!&r/)

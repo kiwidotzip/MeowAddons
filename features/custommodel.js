@@ -99,13 +99,12 @@ function drawCustomModel(pt) {
     Tessellator.enableLighting()
     GlStateManager.func_179121_F() // popMatrix
 }
-
-custommodel.register("renderEntity", () => {
-    GlStateManager.func_179094_E() // pushMatrix
-    GlStateManager.func_179137_b(0, 500, 0) // translate
-}, net.minecraft.client.entity.EntityPlayerSP)
-
-custommodel.register("postRenderEntity", (e, pos, pt, event)=> {
-    GlStateManager.func_179121_F() // popMatrix
-    drawCustomModel(pt)
-}, net.minecraft.client.entity.EntityPlayerSP)
+custommodel
+    .register("renderEntity", () => {
+        GlStateManager.func_179094_E() // pushMatrix
+        GlStateManager.func_179137_b(0, 500, 0) // translate
+    }, net.minecraft.client.entity.EntityPlayerSP)
+    .register("postRenderEntity", (e, pos, pt, event)=> {
+        GlStateManager.func_179121_F() // popMatrix
+        drawCustomModel(pt)
+    }, net.minecraft.client.entity.EntityPlayerSP)

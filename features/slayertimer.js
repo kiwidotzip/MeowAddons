@@ -1,15 +1,15 @@
 import settings from "../config";
 import { LocalStore } from "../../tska/storage/LocalStore";
 import { Render3D } from "../../tska/rendering/Render3D";
-import { Huds } from "../../Krun/Huds";
+import { HudManager } from "../../tska/gui/HudManager";
 import { FeatManager } from "./helperfunction";
 
 const slayerbossdisplay = FeatManager.createFeature("slayerbossdisplay");
 const slayerkilltimer = FeatManager.createFeature("slayerkilltimer");       
 const slayerbosshighlight = FeatManager.createFeature("slayerbosshighlight");
 
-const data = new LocalStore("Krun", {});
-const huds = new Huds(data);
+const data = new LocalStore("tska", {});
+const huds = new HudManager(data);
 const GUI = huds.createTextHud("Slayer Display", 120, 10, "a\n☠ &bVoidgloom Seraph IV");
 const BOSS_HP_REGEX = /☠ (.+?)\s*(?:ᛤ\s*)?([\d\.]+[MK]?\s*(?:Hits|❤))(?:\s*✯)?/i;
 let bossID = null, hpEntity = null, timerEntity = null;

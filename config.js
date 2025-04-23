@@ -610,6 +610,37 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addSwitch({
     category: "Misc.",
+    configName: "NoClutter",
+    title: "No clutter",
+    description: "Disables a lot of useless things",
+    subcategory: "No Clutter"
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "noLightning",
+    title: "No lightning",
+    description: "Disables lightning",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "noDeathAni",
+    title: "No death animation",
+    description: "Disables death animation",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "noEnderTP",
+    title: "No ender teleport",
+    description: "Disables ender teleport animation",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
     configName: "partycmd",
     title: "Party commands",
     description: "Enables party commands",
@@ -624,6 +655,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Party commands",
     shouldShow: data => data.partycmd
 })
+
 // Dev
 
 .addButton({

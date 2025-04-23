@@ -116,6 +116,7 @@ register("worldLoad", () => {
                 ChatLib.chat(new TextComponent(`&7&oPsssst &7- &e&lMeowAddons&f now has a discord - Click to join!`)
                             .setHoverValue(`Click to join!`)
                             .setClick("open_url", `https://discord.gg/KPmHQUC97G`))
+                Data.DiscordSent = true;
                 Data.save()
             }
             updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;

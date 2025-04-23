@@ -24,8 +24,7 @@ DrawBlock.register("drawBlockHighlight", (pos, event) => {
     cancel(event);
     const color = getColor(Config().blockoverlaycolor);
     const phase = Client.settings.getSettings()?.field_74320_O !== 1;
-    const partialTicks = event.partialTicks;
     Config().blockoverlayfill
-      ? Render3D.filledBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, 2, false, partialTicks)
-      : Render3D.outlineBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, 2, true, partialTicks);
+      ? Render3D.filledBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, true, event.partialTicks)
+      : Render3D.outlineBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, 2, true, event.partialTicks);
 })

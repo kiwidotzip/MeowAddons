@@ -59,7 +59,7 @@ Blood.register("chat", (message, event) => {
         if (currentCampTime < Data.bloodCampPB) {
           Data.bloodCampPB = currentCampTime;
           Data.save();
-          ChatLib.chat(`&dMeowAddons &8» &rNew PB: &e${pogData.bloodCampPB.toFixed(1)}s&r!`);
+          ChatLib.chat(`&dMeowAddons &8» &rNew PB: &e${Data.bloodCampPB.toFixed(1)}s&r!`);
         }
 
         if (Config().sendbloodparty) {

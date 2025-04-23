@@ -44,7 +44,7 @@ const phases = {
 };
 
 const getLabel = (text) => {
-  if (pogData.goldorsection === 1) {
+  if (Data.goldorsection === 1) {
     if (text === "&7[&f1&7]" || text === "&7[&f2&7]") return "&aTank";
     if (text === "&7[&f3&7]" || text === "&7[&f4&7]") return "&bMage";
   } else {

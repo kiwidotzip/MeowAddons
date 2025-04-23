@@ -1,44 +1,27 @@
-import Config from "../config";
-import Party from "../../BloomCore/Party"
+import Party from "../../BloomCore/Party";
+import { FeatManager } from "./helperfunction";
+import { getServerTPS } from "../../tska/shared/ServerTick.js"
 
-register('chat', (rank, name) => {
-    if (name === Player.getName()) return;
-	if (!Config().partytransfer) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party transfer ${name}`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !ptme$/)
-
-register('chat', (rank, name) => {
-	if (!Config().partywarp) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party warp`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !warp$/)
-
-register('chat', (rank, name) => {
-	if (!Config().partyallinvite) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party settings allinvite`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !allinv$/)
-
-register('chat', (rank, name) => {
-	if (!Config().partykickoffline) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party settings kickoffline`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !kickoffline$/)
-
-register('chat', (rank, name, alias, player) => {
-	if (!Config().partyinvite) return;
-	if (!Config().partycommands) return;
-	if (Party.leader == Player.getName()) {
-		ChatLib.command(`party invite ${player}`)
-	}
-}).setCriteria(/Party > (?:\[([^\]]*?)\] )?(\w{1,16}): !(inv|invite|p|party) (.+)$/)
-
+const PartyCmd = FeatManager.createFeature("partycmd");
+PartyCmd
+	.register("chat", (name) => { 
+		if (name !== Player.getName() && Party.leader === Player.getName()) ChatLib.command(`party transfer ${name}`)
+	}, /Party > (?:\[([^\]]*?)\] )?(\w{1,16}) (?:\s[^\s\[\]:]+)?: !ptme$/)
+	.register("chat", () => { 
+		if (Party.leader === Player.getName()) ChatLib.command(`party warp`)
+	}, /Party > (?:\[([^\]]*?)\] )?(\w{1,16}) (?:\s[^\s\[\]:]+)?: !warp$/)
+	.register("chat", () => {
+		if (Party.leader === Player.getName()) ChatLib.command(`party settings allinvite`)
+	}, /Party > (?:\[([^\]]*?)\] )?(?:\w{1,16}) (?:\s[^\s\[\]:]+)?: !allinv$/)
+	.register("chat", () => {
+		if (Party.leader === Player.getName()) ChatLib.command(`party settings kickoffline`)
+	}, /Party > (?:\[([^\]]*?)\] )?(?:\w{1,16}) (?:\s[^\s\[\]:]+)?: !kickoffline$/)
+	.register("chat", (player) => {
+		if (Party.leader === Player.getName()) ChatLib.command(`party invite ${player}`)
+	}, /Party > (?:\[([^\]]*?)\] )?(?:\w{1,16}) (?:\s[^\s\[\]:]+)?: !(?:inv|invite|p|party) (.+)$/)
+	.register("chat", () => { 
+		ChatLib.command(`pc [MA] TPS: ${getServerTPS()}`)
+	}, /Party > (?:\[([^\]]*?)\] )?(?:\w{1,16}) (?:\s[^\s\[\]:]+)?: !tps$/)
+	.register("chat", () => {
+		ChatLib.command(`pc [MA] Ping: ${Server.getPing()}`)
+	}, /Party > (?:\[([^\]]*?)\] )?(?:\w{1,16}) (?:\s[^\s\[\]:]+)?: !ping$/)

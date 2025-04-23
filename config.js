@@ -476,44 +476,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Removed because me lazy and code unoptimized
 
-// Party commands
-
-.addSwitch({
-    category: "Party Commands",
-    configName: "partytransfer",
-    title: "Party Transfer",
-    description: "Transfers the party to the player that ran !ptme",
-    subcategory: "Toggles",
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partywarp",
-    title: "Party Warp",
-    description: "Warps the party when someone says !warp",
-    subcategory: "Toggles",
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partyinvite",
-    title: "Party Invite",
-    description: "Runs the party invite command when someone says !inv, !invite, !party, !p username in chat",
-    subcategory: "Toggles",
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partyallinvite",
-    title: "AllInvite",
-    description: "Toggles allinvite when someone says !allinv or !allinvite",
-    subcategory: "Toggles",
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partykickoffline",
-    title: "KickOffline",
-    description: "Kicks all offline players from the party when someone says !kickoffline",
-    subcategory: "Toggles",
-})
-
 // Misc - Custom Size
 
 .addSwitch({
@@ -617,7 +579,22 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     value: [0, 0, 0, 255],
     shouldShow: data => data.blockoverlay
 })
-
+.addSwitch({
+    category: "Misc.",
+    configName: "partycmd",
+    title: "Party commands",
+    description: "Enables party commands",
+    subcategory: "Party commands"
+})
+.addTextParagraph({
+    category: "Misc.",
+    configName: "partycmdinfo",
+    title: "Party commands info",
+    description: "Use !ptme, !warp, !allinv, !kickoffline, !inv <player>, !tps, !ping to use the commands",
+    centered: true,
+    subcategory: "Party commands",
+    shouldShow: data => data.partycmd
+})
 // Dev
 
 .addButton({

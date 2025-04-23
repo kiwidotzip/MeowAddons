@@ -1,10 +1,9 @@
 import settings from "../config";
-import { Data } from "./utils/data";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { SendMsg } from "./helperfunction";
 import { LocalStore } from "../../tska/storage/LocalStore";
-import { FeatManager } from "./helperfunction";
+import { FeatManager, hud } from "./helperfunction";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -21,13 +20,14 @@ const renderGuiINV = FeatManager.createFeatureNo();
 const BossOutline = FeatManager.createFeature("renderbossoutline");
 const PlayerOutline = FeatManager.createFeature("renderplayeroutline");
 
-const webhookUrl = settings().webhookurlcarry
+const GUI = hud.createTextHud("Carry counter", 120, 10, "a\nlyfrieren: 23/1984 (N/A | N/A)\nsascha: 23/1984 (N/A | N/A)");
+
+const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
+const webhookUrl = settings().webhookurlcarry
 const carryCache = new Map();
-const hudEditor = new Gui();
 const processedEntities = new Set();
 const DateMEOW = new Date()
-const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
 const CarryLog = new LocalStore("MeowAddons",{
     data: []
 }, "./data/carrylog.json")
@@ -510,45 +510,30 @@ renderGuiNOTINV.registersub("renderOverlay", () => {
     if (settings().drawcarrybox && allCarryees.length > 0) {
         Renderer.drawRect(
             Renderer.color(...settings().carryboxcolor),
-            Data.CarryX,
-            Data.CarryY,
+            GUI.getX(),
+            GUI.getY(),
             longestWidth,
             totalHeight
         );
     }
-    if (!hudEditor.isOpen() && allCarryees.length > 0) {
-        Renderer.drawString("&e[MA] &d&lCarries&f:", Data.CarryX + 4, Data.CarryY + 4);
+    if (!hud.isOpen() && allCarryees.length > 0) {
+        Renderer.drawString("&e[MA] &d&lCarries&f:", GUI.getX(), GUI.getY());
         allCarryees.forEach((carryee, index) => {
             Renderer.drawString(
                 carryee.toString(),
-                Data.CarryX + 4,
-                Data.CarryY + 16 + (index * 10)
+                GUI.getX(),
+                GUI.getY() + 12 + (index * 10)
             );
         });
     }
-
-    if (hudEditor.isOpen()) {
-        Renderer.drawString(
-            "&a&lDrag to move HUD",
-            Renderer.screen.getWidth() / 2 - 45,
-            Renderer.screen.getHeight() / 2 - 30,
-            true
-        );
-        Renderer.drawString(
-            "&e[MA] &d&lCarries&f:",
-            Data.CarryX + 4,
-            Data.CarryY + 4
-        );
-        Renderer.drawString("&blyfrieren&f: 23&8/&f1984 &7(N/A)",
-            Data.CarryX + 4,
-            Data.CarryY + 16
-        );
-        Renderer.drawString("&bsascha&f: 23&8/&f1984 &7(N/A)",
-            Data.CarryX + 4,
-            Data.CarryY + 26
-        );
-    };
 }, () => !getInventoryState());
+
+GUI.onDraw(() => {
+    Renderer.translate(GUI.getX(), GUI.getY());
+    Renderer.scale(GUI.getScale());
+    Renderer.drawStringWithShadow("&e[MA] &d&lCarries: \n&blyfrieren&f: 23&7/&f1984 &7(N/A | N/A)\n&bsascha&f: 23&7/&f1984 &7(N/A | N/A)\n&4&lTHIS WILL IGNORE THE SCALE", 0, 0);
+    Renderer.finishDraw();
+})
 
 // Inventory GUI
 
@@ -556,13 +541,13 @@ renderGuiINV.registersub("guiRender", () => {
     const allCarryees = getAllCarryees();
     if (allCarryees.length === 0) return;
 
-    const hudX = Data.CarryX;
-    const hudY = Data.CarryY;
+    const hudX = GUI.getX();
+    const hudY = GUI.getY();
 
-    Renderer.drawString("&e[MA] &d&lCarries&f:", hudX + 4, hudY + 4);
+    Renderer.drawString("&e[MA] &d&lCarries&f:", hudX, hudY);
 
     allCarryees.forEach((carryee, index) => {
-        const yPos = hudY + 16 + (index * 10);
+        const yPos = hudY + 12 + (index * 10);
         const textWidth = Renderer.getStringWidth(carryee.toString());
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
         const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
@@ -571,7 +556,7 @@ renderGuiINV.registersub("guiRender", () => {
         const isHoveringMinus = isInArea(mouseX, mouseY, minusArea);
         const isHoveringRemove = isInArea(mouseX, mouseY, removeArea);
 
-        Renderer.drawString(carryee.toString(), hudX + 4, yPos);
+        Renderer.drawString(carryee.toString(), hudX, yPos);
 
         let currentX = hudX + textWidth + 6;
 
@@ -621,8 +606,8 @@ renderGuiINV.registersub("guiRender", () => {
 register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
     if (!isInInventory) return;
     const allCarryees = getAllCarryees();
-    const hudX = Data.CarryX;
-    const hudY = Data.CarryY;
+    const hudX = GUI.getX();
+    const hudY = GUI.getY();
     
     allCarryees.forEach((carryee, index) => {
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
@@ -657,10 +642,10 @@ register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
 
 renderGuiINV.registersub("postGuiRender", () => {
     const allCarryees = getAllCarryees();
-    const hudX = Data.CarryX;
-    const hudY = Data.CarryY;
+    const hudX = GUI.getX();
+    const hudY = GUI.getY();
     const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
-    if (hudEditor.isOpen()) return;
+    if (hud.isOpen()) return;
     allCarryees.forEach((carryee, index) => {
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
     
@@ -675,7 +660,7 @@ renderGuiINV.registersub("postGuiRender", () => {
 }, () => getInventoryState());
 
 function getButtonAreas(hudX, hudY, carryee, index) {
-    const entryY = hudY + 16 + (index * 10);
+    const entryY = hudY + 12 + (index * 10);
     const textWidth = Renderer.getStringWidth(carryee.toString());
     const buttonBaseX = hudX + textWidth + 10;
     
@@ -708,16 +693,6 @@ function getButtonAreas(hudX, hudY, carryee, index) {
 function isInArea(x, y, area) {
     return x >= area.x1 && x <= area.x2 && y >= area.y1 && y <= area.y2;
 }
-
-// GUI management 
-
-register("dragged", (dx, dy, x, y, button) => {
-    if (hudEditor.isOpen() && button === 0) {
-        Data.CarryX = x;
-        Data.CarryY = y;
-        Data.save();
-    }
-});
 
 // Commands
 
@@ -832,7 +807,7 @@ register("command", (...args = []) => {
             ChatLib.chat(`${prefix} &fDecreased &6${name}&f's count to &6${carryeeDec.count}&f.`);
             break;
         case "gui":
-            hudEditor.open();
+            hud.open()
             break;
         case "confirmdeath":
             if (!name) return syntaxError("confirmdeath <name>");

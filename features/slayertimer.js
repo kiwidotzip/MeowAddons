@@ -1,16 +1,12 @@
 import settings from "../config";
-import { LocalStore } from "../../tska/storage/LocalStore";
 import { Render3D } from "../../tska/rendering/Render3D";
-import { HudManager } from "../../tska/gui/HudManager";
-import { FeatManager } from "./helperfunction";
+import { FeatManager, hud } from "./helperfunction";
 
 const slayerbossdisplay = FeatManager.createFeature("slayerbossdisplay");
 const slayerkilltimer = FeatManager.createFeature("slayerkilltimer");       
 const slayerbosshighlight = FeatManager.createFeature("slayerbosshighlight");
 
-const data = new LocalStore("tska", {});
-const huds = new HudManager(data);
-const GUI = huds.createTextHud("Slayer Display", 120, 10, "a\n☠ &bVoidgloom Seraph IV");
+const GUI = hud.createTextHud("Slayer Display", 120, 10, "a\n☠ &bVoidgloom Seraph IV");
 const BOSS_HP_REGEX = /☠ (.+?)\s*(?:ᛤ\s*)?([\d\.]+[MK]?\s*(?:Hits|❤))(?:\s*✯)?/i;
 let bossID = null, hpEntity = null, timerEntity = null;
 let bossName = "", hp = "", timestarted = 0;
@@ -83,7 +79,7 @@ slayerbosshighlight.register("ma:postRenderEntity", (ent, pos) => {
     )
 }, [net.minecraft.entity.monster.EntityEnderman, net.minecraft.entity.passive.EntityWolf, net.minecraft.entity.monster.EntitySpider, net.minecraft.entity.monster.EntityZombie]);
 
-register("command", () => huds.open()).setName(`meowdevonlypls`);
+register("command", () => hud.open()).setName(`meowdevonlypls`);
 register("chat", () => resetBossTracker()).setCriteria(/&r  &r&c&lSLAYER QUEST FAILED!&r/)
 
 GUI.onDraw(() => {
@@ -92,8 +88,3 @@ GUI.onDraw(() => {
     Renderer.drawStringWithShadow("&c03:59               &e64.2M &c❤\n&c☠ &bVoidgloom Seraph IV" , 0, 0);
     Renderer.finishDraw();
 })
-
-register("gameUnload", () => {
-    huds.save();
-    data.save();
-});

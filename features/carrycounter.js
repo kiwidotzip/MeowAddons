@@ -258,7 +258,7 @@ TickTimer.registersub("servertick", () => {
 
 MinibossSpawn.registersub("ma:entityJoin", (ent, entID, evn) => {
     scheduleTask(() => {
-        if (!minibossnames.includes(ent.func_70005_c_().removeFormatting().replace(/ \d[\d.,]*(?:[kKmMbBtT])?❤?$/, ""))) return;
+        if (!minibossnames.includes(ent?.func_70005_c_()?.removeFormatting().replace(/ \d[\d.,]*(?:[kKmMbBtT])?❤?$/, ""))) return;
         World.playSound("mob.cat.meow", 5, 2);
         Client.showTitle("&bMiniboss spawned!", "", 4, 20, 4);
         if (settings().debug || settings().sendminibossmsg) ChatLib.chat(`${prefix} &cMiniboss spawned.`);
@@ -275,7 +275,7 @@ register("step", () => {
         carryees.forEach(carryee => {
             if (settings().debug) {ChatLib.chat(`${prefix} &fChecking for boss entity.`)}
             if (carryee.bossID !== null) {
-                const entity = World.getWorld().func_73045_a(carryee.bossID);
+                const entity = World.getWorld()?.func_73045_a(carryee.bossID);
                 if (!entity || entity?.field_70128_L) {
                     if (settings().debug) ChatLib.chat(`${prefix} &cBoss entity for ${carryee.name} not found/reset.`);
                     carryee.reset();
@@ -308,9 +308,9 @@ BossOutline.register("ma:postRenderEntity", (entity, pos) => {
     const entityID = entity.entity.func_145782_y(); 
     carryees.forEach((carryee) => {
         if (carryee.bossID !== entityID) return;
-        const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
         let color = [0, 255, 255];
-        const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
+        const timer = World.getWorld()?.func_73045_a(carryee.timerID)?.func_70005_c_()?.removeFormatting()
+        const timeMatch = timer?.match(/^(\d+):([0-5]\d)$/);
         if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127];
         Render3D.renderEntityBox(
             pos.getX(),

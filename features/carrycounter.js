@@ -4,6 +4,7 @@ import { Render3D } from "../../tska/rendering/Render3D";
 import { SendMsg } from "./helperfunction";
 import { LocalStore } from "../../tska/storage/LocalStore";
 import { FeatManager, hud } from "./helperfunction";
+import { scheduleTask } from "../../tska/shared/ServerTick";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -27,7 +28,6 @@ const GUI = hud.createTextHud("Carry counter", 120, 10, "a\nlyfrieren: 23/1984 (
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
 const webhookUrl = settings().webhookurlcarry
 const carryCache = new Map();
-const processedEntities = new Set();
 const DateMEOW = new Date()
 const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
 const minibossnames = [
@@ -232,27 +232,19 @@ register("worldLoad", () => {
 
 // Nametag detection
 
-BossChecker.registersub("stepFps", () => {
-    const allEntities = World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"));
-    allEntities.forEach(entity => {
-        const id = entity.entity.func_145782_y();
-        const name = ChatLib.removeFormatting(entity.entity.func_70005_c_());
-        if (!processedEntities.has(id) && name.includes("Spawned by")) {
-            processedEntities.add(id);
-            const playerName = name.split("by: ")[1];
-            const carryee = findCarryee(playerName);
-            if (carryee) {
-                const armorStandID = id;
-                const bossID = armorStandID - 3;
-                carryee.recordBossStartTime(bossID);
-                if (settings().notifybossspawn) {
-                    Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1);
-                    World.playSound("mob.cat.meow", 5, 2);
-                }
-            }
+BossChecker.registersub("ma:entityJoin", (ent, entID, evn) => {
+    scheduleTask(() => {
+        const name = ent.func_70005_c_()?.removeFormatting();
+        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by")) return;
+        const carryee = findCarryee(name.split("by: ")[1]);
+        if (!carryee) return;
+        carryee.recordBossStartTime(entID - 3);
+        if (settings().notifybossspawn) {
+            Client.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, "", 1, 20, 1);
+            World.playSound("mob.cat.meow", 5, 2);
         }
-    });
-}, () => carryees.length > 0, 10)
+    }, 2);
+}, () => carryees.length > 0);
 
 // Tick timer
 
@@ -265,11 +257,14 @@ TickTimer.registersub("servertick", () => {
 // Miniboss spawn
 
 MinibossSpawn.registersub("ma:entityJoin", (ent, entID, evn) => {
-    if (!minibossnames.includes(ent.func_70005_c_().removeFormatting())) return;
-    World.playSound("mob.cat.meow", 5, 2);
-    Client.showTitle("&bMiniboss spawned!", "", 4, 20, 4);
-    ChatLib.chat(`${prefix} &c${ent.func_70005_c_().removeFormatting()} spawned`);
-}, () => carryees.length > 0)
+    scheduleTask(() => {
+        if (!minibossnames.includes(ent.func_70005_c_().removeFormatting().replace(/ \d[\d.,]*(?:[kKmMbBtT])?❤?$/, ""))) return;
+        World.playSound("mob.cat.meow", 5, 2);
+        Client.showTitle("&bMiniboss spawned!", "", 4, 20, 4);
+        if (settings().debug || settings().sendminibossmsg) ChatLib.chat(`${prefix} &cMiniboss spawned.`);
+    });
+}, () => carryees.length > 0);
+
 
 // Boss check
 
@@ -301,7 +296,7 @@ register("entityDeath", (entity) => {
             const timeTaken = carryee.getTimeTakenToKillBoss();
             const msg = new Message(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&7 | `)
                             .addTextComponent(new TextComponent(`&b${carryee.bossTicks / 20}s.`)
-                            .setHoverValue(`&cTick Timer - May not be 100% accurate`))
+                            .setHoverValue(`&c${carryee.bossTicks} ticks - May not be 100% accurate`))
             ChatLib.chat(msg);
             carryee.reset();
             TickTimer.update();

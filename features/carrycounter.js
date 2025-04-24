@@ -17,6 +17,7 @@ let nextAvailableTime = 0;
 const BossChecker = FeatManager.createFeatureNo();
 const renderGuiNOTINV = FeatManager.createFeatureNo();
 const renderGuiINV = FeatManager.createFeatureNo();
+const TickTimer = FeatManager.createFeatureNo();
 const BossOutline = FeatManager.createFeature("renderbossoutline");
 const PlayerOutline = FeatManager.createFeature("renderplayeroutline");
 
@@ -51,6 +52,7 @@ class Carryee {
         this.isFighting = false;
         this.bossID = null;
         this.timerID = null;
+        this.bossTicks = 0;
         this.sessionStartTime = Date.now();
         this.totalCarryTime = 0; 
     }
@@ -70,8 +72,10 @@ class Carryee {
         if (!this.startTime && !this.isFighting) {
             this.startTime = Date.now();
             this.isFighting = true;
+            this.bossTicks = 0;
             this.bossID = bossID;
             this.timerID = bossID + 2;
+            TickTimer.update();
         }
     }
     endSession() {
@@ -116,6 +120,7 @@ class Carryee {
         this.startTime = null;
         this.bossID = null;
         this.timerID = null;
+        this.bossTicks = 0;
     }
 
     complete() {
@@ -240,7 +245,11 @@ BossChecker.registersub("stepFps", () => {
         }
     });
 }, () => carryees.length > 0, 10)
-
+TickTimer.registersub("servertick", () => {
+    carryees.forEach(carryee => {
+        if (carryee.isFighting) carryee.bossTicks++
+    });
+}, () => carryees.some(carryee => carryee.isFighting))
 // Boss check
 
 register("step", () => {
@@ -269,8 +278,12 @@ register("entityDeath", (entity) => {
             carryee.recordBossTime();
             carryee.incrementTotal();
             const timeTaken = carryee.getTimeTakenToKillBoss();
-            ChatLib.chat(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&f.`);
+            const msg = new Message(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&7 | `)
+                            .addTextComponent(new TextComponent(`&b${carryee.bossTicks / 20}s.`)
+                            .setHoverValue(`&cTick Timer - May not be 100% accurate`))
+            ChatLib.chat(msg);
             carryee.reset();
+            TickTimer.update();
         }
     });
 });

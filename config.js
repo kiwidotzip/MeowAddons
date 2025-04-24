@@ -284,7 +284,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     value: "1.3",
     placeHolder: "1.3"
 })
-
 .addSwitch({
     category: "Slayers",
     configName: "notifybossspawn",
@@ -292,7 +291,13 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Displays a title when your client's boss spawns",
     subcategory: "Carrying - QOL"
 })
-
+.addSwitch({
+    category: "Slayers",
+    configName: "minibossspawn",
+    title: "Notify miniboss spawn",
+    description: "Displays a title when a miniboss spawns when you're carrying",
+    subcategory: "Carrying - QOL"
+})
 .addSwitch({
     category: "Slayers",
     configName: "sendtrademsg",

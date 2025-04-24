@@ -18,6 +18,7 @@ const thresholds = [
 Event.createEvent("ma:renderEntity", (cb, entityType) => register("renderEntity", cb).setFilteredClasses(entityType));
 Event.createEvent("ma:postRenderEntity", (cb, entityType) => register("postRenderEntity", cb).setFilteredClasses(entityType));
 Event.createEvent("ma:endermanTP", (cb) => register(net.minecraftforge.event.entity.living.EnderTeleportEvent, cb))
+Event.createEvent("ma:entityJoin", (cb) => register(net.minecraftforge.event.entity.EntityJoinWorldEvent, (e) => cb(e.entity, e.entity.func_145782_y(), e)))
 // Goldor sections
 register("worldLoad", () => {
     Data.goldorsection = 0;

@@ -300,12 +300,19 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addSwitch({
     category: "Slayers",
+    configName: "sendminibossmsg",
+    title: "Send miniboss message",
+    description: "Sends a message when a miniboss spawns",
+    subcategory: "Carrying - QOL",
+    shouldShow: data => data.minibossspawn
+})
+.addSwitch({
+    category: "Slayers",
     configName: "sendtrademsg",
     title: "Send trade msg",
     description: "Sends a message asking if you want to trade the player after their carry ends.",
     subcategory: "Carrying - QOL"
 })
-
 .addSwitch({
     category: "Slayers",
     configName: "carrytimesend",

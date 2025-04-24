@@ -29,7 +29,7 @@ slayerbossdisplay
 }, 10)
     .registersub("renderOverlay", () => {
     const hpOffset = Renderer.getStringWidth(`&c☠ &b${bossName}`) - Renderer.getStringWidth(hp);
-    const timerText = timerEntity?.func_70005_c_().removeFormatting();
+    const timerText = timerEntity?.func_70005_c_()?.removeFormatting();
     Renderer.translate(GUI.getX(), GUI.getY());
     Renderer.scale(GUI.getScale());
     Renderer.retainTransforms(true);

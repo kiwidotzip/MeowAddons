@@ -1,9 +1,9 @@
 import Config from "../config";
-import Dungeon from "../../BloomCore/dungeons/Dungeon";
 import { Data } from "./utils/data";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
 import { Render3D } from "../../tska/rendering/Render3D";
 
+const showTerm = FeatManager.createFeature("showTerm", "catacombs");
 const pdistance = (x, y, z) =>
   Math.hypot(
     x - Math.floor(Player.getX() + 0.25),
@@ -44,7 +44,7 @@ const phases = {
 };
 
 const getLabel = (text) => {
-  if (pogData.goldorsection === 1) {
+  if (Data.goldorsection === 1) {
     if (text === "&7[&f1&7]" || text === "&7[&f2&7]") return "&aTank";
     if (text === "&7[&f3&7]" || text === "&7[&f4&7]") return "&bMage";
   } else {
@@ -60,7 +60,6 @@ const getLabel = (text) => {
 };
 
 const renderTerm = ({ text, x, y, z }) => {
-  if (!Dungeon.inDungeon || !Config().showTerm) return;
   Render3D.renderString(text, x, y + 0.5, z, 0xffffff, true, 0.05, false, true, true);
   const label = Config().showTermClass ? getLabel(text) : "";
   if (label && pdistance(x, y, z) < Config().showTermClassDistance) {
@@ -70,8 +69,5 @@ const renderTerm = ({ text, x, y, z }) => {
 
 const renderPhase = () => {phases[Data.goldorsection]?.forEach(renderTerm)};
 
-registerWhen(register("renderWorld", renderPhase), () => Config().showTerm);
+showTerm.register("renderWorld", renderPhase)
 
-register("command", () => {
-  if (Config().forcerenderterm || Config().debug) renderPhase();
-}).setName("renderterm");

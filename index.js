@@ -6,7 +6,6 @@ import "./features/meowhitsound";
 import "./features/chatcleaner";
 import "./features/cleanfriendjoin";
 import "./features/cleanguildjoin";
-import "./features/cleanpartyjoin";
 import "./features/partyformat";
 import "./features/guildformat";
 // Party command
@@ -24,10 +23,12 @@ import "./features/blood";
 import "./features/terminallabel";
 import "./features/leapannounce";
 import "./features/terminalcallouts";
+import "./features/lividvuln";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";
 import "./features/blockoverlay";
+import "./features/noclutter";
 
 // Update Checker
 
@@ -117,6 +118,7 @@ register("worldLoad", () => {
                 ChatLib.chat(new TextComponent(`&7&oPsssst &7- &e&lMeowAddons&f now has a discord - Click to join!`)
                             .setHoverValue(`Click to join!`)
                             .setClick("open_url", `https://discord.gg/KPmHQUC97G`))
+                Data.DiscordSent = true;
                 Data.save()
             }
             updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;

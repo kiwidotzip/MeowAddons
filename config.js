@@ -1,5 +1,4 @@
 // Make sure these go to the right directory 
-import { setRegisters } from "./features/utils/renderutils";
 import Settings from "../Amaterasu/core/Settings";
 import DefaultConfig from "../Amaterasu/core/DefaultConfig";
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
@@ -266,7 +265,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Slayers",
     subcategory: "Carrying"
 })
-
+.addButton({
+    configName: "carryedit",
+    title: "Edit GUI",
+    description: "Edit carry GUI",
+    category: "Slayers",
+    subcategory: "Carrying",
+    onClick() {
+        ChatLib.command(`meowdevonlypls`, true)
+    }
+})
 .addTextInput({
     configName: "carryvalue",
     title: "Carry price",
@@ -276,7 +284,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     value: "1.3",
     placeHolder: "1.3"
 })
-
 .addSwitch({
     category: "Slayers",
     configName: "notifybossspawn",
@@ -284,7 +291,21 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Displays a title when your client's boss spawns",
     subcategory: "Carrying - QOL"
 })
-
+.addSwitch({
+    category: "Slayers",
+    configName: "minibossspawn",
+    title: "Notify miniboss spawn",
+    description: "Displays a title when a miniboss spawns when you're carrying",
+    subcategory: "Carrying - QOL"
+})
+.addSwitch({
+    category: "Slayers",
+    configName: "sendminibossmsg",
+    title: "Send miniboss message",
+    description: "Sends a message when a miniboss spawns",
+    subcategory: "Carrying - QOL",
+    shouldShow: data => data.minibossspawn
+})
 .addSwitch({
     category: "Slayers",
     configName: "sendtrademsg",
@@ -292,7 +313,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Sends a message asking if you want to trade the player after their carry ends.",
     subcategory: "Carrying - QOL"
 })
-
 .addSwitch({
     category: "Slayers",
     configName: "carrytimesend",
@@ -418,6 +438,26 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Carrying - QOL"
 })
 
+// Dungeons - Livid 
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "lividvuln",
+    title: "Livid vulnerability timer",
+    description: "Timer until livid is hitable/can be icesprayed",
+    subcategory: "Livid"
+})
+.addButton({
+    category: "Dungeons",
+    configName: "lividvulnedit",
+    title: "Edit GUI",
+    description: "Edit livid vulnerability timer GUI",
+    subcategory: "Livid",
+    onClick() {
+        ChatLib.command(`meowdevonlypls`, true)
+    }
+})
+
 // Dungeons - Leap announce
 
 .addSwitch({
@@ -476,56 +516,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 // Fishing - Fishing messagees
 
 // Removed because me lazy and code unoptimized
-
-// Party commands
-
-.addSwitch({
-    category: "Party Commands",
-    configName: "partycommands",
-    title: "Party Commands",
-    description: "Enables party commands",
-    subcategory: "Main toggle"
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partytransfer",
-    title: "Party Transfer",
-    description: "Transfers the party to the player that ran !ptme",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partywarp",
-    title: "Party Warp",
-    description: "Warps the party when someone says !warp",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partyinvite",
-    title: "Party Invite",
-    description: "Runs the party invite command when someone says !inv, !invite, !party, !p username in chat",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partyallinvite",
-    title: "AllInvite",
-    description: "Toggles allinvite when someone says !allinv or !allinvite",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
-})
-.addSwitch({
-    category: "Party Commands",
-    configName: "partykickoffline",
-    title: "KickOffline",
-    description: "Kicks all offline players from the party when someone says !kickoffline",
-    subcategory: "Sub Toggle",
-    shouldShow: data => data.partycommands,
-})
 
 // Misc - Custom Size
 
@@ -630,6 +620,61 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     value: [0, 0, 0, 255],
     shouldShow: data => data.blockoverlay
 })
+.addSwitch({
+    category: "Misc.",
+    configName: "NoClutter",
+    title: "No clutter",
+    description: "Disables a lot of useless things\n&cCredit to DocilElm for this <3",
+    subcategory: "No Clutter"
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "noLightning",
+    title: "No lightning",
+    description: "Disables lightning",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "noDeathAni",
+    title: "No death animation",
+    description: "Disables death animation",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "noEnderTP",
+    title: "No ender teleport",
+    description: "Disables ender teleport animation",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "noEmptyTooltip",
+    title: "No empty tooltip",
+    description: "Disables empty tooltip",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "partycmd",
+    title: "Party commands",
+    description: "Enables party commands",
+    subcategory: "Party commands"
+})
+.addTextParagraph({
+    category: "Misc.",
+    configName: "partycmdinfo",
+    title: "Party commands info",
+    description: "Use !ptme, !warp, !allinv, !kickoffline, !inv <player>, !tps, !ping to use the commands",
+    centered: true,
+    subcategory: "Party commands",
+    shouldShow: data => data.partycmd
+})
 
 // Dev
 
@@ -664,17 +709,22 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json")
         .setCommand("MeowAddons", ["ma", "meowa"])
-        .onCloseGui(() => {
-            setRegisters();
-        })
+        .onOpenGui(() => config.mainRightBlock.setWidth((80).percent()))
 const rcolor = Renderer.color(187, 134, 252)
+const bcolor = Renderer.color(13, 13, 13)
 config.getHandler().registers.onDraw(() => {
-    const mainBlockLeft = config.mainBlock.getLeft();
-    const mainBlockRight = config.mainBlock.getRight();
-    const mainBlockTop = config.mainBlock.getTop();
-    const mainBlockBottom = config.mainBlock.getBottom();
-    Renderer.drawLine(rcolor, mainBlockLeft + 130, mainBlockTop + 10, mainBlockLeft + 130, mainBlockBottom - 10, 2);
+    // Line
+    const mb = config.mainBlock;
+    const width = mb.getRight() - mb.getLeft();
+    const height = mb.getBottom() - mb.getTop();
+    Renderer.drawLine(rcolor, mb.getLeft() + width * 0.20, mb.getTop() + height * 0.05, mb.getLeft() + width * 0.20, mb.getBottom() - height * 0.05, 2);
+    // Box
+    Renderer.drawRect(bcolor, mb.getLeft() + (width - width * 0.3) / 2, mb.getTop() + height * 0.0008, width * 0.5, height * 0.09)
+    // Title
+    Renderer.colorize(187, 134, 252, 255)
+    Renderer.drawString(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`, mb.getLeft() + (width - width * 0.3) / 2 + width * 0.5 / 2 - Renderer.getStringWidth(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`) / 2, mb.getTop() + height * 0.0004 + height * 0.075 / 2)
 })
+config.AmaterasuGui.searchBar.x = 200 // yay no search bar
 config
       .setSize(60,60)
       .apply()

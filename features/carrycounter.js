@@ -1,10 +1,10 @@
 import settings from "../config";
-import { Data } from "./utils/data";
-import { registerWhen } from "./utils/renderutils";
 import { Render2D } from "../../tska/rendering/Render2D";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { SendMsg } from "./helperfunction";
 import { LocalStore } from "../../tska/storage/LocalStore";
+import { FeatManager, hud } from "./helperfunction";
+import { scheduleTask } from "../../tska/shared/ServerTick";
 
 let prefix = `&e[MeowAddons]`;
 let carryees = [];
@@ -12,17 +12,30 @@ let dungeonCarryees = [];
 let checkCounter = 0;
 let lastTradePlayer = null;
 let lastTradeTime = 0;
-let isInInventory = false;
+let isInInventory = true;
 let nextAvailableTime = 0;
 
-const colorCache = new Map();
-const webhookUrl = settings().webhookurlcarry
+const BossChecker = FeatManager.createFeatureNo();
+const renderGuiNOTINV = FeatManager.createFeatureNo();
+const renderGuiINV = FeatManager.createFeatureNo();
+const TickTimer = FeatManager.createFeatureNo();
+const MinibossSpawn = FeatManager.createFeature("minibossspawn");
+const BossOutline = FeatManager.createFeature("renderbossoutline");
+const PlayerOutline = FeatManager.createFeature("renderplayeroutline");
+
+const GUI = hud.createTextHud("Carry counter", 120, 10, "a\nlyfrieren: 23/1984 (N/A | N/A)\nsascha: 23/1984 (N/A | N/A)");
+
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
+const webhookUrl = settings().webhookurlcarry
 const carryCache = new Map();
-const hudEditor = new Gui();
-const processedEntities = new Set();
 const DateMEOW = new Date()
 const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
+const minibossnames = [
+    "Atoned Revenant", "Atoned Champion", "Deformed Revenant", "Revenant Champion", "Revenant Sycophant", // Revenant
+    "Mutant Tarantula", "Tarantula Beast", "Tarantula Vermin", // Tarantula
+    "Sven Alpha", "Sven Follower", "Pack Enforcer", // Sven
+    "Voidcrazed Maniac", "Voidling Radical", "Voidling Devotee" // Voidgloom
+]
 const CarryLog = new LocalStore("MeowAddons",{
     data: []
 }, "./data/carrylog.json")
@@ -46,6 +59,7 @@ class Carryee {
         this.isFighting = false;
         this.bossID = null;
         this.timerID = null;
+        this.bossTicks = 0;
         this.sessionStartTime = Date.now();
         this.totalCarryTime = 0; 
     }
@@ -58,14 +72,18 @@ class Carryee {
         if (settings().debug) { ChatLib.chat(`${prefix} &fLogged 1 carry for &6${this.name} &7(${this.count}/${this.total})`); }
         if (settings().sendcarrycount) { sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`); }
         sendcarrymsg(`${this.name}: ${this.count}/${this.total}`)
+        BossChecker.update();
+        MinibossSpawn.update();
     }
 
     recordBossStartTime(bossID) {
         if (!this.startTime && !this.isFighting) {
             this.startTime = Date.now();
             this.isFighting = true;
+            this.bossTicks = 0;
             this.bossID = bossID;
             this.timerID = bossID + 2;
+            TickTimer.update();
         }
     }
     endSession() {
@@ -110,6 +128,7 @@ class Carryee {
         this.startTime = null;
         this.bossID = null;
         this.timerID = null;
+        this.bossTicks = 0;
     }
 
     complete() {
@@ -213,27 +232,39 @@ register("worldLoad", () => {
 
 // Nametag detection
 
-register("step", () => {
-    const allEntities = World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"));
-    allEntities.forEach(entity => {
-        const id = entity.entity.func_145782_y();
-        const name = ChatLib.removeFormatting(entity.entity.func_70005_c_());
-        if (!processedEntities.has(id) && name.includes("Spawned by")) {
-            processedEntities.add(id);
-            const playerName = name.split("by: ")[1];
-            const carryee = findCarryee(playerName);
-            if (carryee) {
-                const armorStandID = id;
-                const bossID = armorStandID - 3;
-                carryee.recordBossStartTime(bossID);
-                if (settings().notifybossspawn) {
-                    Client.showTitle(`&b${playerName}&f spawned their boss!`, "", 1, 20, 1);
-                    World.playSound("mob.cat.meow", 5, 2);
-                }
-            }
+BossChecker.registersub("ma:entityJoin", (ent, entID, evn) => {
+    scheduleTask(() => {
+        const name = ent.func_70005_c_()?.removeFormatting();
+        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by")) return;
+        const carryee = findCarryee(name.split("by: ")[1]);
+        if (!carryee) return;
+        carryee.recordBossStartTime(entID - 3);
+        if (settings().notifybossspawn) {
+            Client.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, "", 1, 20, 1);
+            World.playSound("mob.cat.meow", 5, 2);
         }
+    }, 2);
+}, () => carryees.length > 0);
+
+// Tick timer
+
+TickTimer.registersub("servertick", () => {
+    carryees.forEach(carryee => {
+        if (carryee.isFighting) carryee.bossTicks++
     });
-}).setFps(10);
+}, () => carryees.some(carryee => carryee.isFighting))
+
+// Miniboss spawn
+
+MinibossSpawn.registersub("ma:entityJoin", (ent, entID, evn) => {
+    scheduleTask(() => {
+        if (!minibossnames.includes(ent?.func_70005_c_()?.removeFormatting().replace(/ \d[\d.,]*(?:[kKmMbBtT])?❤?$/, ""))) return;
+        World.playSound("mob.cat.meow", 5, 2);
+        Client.showTitle("&bMiniboss spawned!", "", 4, 20, 4);
+        if (settings().debug || settings().sendminibossmsg) ChatLib.chat(`${prefix} &cMiniboss spawned.`);
+    });
+}, () => carryees.length > 0);
+
 
 // Boss check
 
@@ -244,7 +275,7 @@ register("step", () => {
         carryees.forEach(carryee => {
             if (settings().debug) {ChatLib.chat(`${prefix} &fChecking for boss entity.`)}
             if (carryee.bossID !== null) {
-                const entity = World.getWorld().func_73045_a(carryee.bossID);
+                const entity = World.getWorld()?.func_73045_a(carryee.bossID);
                 if (!entity || entity?.field_70128_L) {
                     if (settings().debug) ChatLib.chat(`${prefix} &cBoss entity for ${carryee.name} not found/reset.`);
                     carryee.reset();
@@ -263,63 +294,52 @@ register("entityDeath", (entity) => {
             carryee.recordBossTime();
             carryee.incrementTotal();
             const timeTaken = carryee.getTimeTakenToKillBoss();
-            ChatLib.chat(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&f.`);
+            const msg = new Message(`${prefix} &fYou killed &6${carryee.name}&f's boss in &b${timeTaken}&7 | `)
+                            .addTextComponent(new TextComponent(`&b${carryee.bossTicks / 20}s.`)
+                            .setHoverValue(`&c${carryee.bossTicks} ticks - May not be 100% accurate`))
+            ChatLib.chat(msg);
             carryee.reset();
+            TickTimer.update();
         }
     });
 });
 
-// Entity highlight
-
-registerWhen(register("postRenderEntity", (entity, pos) => { 
-    const entityName = entity.getName(); 
+BossOutline.register("ma:postRenderEntity", (entity, pos) => { 
     const entityID = entity.entity.func_145782_y(); 
-    const bossEntityNames = ["Wolf", "Spider", "Zombie", "Enderman"]; 
-    if (!bossEntityNames.includes(entityName)) return; 
     carryees.forEach((carryee) => {
         if (carryee.bossID !== entityID) return;
-        const timer = ChatLib.removeFormatting(World.getWorld().func_73045_a(carryee.timerID).func_70005_c_());
-        let entry = colorCache.get(carryee.timerID);
-        if (!entry || entry.timerStr !== timer) {
-            let color = [0, 255, 255];
-            const timeMatch = timer.match(/^(\d+):([0-5]\d)$/);
-            if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127];
-            entry = { timerStr: timer, color };
-            colorCache.set(carryee.timerID, entry);
-        }
-        const [r, g, b] = entry.color;
+        let color = [0, 255, 255];
+        const timer = World.getWorld()?.func_73045_a(carryee.timerID)?.func_70005_c_()?.removeFormatting()
+        const timeMatch = timer?.match(/^(\d+):([0-5]\d)$/);
+        if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127];
         Render3D.renderEntityBox(
             pos.getX(),
             pos.getY(),
             pos.getZ(),
             entity.getWidth(),
             entity.getHeight(),
-            r, g, b, 255, 2, false, false
+            color[0], color[1], color[2], 255, 2, false, false
         );
     });
-}), () => settings().renderbossoutline);
+}, [net.minecraft.entity.monster.EntityEnderman, net.minecraft.entity.passive.EntityWolf, net.minecraft.entity.monster.EntitySpider, net.minecraft.entity.monster.EntityZombie]);
 
 // Player highlight
 
-registerWhen(
-    register("postRenderEntity", (entity, pos) => { 
-        const entityName = entity.getName(); 
-        const isPlayer = entity.entity instanceof net.minecraft.entity.player.EntityPlayer; 
-        if (!isPlayer) return; 
-        carryees.forEach((carryee) => { 
-            if (carryee.name === entityName) { 
-                Render3D.renderEntityBox(
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    entity.getWidth(),
-                    entity.getHeight(),
-                    0, 255, 255, 255, 2, false, false
-                );
-            } 
-        }); 
-    }), () => settings().renderplayeroutline
-)
+PlayerOutline.register("postRenderEntity", (entity, pos) => { 
+    carryees.forEach((carryee) => { 
+        if (carryee.name === entity.getName()) { 
+            Render3D.renderEntityBox(
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                entity.getWidth(),
+                entity.getHeight(),
+                0, 255, 255, 255, 2, false, false
+            );
+        } 
+    }); 
+}, net.minecraft.entity.player.EntityPlayer)
+
 
 // Cache management
 
@@ -501,22 +521,15 @@ register("worldLoad", () => {
 
 // GUI stuff
 
-register("guiOpened", (event) => {
-    if (event.gui instanceof GuiInventory) { isInInventory = true; }
-});
-
-register("guiClosed", (gui) => {
-    if (gui instanceof GuiInventory) { isInInventory = false; }
-});
-
+register("guiOpened", e => e.gui instanceof GuiInventory && (isInInventory = true, renderGuiNOTINV.update(), renderGuiINV.update()));
+register("guiClosed", () => (isInInventory = false, renderGuiNOTINV.update(), renderGuiINV.update()));
+const getInventoryState = () => isInInventory;
 
 function getAllCarryees() {
     return [...carryees, ...dungeonCarryees];
 }
 
-register("renderOverlay", () => {
-    if (isInInventory) return;
-
+renderGuiNOTINV.registersub("renderOverlay", () => {
     const allCarryees = getAllCarryees();
     const longestWidth = Math.max(...allCarryees.map(carryee =>
         Renderer.getStringWidth(carryee.toString())
@@ -526,59 +539,44 @@ register("renderOverlay", () => {
     if (settings().drawcarrybox && allCarryees.length > 0) {
         Renderer.drawRect(
             Renderer.color(...settings().carryboxcolor),
-            Data.CarryX,
-            Data.CarryY,
+            GUI.getX(),
+            GUI.getY(),
             longestWidth,
             totalHeight
         );
     }
-    if (!hudEditor.isOpen() && allCarryees.length > 0) {
-        Renderer.drawString("&e[MA] &d&lCarries&f:", Data.CarryX + 4, Data.CarryY + 4);
+    if (!hud.isOpen() && allCarryees.length > 0) {
+        Renderer.drawString("&e[MA] &d&lCarries&f:", GUI.getX(), GUI.getY());
         allCarryees.forEach((carryee, index) => {
             Renderer.drawString(
                 carryee.toString(),
-                Data.CarryX + 4,
-                Data.CarryY + 16 + (index * 10)
+                GUI.getX(),
+                GUI.getY() + 12 + (index * 10)
             );
         });
     }
+}, () => !getInventoryState());
 
-    if (hudEditor.isOpen()) {
-        Renderer.drawString(
-            "&a&lDrag to move HUD",
-            Renderer.screen.getWidth() / 2 - 45,
-            Renderer.screen.getHeight() / 2 - 30,
-            true
-        );
-        Renderer.drawString(
-            "&e[MA] &d&lCarries&f:",
-            Data.CarryX + 4,
-            Data.CarryY + 4
-        );
-        Renderer.drawString("&blyfrieren&f: 23&8/&f1984 &7(N/A)",
-            Data.CarryX + 4,
-            Data.CarryY + 16
-        );
-        Renderer.drawString("&bsascha&f: 23&8/&f1984 &7(N/A)",
-            Data.CarryX + 4,
-            Data.CarryY + 26
-        );
-    };
-});
+GUI.onDraw(() => {
+    Renderer.translate(GUI.getX(), GUI.getY());
+    Renderer.scale(GUI.getScale());
+    Renderer.drawStringWithShadow("&e[MA] &d&lCarries: \n&blyfrieren&f: 23&7/&f1984 &7(N/A | N/A)\n&bsascha&f: 23&7/&f1984 &7(N/A | N/A)\n&4&lTHIS WILL IGNORE THE SCALE", 0, 0);
+    Renderer.finishDraw();
+})
 
 // Inventory GUI
 
-register("guiRender", () => {
+renderGuiINV.registersub("guiRender", () => {
     const allCarryees = getAllCarryees();
-    if (!isInInventory || allCarryees.length === 0) return;
+    if (allCarryees.length === 0) return;
 
-    const hudX = Data.CarryX;
-    const hudY = Data.CarryY;
+    const hudX = GUI.getX();
+    const hudY = GUI.getY();
 
-    Renderer.drawString("&e[MA] &d&lCarries&f:", hudX + 4, hudY + 4);
+    Renderer.drawString("&e[MA] &d&lCarries&f:", hudX, hudY);
 
     allCarryees.forEach((carryee, index) => {
-        const yPos = hudY + 16 + (index * 10);
+        const yPos = hudY + 12 + (index * 10);
         const textWidth = Renderer.getStringWidth(carryee.toString());
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
         const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
@@ -587,7 +585,7 @@ register("guiRender", () => {
         const isHoveringMinus = isInArea(mouseX, mouseY, minusArea);
         const isHoveringRemove = isInArea(mouseX, mouseY, removeArea);
 
-        Renderer.drawString(carryee.toString(), hudX + 4, yPos);
+        Renderer.drawString(carryee.toString(), hudX, yPos);
 
         let currentX = hudX + textWidth + 6;
 
@@ -630,15 +628,15 @@ register("guiRender", () => {
         Renderer.colorize(...(isHoveringRemove ? colors.remove.hover : colors.remove.normal));
         Renderer.drawString(" [×]", currentX, yPos);
     });
-});
+}, () => getInventoryState());
 
 // Buttons
 
 register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
     if (!isInInventory) return;
     const allCarryees = getAllCarryees();
-    const hudX = Data.CarryX;
-    const hudY = Data.CarryY;
+    const hudX = GUI.getX();
+    const hudY = GUI.getY();
     
     allCarryees.forEach((carryee, index) => {
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
@@ -665,19 +663,19 @@ register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
             } else if (dungeonCarryees.includes(carryee)) {
                 dungeonCarryees = dungeonCarryees.filter(c => c !== carryee);
             }
+            BossChecker.update();
+            MinibossSpawn.update();
             ChatLib.chat(`${prefix} &fRemoved &6${carryee.name}&f.`);
         }
     });
 });
 
-register("postguiRender", () => {
-    if (!isInInventory) return;
-    
+renderGuiINV.registersub("postGuiRender", () => {
     const allCarryees = getAllCarryees();
-    const hudX = Data.CarryX;
-    const hudY = Data.CarryY;
+    const hudX = GUI.getX();
+    const hudY = GUI.getY();
     const [mouseX, mouseY] = [Client.getMouseX(), Client.getMouseY()];
-    
+    if (hud.isOpen()) return;
     allCarryees.forEach((carryee, index) => {
         const { plusArea, minusArea, removeArea } = getButtonAreas(hudX, hudY, carryee, index);
     
@@ -689,10 +687,10 @@ register("postguiRender", () => {
             Render2D.drawHoveringText(["&bRemove Player", "&cClick to remove from carry list"]);
         }
     });
-});
+}, () => getInventoryState());
 
 function getButtonAreas(hudX, hudY, carryee, index) {
-    const entryY = hudY + 16 + (index * 10);
+    const entryY = hudY + 12 + (index * 10);
     const textWidth = Renderer.getStringWidth(carryee.toString());
     const buttonBaseX = hudX + textWidth + 10;
     
@@ -725,16 +723,6 @@ function getButtonAreas(hudX, hudY, carryee, index) {
 function isInArea(x, y, area) {
     return x >= area.x1 && x <= area.x2 && y >= area.y1 && y <= area.y2;
 }
-
-// GUI management 
-
-register("dragged", (dx, dy, x, y, button) => {
-    if (hudEditor.isOpen() && button === 0) {
-        Data.CarryX = x;
-        Data.CarryY = y;
-        Data.save();
-    }
-});
 
 // Commands
 
@@ -775,6 +763,8 @@ register("command", (...args = []) => {
             }
         
             carryees.push(newCarryee);
+            BossChecker.update();
+            MinibossSpawn.update();
             ChatLib.chat(messageADD);
             break;   
         case "set":
@@ -800,6 +790,8 @@ register("command", (...args = []) => {
         case "remove":
             if (!name) return syntaxError("remove <name>");
             carryees = carryees.filter(carryee => carryee.name !== name);
+            BossChecker.update();
+            MinibossSpawn.update();
             ChatLib.chat(`${prefix} &fRemoved &6${name}&f.`);
             break;
         case "list":
@@ -847,7 +839,7 @@ register("command", (...args = []) => {
             ChatLib.chat(`${prefix} &fDecreased &6${name}&f's count to &6${carryeeDec.count}&f.`);
             break;
         case "gui":
-            hudEditor.open();
+            hud.open()
             break;
         case "confirmdeath":
             if (!name) return syntaxError("confirmdeath <name>");
@@ -943,6 +935,8 @@ register("command", (...args = []) => {
         case "clear":
             const message = carryees.length ? `${prefix} &fCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
             carryees = [];
+            BossChecker.update();
+            MinibossSpawn.update();
             ChatLib.chat(message);
             break; 
         default:

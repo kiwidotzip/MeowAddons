@@ -1,6 +1,7 @@
 import Settings from "../config"
-import { registerWhen } from "./utils/renderutils"
 import { LocalStore } from "../../tska/storage/LocalStore";
+import { FeatManager } from "./helperfunction";
+const custommodel = FeatManager.createFeature("custommodel")
 const ResLoc = Java.type("net.minecraft.util.ResourceLocation")
 
 // Thanks @Noamm9 for helping out with like almost all of this <3
@@ -77,7 +78,7 @@ function drawCustomModel(pt) {
     Tessellator.colorize(1, 1, 1, 1)
     Tessellator.disableLighting()
     GlStateManager.func_179118_c() // enableBlend
-    GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10) // scale
+    GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10) // scale 
     GlStateManager.func_179137_b(0, 0.24, 0) // translate
     GlStateManager.func_179114_b(-bodyYaw, 0, 1, 0) // rotate
 
@@ -98,15 +99,12 @@ function drawCustomModel(pt) {
     Tessellator.enableLighting()
     GlStateManager.func_179121_F() // popMatrix
 }
-
-registerWhen(register("renderEntity", e => {
-    if (e.entity != Player.getPlayer()) return
-    GlStateManager.func_179094_E() // pushMatrix
-    GlStateManager.func_179137_b(0, 500, 0) // translate
-}), () => Settings().custommodel && Settings().custommodeltype !== 0)
-
-registerWhen(register("postRenderEntity", (e, pos, pt, event)=> {
-    if (e.entity != Player.getPlayer()) return
-    GlStateManager.func_179121_F() // popMatrix
-    drawCustomModel(pt)
-}), () => Settings().custommodel && Settings().custommodeltype !== 0)
+custommodel
+    .register("renderEntity", () => {
+        GlStateManager.func_179094_E() // pushMatrix
+        GlStateManager.func_179137_b(0, 500, 0) // translate
+    }, net.minecraft.client.entity.EntityPlayerSP)
+    .register("postRenderEntity", (e, pos, pt, event)=> {
+        GlStateManager.func_179121_F() // popMatrix
+        drawCustomModel(pt)
+    }, net.minecraft.client.entity.EntityPlayerSP)

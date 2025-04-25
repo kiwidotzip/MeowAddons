@@ -1,8 +1,8 @@
-import Config from "../config";
-import { registerWhen } from "./utils/renderutils";
+import { FeatManager } from "./helperfunction";
+const cleanguild = FeatManager.createFeature("cleanguildjoin")
 
-registerWhen(register("chat", (color,username,joinleftmsg,event) => {
+cleanguild.register("chat", (color, username, joinleftmsg, event) => {
         cancel(event)
         if (joinleftmsg == "joined") ChatLib.chat(`&8G &2>> ${color}${username}`)
-            if (joinleftmsg == "left") ChatLib.chat(`&8G &4<< ${color}${username}`)
-}).setCriteria(/^&2Guild > &r(&a|&b|&6|&c|&d|&2|&9|&7)(.+) &r&e(.+)\.&r/), () => Config().cleanguildjoin && Config().cleantoggle)
+        if (joinleftmsg == "left") ChatLib.chat(`&8G &4<< ${color}${username}`)
+}, /^&2Guild > &r(&a|&b|&6|&c|&d|&2|&9|&7)(.+) &r&e(.+)\.&r/)

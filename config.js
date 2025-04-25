@@ -392,16 +392,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.sendcarrycountdc
 })
 
-// Dungeons - Mask notifications
-
-.addSwitch({
-    category: "Dungeons",
-    configName: "masknotifier",
-    title: "Mask Notifications",
-    description: "Notifies party chat when a mask pops",
-    subcategory: "Mask notifications"
-})
-
 // Dungeons - Blood helper
 
 .addSwitch({
@@ -438,6 +428,33 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Carrying - QOL"
 })
 
+// Dungeons - Server Lag Timer
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "serverlagtimer",
+    title: "Server lag timer",
+    description: "Shows the how long the server lagged for in ticks and seconds",
+    subcategory: "Server lag timer"
+})
+
+// Dungeons - Mimic
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "colormimicchests",
+    title: "Color Mimic chests",
+    description: "Colors the mimic chests in dungeons",
+    subcategory: "Mimic"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "mimicdeathmsg",
+    title: "Mimic death message",
+    description: "Sends a message when mimic dies",
+    subcategory: "Mimic"
+})
+
 // Dungeons - Livid 
 
 .addSwitch({
@@ -456,6 +473,15 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     onClick() {
         ChatLib.command(`meowdevonlypls`, true)
     }
+})
+// Dungeons - Mask notif
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "masknotifier",
+    title: "Mask Notifications",
+    description: "Notifies party chat when a mask pops",
+    subcategory: "Mask notifications"
 })
 
 // Dungeons - Leap announce

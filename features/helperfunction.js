@@ -14,9 +14,12 @@ const thresholds = [
   { value: 1e6, symbol: "M", precision: 1 },
   { value: 1e3, symbol: "K", precision: 1 }
 ];
-// Render events
+// Custom events
 Event.createEvent("ma:renderEntity", (cb, entityType) => register("renderEntity", cb).setFilteredClasses(entityType));
 Event.createEvent("ma:postRenderEntity", (cb, entityType) => register("postRenderEntity", cb).setFilteredClasses(entityType));
+Event.createEvent("ma:renderTileEntity", (cb, tileEntityType) => register("renderTileEntity", cb).setFilteredClasses(tileEntityType));
+Event.createEvent("ma:postRenderTileEntity", (cb, tileEntityType) => register("postRenderTileEntity", cb).setFilteredClasses(tileEntityType));
+Event.createEvent("ma:entityDeath", (cb, entityType) => register("entityDeath", cb).setFilteredClasses(entityType))
 Event.createEvent("ma:endermanTP", (cb) => register(net.minecraftforge.event.entity.living.EnderTeleportEvent, cb))
 Event.createEvent("ma:entityJoin", (cb) => register(net.minecraftforge.event.entity.EntityJoinWorldEvent, (e) => cb(e.entity, e.entity.func_145782_y(), e)))
 // Goldor sections

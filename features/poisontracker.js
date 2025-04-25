@@ -1,7 +1,7 @@
 import { FeatManager, hud } from "./helperfunction";
 
 const Tracker = FeatManager.createFeature("arrowpoistracker")
-const GUI = hud.createTextHud("Arrow poison tracmer", 200, 20, "a\na\nmeowmeow\na")
+const GUI = hud.createTextHud("Arrow poison tracker", 200, 20, "a\na\nmeowmeow\na")
 const twilightICON = new Item("dye").setDamage(5)
 const toxicICON = new Item("dye").setDamage(10)
 

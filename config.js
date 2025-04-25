@@ -653,6 +653,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addSwitch({
     category: "Misc.",
+    configName: "noEmptyTooltip",
+    title: "No empty tooltip",
+    description: "Disables empty tooltip",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
     configName: "partycmd",
     title: "Party commands",
     description: "Enables party commands",

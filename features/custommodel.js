@@ -14,8 +14,6 @@ const data = new LocalStore("MeowAddons", {
 const lerp = (a, b, t) => a + (b - a) * t
 const clamp180 = a => ((a + 180) % 360 + 360) % 360 - 180
 const limit90 = a => Math.max(-90, Math.min(90, a))
-const ChangeValue = (newv, newv2, newv3) => [x, y, z] = [newv, newv2, newv3]
-const [ x, y, z] = [10, 10, 10]
 
 const types = {
     ocelot: {
@@ -110,6 +108,3 @@ custommodel
         GlStateManager.func_179121_F() // popMatrix
         drawCustomModel(pt)
     }, net.minecraft.client.entity.EntityPlayerSP)
-    .register("gameLoad", () => Settings().customsize ? ChangeValue(Settings().customX, Settings().customY, Settings().customZ) : ChangeValue(10, 10, 10))
-
-Settings().getConfig().registerListener("customsize", (oldv, newv) => newv ? ChangeValue(Settings().customX, Settings().customY, Settings().customZ) : ChangeValue(10, 10, 10))

@@ -19,7 +19,6 @@ const BossChecker = FeatManager.createFeatureNo();
 const renderGuiNOTINV = FeatManager.createFeatureNo();
 const renderGuiINV = FeatManager.createFeatureNo();
 const TickTimer = FeatManager.createFeatureNo();
-const MinibossSpawn = FeatManager.createFeature("minibossspawn");
 const BossOutline = FeatManager.createFeature("renderbossoutline");
 const PlayerOutline = FeatManager.createFeature("renderplayeroutline");
 
@@ -30,12 +29,6 @@ const webhookUrl = settings().webhookurlcarry
 const carryCache = new Map();
 const DateMEOW = new Date()
 const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
-const minibossnames = [
-    "Atoned Revenant", "Atoned Champion", "Deformed Revenant", "Revenant Champion", "Revenant Sycophant", // Revenant
-    "Mutant Tarantula", "Tarantula Beast", "Tarantula Vermin", // Tarantula
-    "Sven Alpha", "Sven Follower", "Pack Enforcer", // Sven
-    "Voidcrazed Maniac", "Voidling Radical", "Voidling Devotee" // Voidgloom
-]
 const CarryLog = new LocalStore("MeowAddons",{
     data: []
 }, "./data/carrylog.json")
@@ -73,7 +66,6 @@ class Carryee {
         if (settings().sendcarrycount) { sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`); }
         sendcarrymsg(`${this.name}: ${this.count}/${this.total}`)
         BossChecker.update();
-        MinibossSpawn.update();
     }
 
     recordBossStartTime(bossID) {
@@ -253,18 +245,6 @@ TickTimer.registersub("servertick", () => {
         if (carryee.isFighting) carryee.bossTicks++
     });
 }, () => carryees.some(carryee => carryee.isFighting))
-
-// Miniboss spawn
-
-MinibossSpawn.registersub("ma:entityJoin", (ent, entID, evn) => {
-    scheduleTask(() => {
-        if (!minibossnames.includes(ent?.func_70005_c_()?.removeFormatting().replace(/ \d[\d.,]*(?:[kKmMbBtT])?❤?$/, ""))) return;
-        World.playSound("mob.cat.meow", 5, 2);
-        Client.showTitle("&bMiniboss spawned!", "", 4, 20, 4);
-        if (settings().debug || settings().sendminibossmsg) ChatLib.chat(`${prefix} &cMiniboss spawned.`);
-    });
-}, () => carryees.length > 0);
-
 
 // Boss check
 
@@ -664,7 +644,6 @@ register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
                 dungeonCarryees = dungeonCarryees.filter(c => c !== carryee);
             }
             BossChecker.update();
-            MinibossSpawn.update();
             ChatLib.chat(`${prefix} &fRemoved &6${carryee.name}&f.`);
         }
     });
@@ -764,7 +743,6 @@ register("command", (...args = []) => {
         
             carryees.push(newCarryee);
             BossChecker.update();
-            MinibossSpawn.update();
             ChatLib.chat(messageADD);
             break;   
         case "set":
@@ -791,7 +769,6 @@ register("command", (...args = []) => {
             if (!name) return syntaxError("remove <name>");
             carryees = carryees.filter(carryee => carryee.name !== name);
             BossChecker.update();
-            MinibossSpawn.update();
             ChatLib.chat(`${prefix} &fRemoved &6${name}&f.`);
             break;
         case "list":
@@ -936,7 +913,6 @@ register("command", (...args = []) => {
             const message = carryees.length ? `${prefix} &fCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
             carryees = [];
             BossChecker.update();
-            MinibossSpawn.update();
             ChatLib.chat(message);
             break; 
         default:

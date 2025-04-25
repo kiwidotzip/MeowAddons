@@ -687,6 +687,23 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addSwitch({
     category: "Misc.",
+    configName: "arrowpoistracker",
+    title: "Arrow poison tracker",
+    description: "Tracks the amount of arrow poisons you have in your inventory and displays them in a gui",
+    subcategory: "Arrow poison tracker"
+})
+.addButton({
+    category: "Misc.",
+    configName: "arrowpoisonedit",
+    title: "Edit GUI",
+    description: "Edit arrow poison tracker GUI",
+    subcategory: "Arrow poison tracker",
+    onClick() {
+        ChatLib.command(`meowdevonlypls`, true)
+    }
+})
+.addSwitch({
+    category: "Misc.",
     configName: "partycmd",
     title: "Party commands",
     description: "Enables party commands",

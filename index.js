@@ -29,6 +29,7 @@ import "./features/customsize";
 import "./features/custommodel";
 import "./features/blockoverlay";
 import "./features/noclutter";
+import "./features/poisontracker";
 
 // Update Checker
 

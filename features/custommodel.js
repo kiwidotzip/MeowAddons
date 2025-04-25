@@ -78,7 +78,7 @@ function drawCustomModel(pt) {
     Tessellator.colorize(1, 1, 1, 1)
     Tessellator.disableLighting()
     GlStateManager.func_179118_c() // enableBlend
-    GlStateManager.func_179139_a(x, y, z) // scale 
+    GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10) // scale 
     GlStateManager.func_179137_b(0, 0.24, 0) // translate
     GlStateManager.func_179114_b(-bodyYaw, 0, 1, 0) // rotate
 

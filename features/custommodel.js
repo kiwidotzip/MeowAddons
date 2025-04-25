@@ -14,6 +14,8 @@ const data = new LocalStore("MeowAddons", {
 const lerp = (a, b, t) => a + (b - a) * t
 const clamp180 = a => ((a + 180) % 360 + 360) % 360 - 180
 const limit90 = a => Math.max(-90, Math.min(90, a))
+const ChangeValue = (newv, newv2, newv3) => [x, y, z] = [newv, newv2, newv3]
+const [ x, y, z] = [10, 10, 10]
 
 const types = {
     ocelot: {
@@ -78,7 +80,7 @@ function drawCustomModel(pt) {
     Tessellator.colorize(1, 1, 1, 1)
     Tessellator.disableLighting()
     GlStateManager.func_179118_c() // enableBlend
-    GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10) // scale
+    GlStateManager.func_179139_a(x, y, z) // scale 
     GlStateManager.func_179137_b(0, 0.24, 0) // translate
     GlStateManager.func_179114_b(-bodyYaw, 0, 1, 0) // rotate
 
@@ -108,3 +110,6 @@ custommodel
         GlStateManager.func_179121_F() // popMatrix
         drawCustomModel(pt)
     }, net.minecraft.client.entity.EntityPlayerSP)
+    .register("gameLoad", () => Settings().customsize ? ChangeValue(Settings().customX, Settings().customY, Settings().customZ) : ChangeValue(10, 10, 10))
+
+Settings().getConfig().registerListener("customsize", (oldv, newv) => newv ? ChangeValue(Settings().customX, Settings().customY, Settings().customZ) : ChangeValue(10, 10, 10))

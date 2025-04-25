@@ -1,6 +1,8 @@
 import Settings from "../config";
 import { FeatManager } from "./helperfunction";
 const customsize = FeatManager.createFeature("customsize");
+const Float = Java.type("java.lang.Float");
+const setPlayerHeight = height => Player.getPlayer().eyeHeight = new Float(height) // Thanks noamm <3
 
 customsize
     .register("renderEntity", entity => {
@@ -14,3 +16,7 @@ customsize
         Tessellator.scale(x, Math.abs(y), z);
     }, net.minecraft.client.entity.EntityPlayerSP)
     .register("postRenderEntity", () => Tessellator.popMatrix(), net.minecraft.client.entity.EntityPlayerSP)
+    .register("gameLoad", () => Settings().customY ? setPlayerHeight(Settings().customY * 1.62) : setPlayerHeight(1.62))
+    .onUnregister(() => setPlayerHeight(1.62))
+
+Settings().getConfig().registerListener("customY", (oldv, newv) => newv ? setPlayerHeight(newv * 1.62) : setPlayerHeight(1.62))

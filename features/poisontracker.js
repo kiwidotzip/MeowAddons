@@ -1,7 +1,7 @@
 import { FeatManager, hud } from "./helperfunction";
 
 const Tracker = FeatManager.createFeature("arrowpoistracker")
-const GUI = hud.createTextHud("Arrow poison26", 200, 20, "a\na\nmeowmeow\na")
+const GUI = hud.createTextHud("Arrow poison tracmer", 200, 20, "a\na\nmeowmeow\na")
 const twilightICON = new Item("dye").setDamage(5)
 const toxicICON = new Item("dye").setDamage(10)
 
@@ -17,6 +17,7 @@ Tracker
         })
     })
     .register("renderOverlay", () => {
+        if (hud.isOpen()) return;
         Renderer.retainTransforms(true)
         Renderer.translate(GUI.getX(), GUI.getY())
         Renderer.scale(GUI.getScale())

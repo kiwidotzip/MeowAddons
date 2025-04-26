@@ -243,7 +243,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Slayers",
     shouldShow: data => data.slayerbossdisplay,
     onClick() {
-        ChatLib.command(`meowdevonlypls`, true)
+        ChatLib.command(`meowaddons gui`, true)
     }
 })
 .addSwitch({
@@ -272,7 +272,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Slayers",
     subcategory: "Carrying",
     onClick() {
-        ChatLib.command(`meowdevonlypls`, true)
+        ChatLib.command(`meowaddons gui`, true)
     }
 })
 .addTextInput({
@@ -471,7 +471,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit livid vulnerability timer GUI",
     subcategory: "Livid",
     onClick() {
-        ChatLib.command(`meowdevonlypls`, true)
+        ChatLib.command(`meowaddons gui`, true)
     }
 })
 // Dungeons - Mask notif
@@ -484,14 +484,30 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Mask notifications"
 })
 
-// Dungeons - Leap announce
+// Dungeons - Leap features
 
 .addSwitch({
     category: "Dungeons",
     configName: "leapannounce",
     title: "Leap Announce",
     description: "Sends a message in party chat when you leap to a player",
-    subcategory: "Leap announce"
+    subcategory: "Leap features"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "hideafterleap",
+    title: "Hide players after leap",
+    description: "Hides players after you leap to them",
+    subcategory: "Leap features"
+})
+.addTextInput({
+    category: "Dungeons",
+    configName: "hideleaptime",
+    title: "Amount of time to hide players for",
+    description: "&4&lTIME IN SECONDS",
+    subcategory: "Leap features",
+    placeHolder: "10",
+    value: "10"
 })
 
 // Dungeons - Titles
@@ -523,6 +539,15 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "F7 Dead titles",
     description: "Titles when the wither kings die",
     subcategory: "Titles"
+})
+// Dungeons - F7 Misc.
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "f7p3timer",
+    title: "F7 P3 Timer",
+    description: "Shows the time until P3 starts (uses server ticks)",
+    subcategory: "F7 Misc"
 })
 
 // Dungeons - Terminal
@@ -730,7 +755,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit arrow poison tracker GUI",
     subcategory: "Arrow poison tracker",
     onClick() {
-        ChatLib.command(`meowdevonlypls`, true)
+        ChatLib.command(`meowaddons gui`, true)
     }
 })
 .addSwitch({

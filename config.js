@@ -494,6 +494,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Leap announce"
 })
 
+// Dungeons - Bat dead title
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "batdead",
+    title: "Bat dead title",
+    description: "Shows a title when a bat dies",
+    subcategory: "Bat dead title"
+})
+
 // Dungeons - Terminal
 
 .addSwitch({

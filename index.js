@@ -24,6 +24,9 @@ import "./features/terminallabel";
 import "./features/leapannounce";
 import "./features/terminalcallouts";
 import "./features/lividvuln";
+import "./features/mimic";
+import "./features/serverlagtimer";
+import "./features/batdead";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";

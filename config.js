@@ -434,7 +434,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     category: "Dungeons",
     configName: "serverlagtimer",
     title: "Server lag timer",
-    description: "Shows the how long the server lagged for in ticks and seconds",
+    description: "Shows how long the server lagged for in ticks and seconds",
     subcategory: "Server lag timer"
 })
 
@@ -756,6 +756,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Edit GUI",
     description: "Edit arrow poison tracker GUI",
     subcategory: "Arrow poison tracker",
+    shouldShow: data => data.arrowpoistracker,
     onClick() {
         ChatLib.command(`meowaddons gui`, true)
     }

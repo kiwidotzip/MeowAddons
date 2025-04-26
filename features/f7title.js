@@ -9,6 +9,7 @@ const GUI = hud.createTextHud("Time until P3 starts (F7)", 240, 20, "&cP3 timer:
 const BossBar = Java.type("net.minecraft.entity.boss.BossStatus")
 
 let [NecronDead, GoldorDead, MaxorDead] = [false, false, false]
+let [StormDeath, GoldorDeath] = [0, 0]
 let P3timer = false
 let P3time = 104
 
@@ -23,11 +24,14 @@ F7Necron
     .register("chat", () => Client.showTitle(`&cNecron damageable`, "", 1, 40, 1), "[BOSS] Necron: ARGH!")
 F7DeadTitles
     .register("servertick", () => {
-        if (BossBar.field_82827_c?.removeFormatting()?.includes("Necron") && BossBar.field_82828_a * 100 == 0.33333334140479565 && !NecronDead)
+        if (BossBar.field_82827_c?.removeFormatting()?.includes("Necron") && BossBar.field_82828_a * 100 == 0.33333334140479565 
+            && !NecronDead && Date.now - GoldorDeath > 10000)
             NecronDead = true, 
             Client.showTitle(`&cNecron Dead`, "", 1, 40, 1)
-        if (BossBar.field_82827_c?.removeFormatting()?.includes("Goldor") && BossBar.field_82828_a * 100 == 0.33333334140479565 && !GoldorDead) 
+        if (BossBar.field_82827_c?.removeFormatting()?.includes("Goldor") && BossBar.field_82828_a * 100 == 0.33333334140479565 
+            && !GoldorDead && Date.now - StormDeath > 10000) 
             GoldorDead = true,
+            GoldorDeath = Date.now(),
             Client.showTitle(`&cGoldor Dead`, "", 1, 40, 1)
         if (BossBar.field_82827_c?.removeFormatting()?.includes("Maxor") && BossBar.field_82828_a * 100 == 0.33333334140479565 && !MaxorDead) 
             MaxorDead = true,
@@ -35,7 +39,12 @@ F7DeadTitles
     })
     .register("chat", () => {
         Client.showTitle(`&cStorm Dead`, "", 1, 40, 1)
+        StormDeath = Date.now()
     }, "[BOSS] Storm: I should have known that I stood no chance.")
+    .register("worldLoad", () => {
+        NecronDead = GoldorDead = MaxorDead = false
+        StormDeath = GoldorDeath = 0
+    })
 F7P3Timer
     .register("chat", () => {
         P3timer = true

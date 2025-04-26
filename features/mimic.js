@@ -16,7 +16,7 @@ MimicChest
     }, [net.minecraft.tileentity.TileEntityChest])
 
 MimicDead
-    .register("ma:entityDeath", (ent) => {
-        if (ent.entity.func_70631_g_() && !sent) ChatLib.command("pc Mimic Dead!"), sent = true;
-    }, [net.minecraft.entity.monster.EntityZombie])
+    .register("entityDeath", (ent) => {
+        if (ent.entity.func_70631_g_() && ent.getClassName() == "EntityZombie" && !sent) ChatLib.command("pc Mimic Dead!"), sent = true;
+    })
     .register("worldLoad", () => sent = false)

@@ -19,9 +19,8 @@ Event.createEvent("ma:renderEntity", (cb, entityType) => register("renderEntity"
 Event.createEvent("ma:postRenderEntity", (cb, entityType) => register("postRenderEntity", cb).setFilteredClasses(entityType));
 Event.createEvent("ma:renderTileEntity", (cb, tileEntityType) => register("renderTileEntity", cb).setFilteredClasses(tileEntityType));
 Event.createEvent("ma:postRenderTileEntity", (cb, tileEntityType) => register("postRenderTileEntity", cb).setFilteredClasses(tileEntityType));
-Event.createEvent("ma:entityDeath", (cb, entityType) => register("entityDeath", cb).setFilteredClasses(entityType))
-Event.createEvent("ma:entityJoin", (cb) => register(net.minecraftforge.event.entity.EntityJoinWorldEvent, (e) => cb(e.entity, e.entity.func_145782_y(), e)))
-Event.createEvent("ma:endermanTP", (cb) => register(net.minecraftforge.event.entity.living.EnderTeleportEvent, cb))
+Event.createEvent("ma:entityJoin", (cb) => register(net.minecraftforge.event.entity.EntityJoinWorldEvent, (e) => cb(e.entity, e.entity.func_145782_y(), e)));
+Event.createEvent("ma:endermanTP", (cb) => register(net.minecraftforge.event.entity.living.EnderTeleportEvent, cb));
 // Goldor sections
 register("worldLoad", () => {
     Data.goldorsection = 0;

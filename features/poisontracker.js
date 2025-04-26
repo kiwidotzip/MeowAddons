@@ -10,7 +10,8 @@ let toxic = 0
 
 Tracker
     .register("tick", () => {
-        twilight = 0; toxic = 0;
+        twilight = 0;
+        toxic = 0;
         Player.getInventory().getItems().forEach(item => {
             if (item?.getName()?.removeFormatting()?.includes("Twilight Arrow Poison")) twilight += item.getStackSize();
             if (item?.getName()?.removeFormatting()?.includes("Toxic Arrow Poison")) toxic += item.getStackSize();

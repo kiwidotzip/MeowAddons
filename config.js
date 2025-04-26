@@ -470,6 +470,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Edit GUI",
     description: "Edit livid vulnerability timer GUI",
     subcategory: "Livid",
+    shouldShow: data => data.lividvuln,
     onClick() {
         ChatLib.command(`meowaddons gui`, true)
     }

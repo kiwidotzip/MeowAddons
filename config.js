@@ -494,14 +494,35 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Leap announce"
 })
 
-// Dungeons - Bat dead title
+// Dungeons - Titles
 
 .addSwitch({
     category: "Dungeons",
     configName: "batdeadtitle",
     title: "Bat dead title",
     description: "Shows a title when a bat dies",
-    subcategory: "Bat dead title"
+    subcategory: "Titles"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "f7title-crush",
+    title: "F7 Crush titles",
+    description: "Titles when you crush storm/maxor",
+    subcategory: "Titles"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "f7title-necron",
+    title: "F7 Necron titles",
+    description: "Titles when necron is damageable",
+    subcategory: "Titles"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "f7title-dead",
+    title: "F7 Dead titles",
+    description: "Titles when the wither kings die",
+    subcategory: "Titles"
 })
 
 // Dungeons - Terminal

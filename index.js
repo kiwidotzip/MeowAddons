@@ -27,6 +27,7 @@ import "./features/lividvuln";
 import "./features/mimic";
 import "./features/serverlagtimer";
 import "./features/batdead";
+import "./features/f7title";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";

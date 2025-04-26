@@ -8,7 +8,7 @@ let bossticks = 390
 LividVuln
     .register("servertick", () => lividstart !== 0 && bossticks--)
     .register("chat", () => { lividstart = Date.now(); LividVuln.update(); }, /^\[BOSS\] Livid: Welcome, you've arrived right on time\. I am Livid, the Master of Shadows\.$/)
-    .register("renderOverlay", () => {
+    .registersub("renderOverlay", () => {
         Renderer.retainTransforms(true);
         Renderer.translate(GUI.getX(), GUI.getY());
         Renderer.scale(GUI.getScale());
@@ -17,7 +17,7 @@ LividVuln
         Renderer.drawString(`&cLivid&f: &b${label}`, 0, 0);
         Renderer.retainTransforms(false);
         Renderer.finishDraw();
-    }, () => !!lividstart)
+    }, () => lividstart !== 0)
 register("worldLoad", () => { lividstart = 0; bossticks = 390; LividVuln.update(); }) 
 GUI.onDraw(() => {
     Renderer.translate(GUI.getX(), GUI.getY());

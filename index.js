@@ -146,10 +146,10 @@ register("worldLoad", () => {
         ChatLib.chat(`&b`)
         ChatLib.chat(`&b> Commands&f:`)
         ChatLib.chat(`&7> &7/&bmeowaddons &7- &fOpen the settings menu &7&o(Aliases: /meowa, /ma)`)
+        ChatLib.chat(`&7> &7/&bmeowaddons gui &7- &fOpens the gui editor &7&o(Alias: /ma gui)`)
         ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
         ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
         ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
-        ChatLib.chat(`&7> &7/&bmeowaddons gui &7- &fOpens the gui editor &7&o(Alias: /ma gui)`)
         ChatLib.chat(`&7> &7/&bmeowupdate &7- &fCheck for updates`)
         ChatLib.chat(`&b`)
         ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
@@ -164,3 +164,34 @@ register("worldLoad", () => {
         }});
     }
 });
+
+// Command handler
+
+import Config from "./config"
+import { hud } from "./features/helperfunction"
+
+register("command", (...args) => {
+    if (!args[0]?.toLowerCase()) return Config().getConfig().openGui()
+    switch (args[0]?.toLowerCase()) {
+        case "gui":
+            hud.open()
+            break
+        case "help":
+            ChatLib.chat(`&7&l-----------------------------------------------------`)
+            ChatLib.chat(`&b> Commands&f:`)
+            ChatLib.chat(`&7> &7/&bmeowaddons &7- &fOpen the settings menu &7&o(Aliases: /meowa, /ma)`)
+            ChatLib.chat(`&7> &7/&bmeowaddons gui &7- &fOpens the gui editor &7&o(Alias: /ma gui)`)
+            ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
+            ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
+            ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
+            ChatLib.chat(`&7> &7/&bmeowupdate &7- &fCheck for updates`)
+            ChatLib.chat(`&b`)
+            ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
+            ChatLib.chat(`&b> Discord&f:&7 https://discord.gg/KPmHQUC97G`)
+            ChatLib.chat(`&7&l-----------------------------------------------------`)
+            break
+        default:
+            ChatLib.chat(`&e[MeowAddons] &fCommand not found! Do &c/ma help &ffor a list of commands.`)
+            break
+    }
+}).setName("meowaddons").setAliases(["ma", "meowa"])    

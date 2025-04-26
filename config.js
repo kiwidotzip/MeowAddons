@@ -507,7 +507,8 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "&4&lTIME IN SECONDS",
     subcategory: "Leap features",
     placeHolder: "10",
-    value: "10"
+    value: "10",
+    shouldShow: data => data.hideafterleap
 })
 
 // Dungeons - Titles
@@ -807,7 +808,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Debug"
 })
 const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json")
-        .setCommand("MeowAddons", ["ma", "meowa"])
         .onOpenGui(() => config.mainRightBlock.setWidth((80).percent()))
 const rcolor = Renderer.color(187, 134, 252)
 const bcolor = Renderer.color(13, 13, 13)

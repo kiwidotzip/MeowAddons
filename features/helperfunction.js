@@ -30,8 +30,6 @@ register("gameUnload", () => {
   hud.save();
   HudData.save();
 });
-// Hud command
-register("command", () => hud.open()).setName("meowaddons gui").setAliases(["ma gui"])
 // Goldor section changer
 register("chat", (message) =>
     [

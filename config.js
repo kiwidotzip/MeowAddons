@@ -498,7 +498,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 .addSwitch({
     category: "Dungeons",
-    configName: "batdead",
+    configName: "batdeadtitle",
     title: "Bat dead title",
     description: "Shows a title when a bat dies",
     subcategory: "Bat dead title"

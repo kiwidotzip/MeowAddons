@@ -26,7 +26,8 @@ const GUI = hud.createTextHud("Carry counter", 120, 10, "a\nlyfrieren: 23/1984 (
 
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory");
 const webhookUrl = settings().webhookurlcarry
-const carryCache = new Map();
+const carryCache = new Map()
+const ProccessedSp = new Set()
 const DateMEOW = new Date()
 const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
 const CarryLog = new LocalStore("MeowAddons",{
@@ -227,7 +228,8 @@ register("worldLoad", () => {
 BossChecker.registersub("ma:entityJoin", (ent, entID, evn) => {
     scheduleTask(() => {
         const name = ent.func_70005_c_()?.removeFormatting();
-        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by")) return;
+        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by") || ProccessedSp.has(entID)) return;
+        ProccessedSp.add(entID)
         const carryee = findCarryee(name.split("by: ")[1]);
         if (!carryee) return;
         carryee.recordBossStartTime(entID - 3);

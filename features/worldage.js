@@ -7,7 +7,7 @@ let sent = false
 
 WorldAgeDisplay
     .register("renderOverlay", () => {
-        if (hud.isOpen) return;
+        if (hud.isOpen()) return;
         Renderer.translate(GUI.getX(), GUI.getY())
         Renderer.scale(GUI.getScale())
         Renderer.drawString(`&cDay&f: &b${(World.getTime() / 24000).toFixed(1)}`, 0, 0)

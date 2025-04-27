@@ -1,6 +1,7 @@
 // Make sure these go to the right directory 
 import Settings from "../Amaterasu/core/Settings";
 import DefaultConfig from "../Amaterasu/core/DefaultConfig";
+import { title } from "../Other Modules/Zyryon/utils/utils";
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Chat - General
@@ -744,6 +745,20 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Disables empty tooltip",
     subcategory: "No Clutter",
     shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "worldagedisplay",
+    title: "World age display",
+    description: "Displays the world age in a GUI",
+    subcategory: "World age"
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "worldagemsg",
+    title: "World age message",
+    description: "Sends the world age in chat",
+    subcategory: "World age"
 })
 .addSwitch({
     category: "Misc.",

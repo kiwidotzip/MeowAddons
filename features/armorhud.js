@@ -13,7 +13,6 @@ const defaultArmor = [
 ].map(id => new Item(id))
 
 const drawBG = (x, y) => {
-    Renderer.drawRect(slotColor, x, y, 16, 16)
     Renderer.drawLine(slotborder, x, y, x + 16, y, 1)
     Renderer.drawLine(slotborder, x, y, x, y + 16, 1)
     Renderer.drawLine(slotborder, x + 16, y, x + 16, y + 16, 1)

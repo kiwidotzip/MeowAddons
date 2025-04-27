@@ -34,6 +34,7 @@ import "./features/custommodel";
 import "./features/blockoverlay";
 import "./features/noclutter";
 import "./features/poisontracker";
+import "./features/worldage";
 
 // Update Checker
 

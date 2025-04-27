@@ -1,6 +1,7 @@
 import settings from "../config";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { FeatManager, hud } from "./helperfunction";
+import { scheduleTask } from "../../tska/shared/ServerTick";
 
 const slayerbossdisplay = FeatManager.createFeature("slayerbossdisplay");
 const slayerkilltimer = FeatManager.createFeature("slayerkilltimer");       
@@ -42,7 +43,7 @@ slayerbossdisplay
 
 register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (entity) => {
     if (settings().slayerbossdisplay || settings().slayerkilltimer) {
-        Client.scheduleTask(1, () => {
+        scheduleTask(() => {
             const name = ChatLib.removeFormatting(entity.entity.func_70005_c_());
             if (name.includes("Spawned by") && name.split("by: ")[1] === Player.getName()) {
                 const armorStandID = entity.entity.func_145782_y();
@@ -51,7 +52,7 @@ register(Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent"), (ent
                 timerEntity = World.getWorld().func_73045_a(bossID + 2);
                 timestarted = Date.now();
             }
-        });
+        }, 2);
     }
 })
 

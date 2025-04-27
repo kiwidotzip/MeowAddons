@@ -509,7 +509,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 .addSwitch({
     category: "Dungeons",
     configName: "hidedmg",
-    title: "Hide mob damage",
+    title: "Hide damage",
     description: "Hides the damage in dungeons",
     subcategory: "No clutter - Dungeons"
 })
@@ -533,14 +533,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-necron",
-    title: "F7 Necron titles",
+    title: "F7 Necron title",
     description: "Titles when necron is damageable",
     subcategory: "Titles"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-dead",
-    title: "F7 Dead titles",
+    title: "F7 Death titles",
     description: "Titles when the wither kings die",
     subcategory: "Titles"
 })
@@ -732,8 +732,8 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 .addSwitch({
     category: "Misc.",
     configName: "noEnderTP",
-    title: "No ender teleport",
-    description: "Disables ender teleport animation",
+    title: "No enderman teleport",
+    description: "Disables enderman teleport animation",
     subcategory: "No Clutter",
     shouldShow: data => data.NoClutter
 })

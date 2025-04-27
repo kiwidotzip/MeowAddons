@@ -12,7 +12,7 @@
   </a>
 </p>
 
-<p align="center"><b>Total Downloads:</b> 3158 </p>
+<p align="center"><b>Total Downloads:</b> 3966 </p>
 
 <p align="center" id="description"><b>MeowAddons</b> is a Silly chattriggers module that has some QOL features</p>
 
@@ -39,11 +39,20 @@
 - Friend Join/Leave format
   - Formats friend join/leave messages to look cleaner
 
-- Party Join/Leave format
-  - Formats party join/leave messages to look cleaner
-
 - Party commands
   - Adds various party commands! (alias is !)
+
+- Hides lightning bolts
+
+- Hides death animation
+
+- Hides enderman teleport
+
+- Hides empty tooltip
+
+- World age display
+
+- World age chat message
 
 ## **Skyblock**
 
@@ -52,6 +61,9 @@
 
 - BetterAH (WIP)
   - Formats auction house messages to look cleaner
+
+- Arrow poison tracker
+  - Tracks the twilight/toxic arrow poison you have in your inventory
 
 ### **Slayer**
  
@@ -103,6 +115,32 @@
 
 - Mask notifications
   - Sends alerts in party chat when you activate a mask/phoenix pet
+
+- Server lag timer
+  - Sends a message at the end of the dungeon run showing how long the server lagged for
+
+- Color mimic chest
+
+- Send message on mimic death
+
+- Livi vuln. timer
+  - Timer until livid can be icesprayed
+
+- Hide non star mob nametags
+
+- Hide your damage in dungeons
+
+- Show a title on bat death
+
+- F7 crush title
+  - Shows a title when maxor/storm get crushed
+
+- F7 death title
+  - Shows a title when necron/goldor/storm/maxor die
+
+- F7 Necron damageable title
+
+- Timer until P3 starts in F7
 
 - Terminal labels
   - Labels terminals - Has an option to display the class (both f7 and m7 roles) that should be doing the term as well as boxing the term

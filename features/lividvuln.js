@@ -18,7 +18,8 @@ LividVuln
         Renderer.retainTransforms(false);
         Renderer.finishDraw();
     }, () => lividstart !== 0)
-register("worldLoad", () => { lividstart = 0; bossticks = 390; LividVuln.update(); }) 
+    .onRegister(() => (lividstart = 0, bossticks = 390, LividVuln.update()))
+    .onUnregister(() => (lividstart = 0, bossticks = 390, LividVuln.update()))
 GUI.onDraw(() => {
     Renderer.translate(GUI.getX(), GUI.getY());
     Renderer.scale(GUI.getScale());

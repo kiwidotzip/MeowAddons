@@ -53,7 +53,5 @@ Blood.register("chat", (message) => {
         }
     }
 }, "${message}")
-    .register("worldLoad", () => {
-        bloodopen = blooddone = false
-        starttime = 0
-    })
+.onRegister(() => (bloodopen = blooddone = false, starttime = 0))
+.onUnregister(() => (bloodopen = blooddone = false, starttime = 0))

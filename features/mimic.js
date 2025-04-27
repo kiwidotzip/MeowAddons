@@ -21,4 +21,4 @@ MimicDead
         ChatLib.command("pc Mimic Dead!")
         sent = true;
     })
-    .register("worldLoad", () => sent = false)
+    .onRegister(() => sent = false)

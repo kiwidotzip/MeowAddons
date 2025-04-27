@@ -41,7 +41,7 @@ F7DeadTitles
         Client.showTitle(`&cStorm Dead`, "", 1, 40, 1)
         StormDeath = Date.now()
     }, "[BOSS] Storm: I should have known that I stood no chance.")
-    .register("worldLoad", () => {
+    .onRegister(() => {
         NecronDead = GoldorDead = MaxorDead = false
         StormDeath = GoldorDeath = 0
     })

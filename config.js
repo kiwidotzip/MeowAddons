@@ -752,6 +752,17 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Displays the world age in a GUI",
     subcategory: "World age"
 })
+.addButton({
+    category: "Misc.",
+    configName: "worldagedisplayedit",
+    title: "Edit GUI",
+    description: "Edit world age display GUI",
+    subcategory: "World age",
+    shouldShow: data => data.worldagedisplay,
+    onClick() {
+        ChatLib.command(`meowaddons gui`, true)
+    }
+})
 .addSwitch({
     category: "Misc.",
     configName: "worldagemsg",
@@ -773,6 +784,24 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit arrow poison tracker GUI",
     subcategory: "Arrow poison tracker",
     shouldShow: data => data.arrowpoistracker,
+    onClick() {
+        ChatLib.command(`meowaddons gui`, true)
+    }
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "armorhud",
+    title: "Armor HUD",
+    description: "Displays your armor",
+    subcategory: "Armor HUD"
+})
+.addButton({
+    category: "Misc.",
+    configName: "armorhudedit",
+    title: "Edit GUI",
+    description: "Edit armor HUD GUI",
+    subcategory: "Armor HUD",
+    shouldShow: data => data.armorhud,
     onClick() {
         ChatLib.command(`meowaddons gui`, true)
     }

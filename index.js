@@ -35,6 +35,7 @@ import "./features/blockoverlay";
 import "./features/noclutter";
 import "./features/poisontracker";
 import "./features/worldage";
+import "./features/armorhud";
 
 // Update Checker
 

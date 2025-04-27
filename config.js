@@ -497,14 +497,21 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.hideafterleap
 })
 
-// Dungeons - Hide non star mob names
+// Dungeons - No clutter
 
 .addSwitch({
     category: "Dungeons",
     configName: "hidenonstarmobs",
     title: "Hide non star mob names",
     description: "Hides non star mob names",
-    subcategory: "Non star mob names"
+    subcategory: "No clutter - Dungeons"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "hidedmg",
+    title: "Hide mob damage",
+    description: "Hides the damage in dungeons",
+    subcategory: "No clutter - Dungeons"
 })
 
 // Dungeons - Titles

@@ -9,7 +9,7 @@ WorldAgeDisplay
     .register("renderOverlay", () => {
         Renderer.translate(GUI.getX(), GUI.getY())
         Renderer.scale(GUI.getScale())
-        Renderer.drawString(`&bDay&f: &b${(World.getTime() / 24000).toFixed(1)}`, 0, 0)
+        Renderer.drawString(`&cDay&f: &b${(World.getTime() / 24000).toFixed(1)}`, 0, 0)
         Renderer.finishDraw()
     })
 WorldAgeMsg
@@ -19,6 +19,6 @@ WorldAgeMsg
 GUI.onDraw(() => {
     Renderer.translate(GUI.getX(), GUI.getY())
     Renderer.scale(GUI.getScale())
-    Renderer.drawString(`&bDay&f: &b26.2`, 0, 0)
+    Renderer.drawString(`&cDay&f: &b26.2`, 0, 0)
     Renderer.finishDraw()
 })

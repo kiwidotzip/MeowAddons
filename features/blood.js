@@ -52,4 +52,8 @@ Blood.register("chat", (message) => {
             Config().sendbloodparty && ChatLib.command(`pc MeowAddons » Blood camp took ${camptime}s!`);
         }
     }
-}, "${message}");
+}, "${message}")
+    .register("worldLoad", () => {
+        bloodopen = blooddone = false
+        starttime = 0
+    })

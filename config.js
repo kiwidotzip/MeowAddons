@@ -1,7 +1,6 @@
 // Make sure these go to the right directory 
 import Settings from "../Amaterasu/core/Settings";
 import DefaultConfig from "../Amaterasu/core/DefaultConfig";
-import { title } from "../Other Modules/Zyryon/utils/utils";
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Chat - General

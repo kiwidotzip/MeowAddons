@@ -171,7 +171,7 @@ import Config from "./config"
 import { hud } from "./features/helperfunction"
 
 register("command", (...args) => {
-    if (!args[0]?.toLowerCase()) return Config().getConfig().openGui()
+    if (!args[0]?.toLowerCase()) return Config()?.getConfig()?.openGui()
     switch (args[0]?.toLowerCase()) {
         case "gui":
             hud.open()

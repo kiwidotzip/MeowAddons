@@ -10,7 +10,7 @@ const ServerLag = FeatManager.createFeature("serverlagtimer", "catacombs")
 ServerLag
     .register("tick", () => count && clientticks++)
     .register("servertick", () => count && serverticks++)
-    .register("worldLoad", () => clientticks = 0, serverticks = 0, count = false)
+    .register("worldLoad", () => (clientticks = serverticks = 0, count = false))
     .register("chat", () => scheduleTask(() => count = true, 20), /Starting in 1 second\./)
     .register("chat", () => {
         if (sent) return

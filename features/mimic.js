@@ -17,6 +17,8 @@ MimicChest
 
 MimicDead
     .register("entityDeath", (ent) => {
-        if (ent.entity.func_70631_g_() && ent.getClassName() == "EntityZombie" && !sent) ChatLib.command("pc Mimic Dead!"), sent = true;
+        if (!ent.entity.func_70631_g_() || ent.getClassName() !== "EntityZombie" || sent || ent.entity.func_82169_q(0)) return;
+        ChatLib.command("pc Mimic Dead!")
+        sent = true;
     })
     .register("worldLoad", () => sent = false)

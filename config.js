@@ -544,6 +544,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Titles when the wither kings die",
     subcategory: "Titles"
 })
+.addSwitch({
+    category: "Dungeons",
+    configName: "m7ragtitle",
+    title: "Rag alert in m7",
+    description: "Shows the rag axe title",
+    subcategory: "Titles"
+})
+
 // Dungeons - F7 Misc.
 
 .addSwitch({
@@ -681,7 +689,9 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
         ChatLib.command(`macattexture ${newv}`, true);
     }
 })
+
 // Misc - Block Overlay
+
 .addSwitch({
     category: "Misc.",
     configName: "blockoverlay",
@@ -706,6 +716,9 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     value: [0, 0, 0, 255],
     shouldShow: data => data.blockoverlay
 })
+
+// Misc - no clutter
+
 .addSwitch({
     category: "Misc.",
     configName: "NoClutter",
@@ -745,6 +758,59 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "No Clutter",
     shouldShow: data => data.NoClutter
 })
+
+// Misc - alerts
+
+.addSwitch({
+    category: "Misc.",
+    configName: "alerttoggle",
+    title: "Alerts",
+    description: "Enable to see other alert toggles",
+    subcategory: "Alerts"
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "cellalignalert",
+    title: "Cell align alert",
+    description: "Alerts you when your cell alingement ends",
+    subcategory: "Alerts",
+    shouldShow: data => data.alerttoggle
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "healwandalert",
+    title: "Heal wand alert",
+    description: "Alerts you when your healing wand's ability ends",
+    subcategory: "Alerts",
+    shouldShow: data => data.alerttoggle
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "katanaalert",
+    title: "Katana alert",
+    description: "Alerts you when your katana's ability ends",
+    subcategory: "Alerts",
+    shouldShow: data => data.alerttoggle
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "weirdtubaalert",
+    title: "Weird tuba alert",
+    description: "Alerts you when your weird tuba's ability ends",
+    subcategory: "Alerts",
+    shouldShow: data => data.alerttoggle
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "withercloakalert",
+    title: "Wither cloak alert",
+    description: "Alerts you when your wither cloak's ability ends",
+    subcategory: "Alerts",
+    shouldShow: data => data.alerttoggle
+})
+
+// Misc - world age display
+
 .addSwitch({
     category: "Misc.",
     configName: "worldagedisplay",
@@ -770,6 +836,9 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Sends the world age in chat",
     subcategory: "World age"
 })
+
+// Misc - arrow poison tracker
+
 .addSwitch({
     category: "Misc.",
     configName: "arrowpoistracker",
@@ -788,6 +857,9 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
         ChatLib.command(`meowaddons gui`, true)
     }
 })
+
+// Misc - armor hud
+
 .addSwitch({
     category: "Misc.",
     configName: "armorhud",
@@ -806,6 +878,9 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
         ChatLib.command(`meowaddons gui`, true)
     }
 })
+
+// Misc - party commands
+
 .addSwitch({
     category: "Misc.",
     configName: "partycmd",

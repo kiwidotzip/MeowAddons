@@ -4,6 +4,7 @@ const F7Crush = FeatManager.createFeature("f7title-crush", "catacombs")
 const F7Necron = FeatManager.createFeature("f7title-necron", "catacombs")
 const F7DeadTitles = FeatManager.createFeature("f7title-dead", "catacombs")
 const F7P3Timer = FeatManager.createFeature("f7p3timer", "catacombs")
+const RagNotif = FeatManager.createFeature("m7ragtitle", "catacombs")
 
 const GUI = hud.createTextHud("Time until P3 starts (F7)", 240, 20, "&cP3 timer: &b4.8s")
 const BossBar = Java.type("net.minecraft.entity.boss.BossStatus")
@@ -67,3 +68,6 @@ GUI.onDraw(() => {
     Renderer.drawString(`&cP3 Timer: &b4.8s`, 0, 0, false)
     Renderer.finishDraw()
 })
+
+RagNotif
+    .register("chat", () => Client.showTitle("&cRag axe!", "", 1, 20, 1), "[BOSS] Wither King: I no longer wish to fight, but I know that will not stop you.")

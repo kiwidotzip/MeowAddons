@@ -1,6 +1,6 @@
 import { FeatManager } from "./helperfunction"
 
-const maskrem = FeatManager.createFeature("maskrem")
+const maskrem = FeatManager.createFeature("maskrem", "catacombs")
 const masknotifier = FeatManager.createFeature("masknotifier")
 
 masknotifier.register("chat", (msg, event) => {

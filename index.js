@@ -31,6 +31,7 @@ import "./features/batdead";
 import "./features/f7title";
 import "./features/cryptcounter";
 import "./features/firefreezetimer";
+import "./features/quiztimer";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";

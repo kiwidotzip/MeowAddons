@@ -643,6 +643,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "F7 Misc"
 })
 
+// Dungeons - Quiz Timer
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "quiztimer",
+    title: "Quiz Timer",
+    description: "Shows the time until you can answer the quiz question",
+    subcategory: "Quiz"
+})
+
 // Dungeons - Score messages
 
 .addSwitch({

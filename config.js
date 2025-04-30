@@ -469,6 +469,13 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Notifies party chat when a mask pops",
     subcategory: "Masks"
 })
+.addSwitch({
+    category: "Dungeons",
+    configName: "maskrem",
+    title: "Mask reminder",
+    description: "Reminds you when you don't have a mask on",
+    subcategory: "Masks"
+})
 
 // Dungeons - Leap features
 

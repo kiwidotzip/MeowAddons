@@ -29,6 +29,8 @@ import "./features/mimic";
 import "./features/serverlagtimer";
 import "./features/batdead";
 import "./features/f7title";
+import "./features/cryptcounter";
+import "./features/firefreezetimer";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";

@@ -467,7 +467,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "masknotifier",
     title: "Mask Notifications",
     description: "Notifies party chat when a mask pops",
-    subcategory: "Mask notifications"
+    subcategory: "Masks"
 })
 
 // Dungeons - Leap features
@@ -514,56 +514,116 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "No clutter - Dungeons"
 })
 
+// Dungeons - Fire freeze timer
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "firefreezenotif",
+    title: "Fire freeze",
+    description: "Fire freeze timer in f3 and m3",
+    subcategory: "Fire Freeze"
+})
+
+// Dungeons - Crypt counter
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "cryptnotif",
+    title: "Main toggle for the crypt reminder",
+    description: "Disabling this will NOT disable the crypt features if you had them enabled",
+    subcategory: "Crypt Reminder"
+})
+.addTextInput({
+    category: "Dungeons",
+    configName: "cryptremtime",
+    title: "Time delay",
+    description: "Time between crypt count checks\n&c&lTIME IN MINUTES",
+    subcategory: "Crypt Reminder",
+    placeHolder: "1.5",
+    value: "1.5",
+    shouldShow: data => data.cryptnotif
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "cryptchatmsg",
+    title: "Crypt chat message",
+    description: "Sends a message in party chat if 5 crypts have not been killed",
+    subcategory: "Crypt Reminder",
+    shouldShow: data => data.cryptnotif
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "crypttitle",
+    title: "Crypt title",
+    description: "Shows you a reminder on your sceen if 5 crypts have not been killed",
+    subcategory: "Crypt Reminder",
+    shouldShow: data => data.cryptnotif
+})
+
 // Dungeons - Titles
 
+.addSwitch({
+    category: "Dungeons",
+    configName: "AlertMainToggle",
+    title: "Show title options",
+    description: "Merely here to save space, disabling this will NOT disable the title features if you had them enabled",
+    subcategory: "Titles"
+})
 .addSwitch({
     category: "Dungeons",
     configName: "batdeadtitle",
     title: "Bat dead title",
     description: "Shows a title when a bat dies",
-    subcategory: "Titles"
+    subcategory: "Titles",
+    shouldShow: data => data.AlertMainToggle
 })
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-crush",
     title: "F7 Crush titles",
     description: "Titles when you crush storm/maxor",
-    subcategory: "Titles"
+    subcategory: "Titles",
+    shouldShow: data => data.AlertMainToggle
 })
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-necron",
     title: "F7 Necron title",
     description: "Titles when necron is damageable",
-    subcategory: "Titles"
+    subcategory: "Titles",
+    shouldShow: data => data.AlertMainToggle
 })
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-dead",
     title: "F7 Death titles",
     description: "Titles when the wither kings die",
-    subcategory: "Titles"
+    subcategory: "Titles",
+    shouldShow: data => data.AlertMainToggle
 })
 .addSwitch({
     category: "Dungeons",
     configName: "m7ragtitle",
     title: "Rag alert in m7",
     description: "Shows the rag axe title",
-    subcategory: "Titles"
+    subcategory: "Titles",
+    shouldShow: data => data.AlertMainToggle
 })
 .addSwitch({
     category: "Dungeons",
     configName: "healtitle",
     title: "Wish alert",
     description: "Shows the wish alert in f6, f7, m6, and m7",
-    subcategory: "Titles"
+    subcategory: "Titles",
+    shouldShow: data => data.AlertMainToggle
 })
 .addSwitch({
     category: "Dungeons",
     configName: "tanktitle",
     title: "Ult (CoS) alert",
     description: "Shows the ult alert for tank in f7 and m7",
-    subcategory: "Titles"
+    subcategory: "Titles",
+    shouldShow: data => data.AlertMainToggle
 })
 
 // Dungeons - F7 Misc.
@@ -638,7 +698,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     options: [0, 20],
     value: 14,
     subcategory: "Terminals",
-    shouldShow: data => data.showTermClass
+    shouldShow: data => data.showTermClass && data.showTerm
 })
 .addSwitch({
     category: "Dungeons",

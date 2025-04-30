@@ -1,4 +1,6 @@
 import { FeatManager, hud } from "./helperfunction";
+import { inBoss, on270Score, on300Score } from "../../tska/skyblock/dungeon/Dungeon"; 
+import Config from "../config"
 
 const F7Crush = FeatManager.createFeature("f7title-crush", "catacombs")
 const F7Necron = FeatManager.createFeature("f7title-necron", "catacombs")
@@ -25,6 +27,7 @@ F7Necron
     .register("chat", () => Client.showTitle(`&cNecron damageable`, "", 1, 40, 1), "[BOSS] Necron: ARGH!")
 F7DeadTitles
     .register("servertick", () => {
+        if (!inBoss()) return
         if (BossBar.field_82827_c?.removeFormatting()?.includes("Necron") && BossBar.field_82828_a * 100 == 0.33333334140479565 
             && !NecronDead && Date.now - GoldorDeath > 10000)
             NecronDead = true, 
@@ -52,7 +55,7 @@ F7P3Timer
         F7P3Timer.update()
     }, "[BOSS] Storm: I should have known that I stood no chance.")
     .register("servertick", () => {
-        if (P3time && P3timer) P3time--
+        if (P3time && P3timer && inBoss()) P3time--
         if (P3time <= 1) P3timer = false, F7P3Timer.update(), P3time = 104
     })
     .registersub("renderOverlay", () => {
@@ -60,7 +63,7 @@ F7P3Timer
         Renderer.scale(GUI.getScale())
         Renderer.drawString(`&cP3 Timer: &b${P3time / 20}s`, 0, 0, false)
         Renderer.finishDraw()
-    }, () => P3timer)
+    }, () => P3timer && inBoss())
 
 GUI.onDraw(() => {
     Renderer.translate(GUI.getX(), GUI.getY())
@@ -69,5 +72,8 @@ GUI.onDraw(() => {
     Renderer.finishDraw()
 })
 
+on270Score(() => Config().dungeonscore270 && ChatLib.chat(Config().dungeonscore270msg))
+on300Score(() => Config().dungeonscore300 && ChatLib.chat(Config().dungeonscore300msg))
+
 RagNotif
-    .register("chat", () => Client.showTitle("&cRag axe!", "", 1, 20, 1), "[BOSS] Wither King: I no longer wish to fight, but I know that will not stop you.")
+    .register("chat", () => inBoss() && Client.showTitle("&cRag axe!", "", 1, 20, 1), "[BOSS] Wither King: I no longer wish to fight, but I know that will not stop you.")

@@ -562,6 +562,43 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "F7 Misc"
 })
 
+// Dungeons - Score messages
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "dungeonscore270",
+    title: "Dungeon score message (270)",
+    description: "Dungeon score message on 270 score",
+    subcategory: "Score messages"
+})
+.addTextInput({
+    category: "Dungeons",
+    configName: "dungeonscore270msg",
+    title: "Dungeon score message for 270 score",
+    description: "Dungeon score message for 270 score",
+    subcategory: "Score messages",
+    placeHolder: "270 meow",
+    value: "270 meow",
+    shouldShow: data => data.dungeonscore270
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "dungeonscore300",
+    title: "Dungeon score message (300)",
+    description: "Dungeon score message on 300 score",
+    subcategory: "Score messages"
+})
+.addTextInput({
+    category: "Dungeons",
+    configName: "dungeonscore270msg",
+    title: "Dungeon score message for 300 score",
+    description: "Dungeon score message for 300 score",
+    subcategory: "Score messages",
+    placeHolder: "300 meow",
+    value: "300 meow",
+    shouldShow: data => data.dungeonscore300
+})
+
 // Dungeons - Terminal
 
 .addSwitch({

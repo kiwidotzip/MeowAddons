@@ -1,4 +1,5 @@
 import { FeatManager } from "./helperfunction";
+import { inBoss } from "../../tska/skyblock/dungeon/Dungeon";
 
 let sent = false;
 const MimicChest = FeatManager.createFeature("colormimicchests", "catacombs")
@@ -17,7 +18,7 @@ MimicChest
 
 MimicDead
     .register("entityDeath", (ent) => {
-        if (!ent.entity.func_70631_g_() || ent.getClassName() !== "EntityZombie" || sent || ent.entity.func_82169_q(0)) return;
+        if (!ent.entity.func_70631_g_() || ent.getClassName() !== "EntityZombie" || sent || inBoss() || ent.entity.func_82169_q(0)) return;
         ChatLib.command("pc Mimic Dead!")
         sent = true;
     })

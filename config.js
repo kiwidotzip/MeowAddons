@@ -551,6 +551,20 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Shows the rag axe title",
     subcategory: "Titles"
 })
+.addSwitch({
+    category: "Dungeons",
+    configName: "healtitle",
+    title: "Wish alert",
+    description: "Shows the wish alert in f6, f7, m6, and m7",
+    subcategory: "Titles"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "tanktitle",
+    title: "Ult (CoS) alert",
+    description: "Shows the ult alert for tank in f7 and m7",
+    subcategory: "Titles"
+})
 
 // Dungeons - F7 Misc.
 

@@ -1,5 +1,5 @@
 import { FeatManager, hud } from "./helperfunction";
-import { inBoss, on270Score, on300Score } from "../../tska/skyblock/dungeon/Dungeon"; 
+import { inBoss, on270Score, on300Score, getCurrentClass } from "../../tska/skyblock/dungeon/Dungeon"; 
 import Config from "../config"
 
 const F7Crush = FeatManager.createFeature("f7title-crush", "catacombs")
@@ -7,6 +7,8 @@ const F7Necron = FeatManager.createFeature("f7title-necron", "catacombs")
 const F7DeadTitles = FeatManager.createFeature("f7title-dead", "catacombs")
 const F7P3Timer = FeatManager.createFeature("f7p3timer", "catacombs")
 const RagNotif = FeatManager.createFeature("m7ragtitle", "catacombs")
+const WishTitle = FeatManager.createFeature("healtitle", "catacombs")
+const TankTitle = FeatManager.createFeature("tanktitle", "catacombs")
 
 const GUI = hud.createTextHud("Time until P3 starts (F7)", 240, 20, "&cP3 timer: &b4.8s")
 const BossBar = Java.type("net.minecraft.entity.boss.BossStatus")
@@ -75,5 +77,13 @@ GUI.onDraw(() => {
 on270Score(() => Config().dungeonscore270 && ChatLib.chat(Config().dungeonscore270msg))
 on300Score(() => Config().dungeonscore300 && ChatLib.chat(Config().dungeonscore300msg))
 
+WishTitle
+    .register("chat", () => {
+        if (getCurrentClass() !== "Healer") Client.showTitle("&dWish!", "", 1, 40, 1)
+    }, /(⚠ Maxor is enraged! ⚠|\[BOSS\] Goldor: You have done it, you destroyed the factory…|\[BOSS\] Sadan: My giants! Unleashed!)/)
+TankTitle
+    .register("chat", () => {
+        if (getCurrentClass() !== "Tank") Client.showTitle("&cUlt!", "", 1, 40, 1)
+    }, "⚠ Maxor is enraged! ⚠")
 RagNotif
     .register("chat", () => inBoss() && Client.showTitle("&cRag axe!", "", 1, 20, 1), "[BOSS] Wither King: I no longer wish to fight, but I know that will not stop you.")

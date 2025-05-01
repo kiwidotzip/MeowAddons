@@ -1,12 +1,12 @@
 import { FeatManager, hud } from "./helperfunction"
+import Config from "../config"
 
 let armor = []
 const ArmorHUD = FeatManager.createFeature("armorhud")
 const GUI = hud.createHud("Armor HUD ", 400, 40, 17.5, 72)
-const slotColor = Renderer.color(100, 100, 100, 150)
 const slotborder = Renderer.color(100, 100, 100, 150)
 const defaultArmor = [
-    "minecraft:skull",
+    "minecraft:leather_helmet",
     "minecraft:leather_chestplate",
     "minecraft:leather_leggings",
     "minecraft:leather_boots"
@@ -19,13 +19,13 @@ const drawBG = (x, y) => {
     Renderer.drawLine(slotborder, x, y + 16, x + 16, y + 16, 1)
 }
 
-const renderItems = (items) => {
+const renderItems = (items, vert = true) => {
     items.forEach((item, index) => {
         Renderer.retainTransforms(true)
         Renderer.translate(GUI.getX(), GUI.getY())
         Renderer.scale(GUI.getScale())
-        drawBG(0, index * 18)
-        item?.draw(0, index * 18)
+        if (Config().drawarmorhudbox) drawBG(vert ? 0 : index * 18, vert ? index * 18 : 0)
+        item?.draw(vert ? 0 : index * 18, vert ? index * 18 : 0)
         Renderer.retainTransforms(false)
         Renderer.finishDraw()
     })
@@ -33,6 +33,6 @@ const renderItems = (items) => {
 
 ArmorHUD
     .register("tick", () => armor = Player.getInventory().getItems()?.filter((item, index) => index > 35).reverse() || [])
-    .register("renderOverlay", () => !hud.isOpen() && renderItems(armor))
+    .register("renderOverlay", () => !hud.isOpen() && renderItems(armor, Config().armorhudvert))
 
-GUI.onDraw(() => renderItems(defaultArmor))
+GUI.onDraw(() => renderItems(defaultArmor, Config().armorhudvert))

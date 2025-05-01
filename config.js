@@ -995,6 +995,24 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Displays your armor",
     subcategory: "Armor HUD"
 })
+.addSwitch({
+    category: "Misc.",
+    configName: "armorhudvert",
+    title: "Vertical Armor HUD",
+    description: "Enable to have vertical armor hud and disable for horizontal",
+    subcategory: "Armor HUD",
+    value: "true",
+    shouldShow: data => data.armorhud
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "drawarmorhudbox",
+    title: "Armor HUD Box",
+    description: "Enable to have the box around armor hud and disable for no box",
+    subcategory: "Armor HUD",
+    value: "true",
+    shouldShow: data => data.armorhud
+})
 .addButton({
     category: "Misc.",
     configName: "armorhudedit",

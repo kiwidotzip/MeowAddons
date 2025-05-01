@@ -22,5 +22,5 @@ hide
     }, "You have teleported to ${player}")
 
     .registersub("renderEntity", (ent, pos, pt, evn) => {
-        ent.getEntity() !== Player.getEntity() && cancel(evn)
+        ent.getName() !== Player.getName() && cancel(evn)
     }, () => hiding, net.minecraft.entity.player.EntityPlayer)

@@ -476,7 +476,21 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Reminds you when you don't have a mask on",
     subcategory: "Masks"
 })
-
+.addSwitch({
+    category: "Dungeons",
+    configName: "maskcd",
+    title: "Mask cooldown display",
+    description: "Shows a HUD displaying the cooldown of your masks",
+    subcategory: "Masks"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "onlyshowinp3",
+    title: "Only show in P3",
+    description: "Enable to only show in P3 of f7/m7",
+    subcategory: "Masks",
+    shouldShow: data => data.maskcd
+})
 // Dungeons - Leap features
 
 .addSwitch({

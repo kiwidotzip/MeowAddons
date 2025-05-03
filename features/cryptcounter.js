@@ -11,8 +11,8 @@ Crypt
     .register("stepDelay", () => {
         if (Dungeon.getCrypts() >= 5 || sent || Dungeon.inBoss()) return
         sent = true
-        if (Config().cryptchatmsg) ChatLib.command(`pc ${Dungeon.getCrypts()}/5 crypts done yet.`)
-        if (Config().crypttitle) Render2D.showTitle(`&b${Dungeon.getCrypts()}&7/&b5 &ccrypts`, null, 2500)
+        Config().cryptchatmsg && ChatLib.command(`pc ${Dungeon.getCrypts()}/5 crypts done yet.`)
+        Config().crypttitle && Render2D.showTitle(`&b${Dungeon.getCrypts()}&7/&b5 &ccrypts`, null, 2500)
     }, 60 * delay)
     .onRegister(() => sent = false)
 

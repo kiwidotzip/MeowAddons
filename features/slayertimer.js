@@ -80,7 +80,6 @@ slayerbosshighlight.register("ma:postRenderEntity", (ent, pos) => {
     )
 }, [net.minecraft.entity.monster.EntityEnderman, net.minecraft.entity.passive.EntityWolf, net.minecraft.entity.monster.EntitySpider, net.minecraft.entity.monster.EntityZombie]);
 
-register("command", () => hud.open()).setName(`meowdevonlypls`);
 register("chat", () => resetBossTracker()).setCriteria(/&r  &r&c&lSLAYER QUEST FAILED!&r/)
 
 GUI.onDraw(() => {

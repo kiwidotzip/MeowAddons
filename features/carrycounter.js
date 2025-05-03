@@ -30,6 +30,8 @@ const carryCache = new Map()
 const ProccessedSp = new Set()
 const DateMEOW = new Date()
 const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
+const modcmd = ["add","remove","set","settotal"]
+const allcmd = ["add","remove","set","settotal","list","gui","increase","decrease","clear","confirmdeath","canceldeath","logs","clearlogs"]
 const CarryLog = new LocalStore("MeowAddons",{
     data: []
 }, "./data/carrylog.json")
@@ -925,17 +927,10 @@ register("command", (...args = []) => {
     const currentArg = args[args.length - 1]?.toLowerCase();
     const playerNames = World.getAllPlayers()
         .filter(player => player.getUUID().version() === 4)
-        .map(player => ChatLib.removeFormatting(player.getName()));
-    
-    if (subcommand === "add" || subcommand === "remove" || subcommand === "set" || subcommand === "settotal") {
-        if (args.length === 2) {
-            return playerNames.filter(name => name.toLowerCase().startsWith(currentArg));
-        }
-    }
-    if (args.length === 1) {
-        return ["add", "remove", "set", "settotal", "list", "gui", "increase", "decrease", "clear", "confirmdeath", "canceldeath", "logs", "clearlogs"].filter(cmd => cmd.startsWith(currentArg));
-    }
-    return [];
+        .map(player => player.getName()?.toLowerCase()?.removeFormatting())
+    if (args.length === 2 && modcmd.includes(subcommand)) return playerNames.filter(name => name.startsWith(currentArg))
+    if (args.length === 1) return allcmd.filter(c => c.startsWith(currentArg))
+    return []
 }).setName("carry").setAliases(["macarry"]);
 
 // Dungeon commands (/dgcarry)
@@ -1026,19 +1021,11 @@ register("command", (...args = []) => {
     const subcommand = args[0]?.toLowerCase();
     const currentArg = args[args.length - 1]?.toLowerCase();
     const playerNames = World.getAllPlayers()
-    .filter(player => player.getUUID().version() === 4)
-    .map(player => ChatLib.removeFormatting(player.getName()));
-    
-    if (subcommand === "add" || subcommand === "remove" || subcommand === "set") {
-        if (args.length === 2) {
-            return playerNames.filter(name => name.toLowerCase().startsWith(currentArg));
-        }
-    }
-    if (args.length === 1) {
-        return ["add", "remove", "set", "list", "increase", "decrease"].filter(cmd => cmd.startsWith(currentArg));
-    }
-
-    return [];
+        .filter(player => player.getUUID().version() === 4)
+        .map(player => player.getName()?.toLowerCase()?.removeFormatting())
+    if (args.length === 2 && modcmd.includes(subcommand)) return playerNames.filter(name => name.startsWith(currentArg))
+    if (args.length === 1) return allcmd.filter(c => c.startsWith(currentArg))
+    return []
 }).setName("dgcarry").setAliases(["madgcarry"]);
 
 function findDungeonCarryee(name) {

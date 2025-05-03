@@ -3,9 +3,9 @@ import { FeatManager, hud } from "./helperfunction"
 let start = 0
 let duration = 0
 
-const GUI = hud.createTextHud("Quiz Timer", 600, 600, "&cQuiz: &b12.6s")
+const GUI = hud.createTextHud("Quiz Timer", 300, 300, "&cQuiz: &b12.6s")
 const Quiz = FeatManager.createFeature("quiztimer", "catacombs")
-const quiztimer = (time) => {
+const quiztimerT = (time) => {
     start = Date.now()
     duration = time
     Quiz.update()
@@ -13,8 +13,8 @@ const quiztimer = (time) => {
 }
 
 Quiz
-    .register("serverChat", () => quiztimer(12000), "[STATUE] Oruo the Omniscient: I am Oruo the Omniscient. I have lived many lives. I have learned all there is to know.")
-    .register("serverChat", () => quiztimer(8200), /\[STATUE\] Oruo the Omniscient: (?:.+) answered Question #\d correctly!/)
+    .register("serverChat", () => quiztimerT(12000), "[STATUE] Oruo the Omniscient: I am Oruo the Omniscient. I have lived many lives. I have learned all there is to know.")
+    .register("serverChat", () => quiztimerT(8200), /\[STATUE\] Oruo the Omniscient: (?:.+) answered Question #\d correctly!/)
     .registersub("renderOverlay", () => {
         const rem = duration - (Date.now() - start)
         Renderer.translate(GUI.getX(), GUI.getY())

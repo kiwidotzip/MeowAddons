@@ -21,7 +21,6 @@ firefreeze
         Renderer.translate(GUI.getX(), GUI.getY())
         Renderer.scale(GUI.getScale())
         Renderer.drawString(`&cFire Freeze&f: &b${(Math.max(0, timer - serverticks) / 20).toFixed(2)}s`, 0, 0)
-        Renderer.finishDraw()
     }, () => timer)
     .registersub("servertick", () => serverticks++, () => timer)
     .onRegister(() => (timer = serverticks = 0, firefreeze.update()))

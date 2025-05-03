@@ -1,4 +1,5 @@
 import { FeatManager } from "./helperfunction";
+import { Render2D } from "../../tska/rendering/Render2D"
 
 let cellc = 0
 let healc = 0
@@ -11,7 +12,7 @@ const Katana = FeatManager.createFeature("katanaalert")
 const WeirdTuba = FeatManager.createFeature("weirdtubaalert")
 const WitherCloak = FeatManager.createFeature("withercloakalert")
 
-const cellalert = () => setTimeout(() => ++cellc === cellc && expTitle("Cells Alignment Has Expired"), 5400)
+const cellalert = () => setTimeout(() => ++cellc === cellc && Render2D.showTitle("Cells Alignment Has Expired", null, 1000), 5400)
 
 CellAlign
     .register("serverActionbar", () => cellalert(), /.+\(Cells Alignment\).+/)
@@ -19,22 +20,22 @@ CellAlign
 Heal
     .register("serverActionbar", () => {
         let mel = ++healc
-        setTimeout(() => mel === healc && Client.showTitle("&cHealing Has Expired!", "", 1, 20, 1), 5800)
+        setTimeout(() => mel === healc && Render2D.showTitle("&cHealing Has Expired!", null, 1000), 5800)
     }, /.+\((Small|Medium|Big|Huge) Heal\).+/)
 Katana
     .register("serverActionbar", () => {
         if (soulcry) return
         soulcry = true
-        setTimeout(() => (soulcry = false, Client.showTitle("&cSoulcry expired!", "", 1, 20, 1)), 3900)
+        setTimeout(() => (soulcry = false, Render2D.showTitle("&cSoulcry expired!", null, 1000)), 3900)
     }, /.+\(Soulcry\).+/)
 WeirdTuba
     .register("serverActionbar", () => {
         if (howl) return
         howl = true
         const type = /.+Weirder.+Tuba/.test(Player.getHeldItem().getName())
-        setTimeout(() => (howl = false, Client.showTitle(`&c ${type ? "Weirder" : "Weird"} Tuba expired!`, "", 1, 20, 1)), type ? 30000 : 20000)
+        setTimeout(() => (howl = false, Render2D.showTitle(`&c ${type ? "Weirder" : "Weird"} Tuba expired!`, null, 1000)), type ? 30000 : 20000)
     }, /.+\(Howl\).+/)
 WitherCloak
     .register("serverChat", () => { 
-        Client.showTitle("&cWither Cloak Disabled!", "", 1, 20, 1) 
+        Render2D.showTitle("&cWither Cloak Disabled!", null, 1000) 
     }, /(Creeper Veil De-activated! \(Expired\)|Not enough mana! Creeper Veil De-activated!)/)

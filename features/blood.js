@@ -1,4 +1,5 @@
 import Config from "../config"
+import { Render2D } from "../../tska/rendering/Render2D"
 import { FeatManager } from "./helperfunction"
 import { Data } from "./utils/data"
 
@@ -17,14 +18,14 @@ Blood
 
     .register("serverChat", () => {
         const diftime = ((Date.now() - starttime) / 1000).toFixed(1)
-        Client.showTitle(`&c&l!`, `&cWatcher reached dialogue!`, 2, 45, 10)
+        Render2D.showTitle(`&c&l!`, `&cWatcher reached dialogue!`, 2500)
         ChatLib.chat(`&e[MeowAddons] &rWatcher took &b${diftime}s&r to reach dialogue!`)
         Config().sendbloodparty && ChatLib.command(`pc MeowAddons » Watcher took ${diftime}s to reach dialogue!`)
     }, "[BOSS] The Watcher: Let's see how you can handle this.")
 
     .register("serverChat", () => {
         const spawnalltime = ((Date.now() - starttime) / 1000).toFixed(1)
-        Client.showTitle(`&c!`, `&cWatcher finished spawning mobs!`, 2, 45, 10)
+        Render2D.showTitle(`&c!`, `&cWatcher finished spawning mobs!`, 2500)
         ChatLib.chat(`&e[MeowAddons] &rWatcher took &b${spawnalltime}s&r to spawn all mobs!`)
         Config().sendbloodparty && ChatLib.command(`pc MeowAddons » Watcher took ${spawnalltime}s to spawn all mobs!`)
     }, "[BOSS] The Watcher: That will be enough for now.")

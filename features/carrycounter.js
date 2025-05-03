@@ -136,10 +136,10 @@ class Carryee {
             });
         }
         World.playSound("note.pling", 5, 2);
-        Client.showTitle(
+        Render2D.showTitle(
             `&aCarries Completed: &6${this.name}`, 
             `&b${this.count}&f/&b${this.total}`,
-            10, 100, 10
+            3000
         );
         cacheCarryee(this);
         this.endSession();
@@ -180,7 +180,7 @@ class DungeonCarryee {
     complete() {
         ChatLib.chat(`${prefix} &fDungeon carries completed for &b${this.name}`);
         World.playSound("note.pling", 5, 2);
-        Client.showTitle(`&aCarries Completed: &6${this.name}`, `&b${this.count}&f/&b${this.total}`, 10, 100, 10);
+        Render2D.showTitle(`&aCarries Completed: &6${this.name}`, `&b${this.count}&f/&b${this.total}`, 3000);
     }
 
     toString() {
@@ -234,7 +234,7 @@ BossChecker.registersub("ma:entityJoin", (ent, entID, evn) => {
         if (!carryee) return;
         carryee.recordBossStartTime(entID - 3);
         if (settings().notifybossspawn) {
-            Client.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, "", 1, 20, 1);
+            Render2D.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, null, 1000);
             World.playSound("mob.cat.meow", 5, 2);
         }
     }, 2);

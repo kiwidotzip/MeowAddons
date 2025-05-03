@@ -2,6 +2,7 @@ import Config from "../config"
 import Dungeon from "../../tska/skyblock/dungeon/Dungeon"
 import { createSkull } from "../../tska/utils/InventoryUtils"
 import { FeatManager, hud } from "./helperfunction"
+import { Render2D } from "../../tska/rendering/Render2D"
 
 const SpiritMask = createSkull("eyJ0aW1lc3RhbXAiOjE1MDUyMjI5OTg3MzQsInByb2ZpbGVJZCI6IjBiZTU2MmUxNzIyODQ3YmQ5MDY3MWYxNzNjNjA5NmNhIiwicHJvZmlsZU5hbWUiOiJ4Y29vbHgzIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsibWV0YWRhdGEiOnsibW9kZWwiOiJzbGltIn0sInVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWJiZTcyMWQ3YWQ4YWI5NjVmMDhjYmVjMGI4MzRmNzc5YjUxOTdmNzlkYTRhZWEzZDEzZDI1M2VjZTlkZWMyIn19fQ==")
 const BonzoMask = createSkull("eyJ0aW1lc3RhbXAiOjE1ODc5MDgzMDU4MjYsInByb2ZpbGVJZCI6IjJkYzc3YWU3OTQ2MzQ4MDI5NDI4MGM4NDIyNzRiNTY3IiwicHJvZmlsZU5hbWUiOiJzYWR5MDYxMCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTI3MTZlY2JmNWI4ZGEwMGIwNWYzMTZlYzZhZjYxZThiZDAyODA1YjIxZWI4ZTQ0MDE1MTQ2OGRjNjU2NTQ5YyJ9fX0=")
@@ -37,7 +38,7 @@ maskrem
     .register("serverChat", () => {
         const helmet = Player.armor.getHelmet()?.getName()?.removeFormatting()
         if ((helmet?.includes("Bonzo's Mask")) || helmet?.includes("Spirit Mask")) return
-        Client.showTitle("&cMask not equipped!", "", 1, 60, 1)
+        Render2D.showTitle("&cMask not equipped!",  null, 3000)
         World.playSound("mob.cat.hiss", 1, 1)
     }, "[BOSS] Storm: I should have known that I stood no chance.")
 

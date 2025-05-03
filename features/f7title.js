@@ -75,8 +75,8 @@ GUI.onDraw(() => {
     Renderer.finishDraw()
 })
 
-Dungeon.on270Score(() => Config().dungeonscore270 && ChatLib.chat(Config().dungeonscore270msg))
-Dungeon.on300Score(() => Config().dungeonscore300 && ChatLib.chat(Config().dungeonscore300msg))
+Dungeon.on270Score(() => Config().dungeonscore270 && ChatLib.command(`pc ${Config().dungeonscore270msg}`))
+Dungeon.on300Score(() => Config().dungeonscore300 && ChatLib.command(`pc ${Config().dungeonscore300msg}`))
 
 WishTitle
     .register("chat", () => {

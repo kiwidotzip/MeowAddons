@@ -695,7 +695,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addTextInput({
     category: "Dungeons",
-    configName: "dungeonscore270msg",
+    configName: "dungeonscore300msg",
     title: "Dungeon score message for 300 score",
     description: "Dungeon score message for 300 score",
     subcategory: "Score messages",

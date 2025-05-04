@@ -1,6 +1,6 @@
 import { Render2D } from "../../tska/rendering/Render2D";
 import { FeatManager } from "./helperfunction";
-import { Dungeon } from "../../tska/skyblock/dungeon/Dungeon"
+import Dungeon from "../../tska/skyblock/dungeon/Dungeon"
 
 const BatDead = FeatManager.createFeature("batdeadtitle", "catacombs")
 BatDead

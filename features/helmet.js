@@ -1,8 +1,10 @@
 import { FeatManager } from "./helperfunction"
 import { LocalStore } from "../../tska/storage/LocalStore"
+import Config from "../config"
 
 let currentIndex = 0
 let isInInventory = false
+let delay = Config().spacehelmetdelay
 const Helm = FeatManager.createFeature("spacehelmet")
 const MeowDate = new Date()
 const formattedDate = `${["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][MeowDate.getMonth()]}, ${MeowDate.getFullYear()}`
@@ -36,8 +38,10 @@ Helm
             data.helmname = data.helm.func_82833_r()
             data.helm = null
         }
-    }, 5)
+    }, delay)
     .register("ma:setSlot", (wind, slot, item, evn) => slot === 5 && item?.func_82833_r() === data.helmname && cancel(evn))
     .register("guiOpened", e => e.gui instanceof GuiInventory && (isInInventory = true))
     .register("guiClosed", () => (isInInventory = false))
     .onUnregister(() => data.helm && (Player.getInventory()?.getInventory().field_70460_b[3] = data.helm))
+
+Config().getConfig().registerListener((oldv, newv) => (delay = newv))

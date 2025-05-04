@@ -1,6 +1,7 @@
 // Make sure these go to the right directory 
 import Settings from "../Amaterasu/core/Settings";
 import DefaultConfig from "../Amaterasu/core/DefaultConfig";
+import { meowc } from "./features/utils/data";
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Chat - General
@@ -840,6 +841,15 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Space Helmet",
     description: "Shows a client-side space helmet on your head",
     subcategory: "Space helmet"
+})
+.addSlider({
+    category: "Misc.",
+    configName: "spacehelmetdelay",
+    title: "Space helmet speed",
+    description: "Speed for the space helmet animation",
+    subcategory: "Space helmet",
+    value: "3",
+    options: [1, 5]
 })
 
 // Misc - Block Overlay

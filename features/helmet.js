@@ -17,6 +17,7 @@ const data = new LocalStore("MeowAddons", {
 
 Helm
     .register("stepFps", () => {
+        if (!World.isLoaded()) return
         const inv = Player.getInventory()?.getInventory()
         if (!isInInventory) {
             const currentHelmet = inv?.field_70460_b[3]

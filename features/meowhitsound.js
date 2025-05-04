@@ -27,9 +27,9 @@ const playParticles = (entity) => {
     let x = entity.getX();
     let y = entity.getY();
     let z = entity.getZ();
-
-    for (var i = 0; i < 10; i++) {
-        setTimeout(() => {
+    try {
+        for (var i = 0; i < 10; i++) {
+            setTimeout(() => {
                 if (Math.random() <= 0.66) {
                     World.particle.spawnParticle(
                         "NOTE",
@@ -37,6 +37,9 @@ const playParticles = (entity) => {
                         0, 0, 0
                     ).setMaxAge(6 + Math.random() * 6).scale(0.66 + Math.random() * 0.2)
                 }
-        }, i*30) 
+            }, i*30) 
+        }
+    } catch (err) {
+        // eat error
     }
 }

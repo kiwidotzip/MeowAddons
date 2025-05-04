@@ -849,7 +849,8 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Speed for the space helmet animation",
     subcategory: "Space helmet",
     value: "3",
-    options: [1, 5]
+    options: [1, 5],
+    shouldShow: data => data.spacehelmet
 })
 
 // Misc - Block Overlay

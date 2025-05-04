@@ -832,6 +832,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     }
 })
 
+// Misc - Space Helmet
+
+.addSwitch({
+    category: "Misc.",
+    configName: "spacehelmet",
+    title: "Space Helmet",
+    description: "Shows a client-side space helmet on your head",
+    subcategory: "Space helmet"
+})
+
 // Misc - Block Overlay
 
 .addSwitch({

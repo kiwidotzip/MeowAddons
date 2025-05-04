@@ -4,5 +4,6 @@
     "description"   : "QOL features and some dumb ones",
     "version"       : "2.3.2",
     "entry"         : "index.js",
+    "helpMessage"   : "&f[&eMeowAddons&f] Open the GUI using &b/ma&f. View all commands using &b/ma help&f.",
     "requires"      : ["Amaterasu", "tska"]
 }

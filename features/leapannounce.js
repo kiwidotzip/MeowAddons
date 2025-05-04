@@ -1,8 +1,8 @@
 import Config from "../config";
 import { FeatManager } from "./helperfunction";
 
-const hide = FeatManager.createFeature("hideafterleap");
-const leapannounce = FeatManager.createFeature("leapannounce");
+const hide = FeatManager.createFeature("hideafterleap", "catacombs")
+const leapannounce = FeatManager.createFeature("leapannounce", "catacombs")
 let hiding = false
 
 leapannounce.register("chat", (player, event) => {

@@ -9,16 +9,17 @@ const formattedDate = `${["January", "February", "March", "April", "May", "June"
 const damageValues = [14, 1, 4, 5, 13, 9, 11, 10, 6]
 const GuiInventory = Java.type("net.minecraft.client.gui.inventory.GuiInventory")
 const data = new LocalStore("MeowAddons", {
-    helm: null
+    helm: null,
+    helmname: null
 }, "./data/spacehelm.json")
 
 Helm
-    .register("servertick", () => {
+    .register("stepFps", () => {
         const inv = Player.getInventory()?.getInventory()
         if (!isInInventory) {
             const currentHelmet = inv?.field_70460_b[3]
-            if (currentHelmet&& !data.helm && !currentHelmet?.func_82833_r().includes("[MA]")) data.helm = currentHelmet
-            inv.field_70460_b[3] = new Item("minecraft:stained_glass")
+            if (currentHelmet && !data.helm && !currentHelmet?.func_82833_r().includes("[MA]")) data.helm = currentHelmet, data.helmname = data.helm.func_82833_r()
+            inv?.field_70460_b[3] = new Item("minecraft:stained_glass")
                 .setDamage(damageValues[currentIndex])
                 .setName("§r§cSpace Helmet &e[MA]")
                 .setLore([
@@ -31,13 +32,12 @@ Helm
                 .getItemStack()
             currentIndex = (currentIndex + 1) % damageValues.length
         } else if (data.helm !== null) {
-            inv.field_70460_b[3] = data.helm
+            inv?.field_70460_b[3] = data.helm
+            data.helmname = data.helm.func_82833_r()
             data.helm = null
         }
-    })
+    }, 5)
+    .register("ma:setSlot", (wind, slot, item, evn) => slot === 5 && item?.func_82833_r() === data.helmname && cancel(evn))
     .register("guiOpened", e => e.gui instanceof GuiInventory && (isInInventory = true))
     .register("guiClosed", () => (isInInventory = false))
-    .onUnregister(() => {
-        const inv = Player.getInventory()?.getInventory()
-        if (data.helm) inv.field_70460_b[3] = data.helm
-    })
+    .onUnregister(() => data.helm && (Player.getInventory()?.getInventory().field_70460_b[3] = data.helm))

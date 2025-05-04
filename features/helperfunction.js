@@ -21,6 +21,7 @@ Event.createEvent("ma:renderTileEntity", (cb, tileEntityType) => register("rende
 Event.createEvent("ma:postRenderTileEntity", (cb, tileEntityType) => register("postRenderTileEntity", cb).setFilteredClasses(tileEntityType));
 Event.createEvent("ma:entityJoin", (cb) => register(net.minecraftforge.event.entity.EntityJoinWorldEvent, (e) => cb(e.entity, e.entity.func_145782_y(), e)));
 Event.createEvent("ma:endermanTP", (cb) => register(net.minecraftforge.event.entity.living.EnderTeleportEvent, cb));
+Event.createEvent("ma:setSlot", (cb) => register("packetReceived", (p) => cb(p.func_149175_c(), p.func_149173_d(), p.func_149174_e(), p)).setFilteredClasses(net.minecraft.network.play.server.S2FPacketSetSlot));
 // Goldor sections
 register("worldLoad", () => {
     Data.goldorsection = 0;

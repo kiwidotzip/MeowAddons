@@ -21,7 +21,7 @@ function bump() {
 register("messageSent", msg => { 
     const m = msg.toLowerCase();
     MEOWS.forEach(meow => {
-        if (m.startsWith(meow)) {
+        if (m.includes(meow)) {
             bump();
             return;
         }

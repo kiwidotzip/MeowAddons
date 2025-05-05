@@ -41,13 +41,14 @@ import "./features/poisontracker";
 import "./features/worldage";
 import "./features/armorhud";
 import "./features/helmet";
+
 // Update Checker
 
 import { LocalStore } from "../tska/storage/LocalStore";
 import { fetch } from "../tska/polyfill/Fetch";
 const Data = new LocalStore("MeowAddons", {
     firstInstall: true,
-    DiscordSent: false
+    version: "2.3.2"
 }, "./data/indexData.json")
 
 
@@ -113,40 +114,32 @@ function checkUpdate(silent = false) {
     });
 }
 
-let updateChecked = false;
-register("worldLoad", () => {
-    if (!updateChecked) {
-        if (Data.version < LOCAL_VERSION) {
-            checkUpdate(true);
-            Client.scheduleTask(40, () => ChatLib.chat(updateMessage));
-            Data.version = LOCAL_VERSION;
-            Data.save();
-        }
-        updateChecked = true;
-        Client.scheduleTask(1000, () => {
-            checkUpdate();
-            if(!Data.DiscordSent) { 
-                ChatLib.chat(new TextComponent(`&7&oPsssst &7- &e&lMeowAddons&f now has a discord - Click to join!`)
-                            .setHoverValue(`Click to join!`)
-                            .setClick("open_url", `https://discord.gg/KPmHQUC97G`))
-                Data.DiscordSent = true;
-                Data.save()
-            }
-            updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
-        });
-    }
-});
+// Update check
 
-register('command', () => {
-    checkUpdate();
-    updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
-}).setName('meowupdate');
+let updateChecked = false
+
+const Changelog = register("worldLoad", () => {
+    checkUpdate(true)
+    Changelog.unregister()
+    Client.scheduleTask(40, () => ChatLib.chat(updateMessage))
+    Data.version = LOCAL_VERSION
+}).unregister()
+
+const UpdateCH = register("worldLoad", () => {
+    updateChecked = true
+    UpdateCH.unregister()
+    Client.scheduleTask(1000, () => (checkUpdate(), updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`))
+}).unregister()
+
+register("gameLoad", () => (Data.version < LOCAL_VERSION && Changelog.register(), !updateChecked && UpdateCH.register()))
 
 // First install
 
-register("worldLoad", () => {
-    if (Data.firstInstall) {
-        Client.scheduleTask(20, () => {
+const fi = register("step", () => {
+    if (!World.isLoaded()) return
+    Data.firstInstall = false
+    fi.unregister()
+    Client.scheduleTask(20, () => {
         ChatLib.chat(`&7&l-----------------------------------------------------`)
         ChatLib.chat(ChatLib.getCenteredText("&bThanks for installing &e&lMeowAddons&b!"))
         ChatLib.chat(`&b`)
@@ -156,20 +149,15 @@ register("worldLoad", () => {
         ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
         ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
         ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
-        ChatLib.chat(`&7> &7/&bmeowupdate &7- &fCheck for updates`)
+        ChatLib.chat(`&7> &7/&bma update &7- &fCheck for updates`)
         ChatLib.chat(`&b`)
         ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
         ChatLib.chat(`&b> Discord&f:&7 https://discord.gg/KPmHQUC97G`)
         ChatLib.chat(`&7&l-----------------------------------------------------`)
-        Data.firstInstall = false;
-        Data.save();
-        if (FileLib.exists("MeowAddons", ".data.json")) {
-            ChatLib.chat(`&cYou may be seeing this message again because your data file can no longer be accessed.`)
-            ChatLib.chat(`&cDeleting old MeowAddons Data file...`)
-            FileLib.delete("MeowAddons", ".data.json")
-        }});
-    }
-});
+    })
+}).setDelay(2).unregister()
+
+register("gameLoad", () => Data.firstInstall && fi.register())
 
 // Command handler
 
@@ -190,14 +178,18 @@ register("command", (...args) => {
             ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
             ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
             ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
-            ChatLib.chat(`&7> &7/&bmeowupdate &7- &fCheck for updates`)
+            ChatLib.chat(`&7> &7/&bma update &7- &fCheck for updates`)
             ChatLib.chat(`&b`)
             ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
             ChatLib.chat(`&b> Discord&f:&7 https://discord.gg/KPmHQUC97G`)
             ChatLib.chat(`&7&l-----------------------------------------------------`)
             break
+        case "update": 
+            checkUpdate()
+            updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`
+            break
         default:
             ChatLib.chat(`&e[MeowAddons] &fCommand not found! Do &c/ma help &ffor a list of commands.`)
             break
     }
-}).setName("meowaddons").setAliases(["ma", "meowa"])    
+}).setName("meowaddons").setAliases(["ma", "meowa"])

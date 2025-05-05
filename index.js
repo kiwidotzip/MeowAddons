@@ -67,9 +67,9 @@ function compareVersions (v1, v2) {
 
 function buildUpdateMessage(releases) {
     let message = `&9&m${ChatLib.getChatBreak("-")}\n`;
-    message += `&e&lMeowAddons Changelog: \n&fChanges since &bv${LOCAL_VERSION}&e:\n`;
+    message += `&e&lMeowAddons Changelog: \n&fChanges since &bv${Data.version}&e:\n`;
     releases
-        .filter(release => compareVersions(release.tag_name.replace(/^v/, ''), LOCAL_VERSION) > 0)
+        .filter(release => compareVersions(release.tag_name.replace(/^v/, ''), Data.version) > 0)
         .forEach(release => {
             release.body.split("\n").forEach(line => {
                 const trimmedLine = line.trim();
@@ -121,8 +121,7 @@ let updateChecked = false
 const Changelog = register("worldLoad", () => {
     checkUpdate(true)
     Changelog.unregister()
-    Client.scheduleTask(40, () => ChatLib.chat(updateMessage))
-    Data.version = LOCAL_VERSION
+    Client.scheduleTask(40, () => (ChatLib.chat(updateMessage), Data.version = LOCAL_VERSION))
 }).unregister()
 
 const UpdateCH = register("worldLoad", () => {

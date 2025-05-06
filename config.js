@@ -1126,7 +1126,7 @@ config.getHandler().registers.onDraw(() => {
     Renderer.drawRect(bcolor, mb.getLeft() + (width - width * 0.3) / 2, mb.getTop() + height * 0.0008, width * 0.5, height * 0.09)
     // Title
     Renderer.colorize(187, 134, 252, 255)
-    Renderer.drawString(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`, mb.getLeft() + (width - width * 0.3) / 2 + width * 0.5 / 2 - Renderer.getStringWidth(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`) / 2, mb.getTop() + height * 0.0004 + height * 0.075 / 2)
+    Renderer.drawString(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`, mb.getLeft() + (width - width * 0.31) / 2 + width * 0.5 / 2 - Renderer.getStringWidth(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`) / 2, mb.getTop() + height * 0.0004 + height * 0.075 / 2)
 })
 config.AmaterasuGui.searchBar.x = 200 // yay no search bar
 config

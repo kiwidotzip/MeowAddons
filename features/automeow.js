@@ -23,11 +23,10 @@ register("messageSent", msg => msg.toLowerCase().includes("meow") && bump())
 register("command", () => ChatLib.chat(`${PREFIX} &fYou have meowed &b${meowc.meowcount} &ftimes :3`)).setName("meowcount")
 
 AutoMeow.register("chat", (user, event) => {
-    if (user === Player.getName()) return
     const message = ChatLib.getChatMessage(event).removeFormatting()
+    if (user === Player.getName() || message.startsWith("To ")) return
 
     setTimeout(() => {
-        if (message.startsWith("To ")) return
         const cmd = message.startsWith("From ") ? `msg ${user}` : (m = message.match(/^(Party >|Guild >|Officer >|Co-op >)/)) ? meowmap[m[1]] : "ac"
         ChatLib.command(`${cmd} ${MEOW_RESPONSES[Math.floor(Math.random() * MEOW_RESPONSES.length)]}`)    
         bump()

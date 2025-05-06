@@ -1,6 +1,7 @@
 import Config from "../config";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { FeatManager } from "./helperfunction";
+import config from "../config";
 
 // Credit to DocilElm's Doc module for like 70% of the code lmao <3
 
@@ -26,5 +27,5 @@ DrawBlock.register("drawBlockHighlight", (pos, event) => {
     const phase = Client.settings.getSettings()?.field_74320_O !== 1;
     Config().blockoverlayfill
       ? Render3D.filledBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, true, event.partialTicks)
-      : Render3D.outlineBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, 2, true, event.partialTicks);
+      : Render3D.outlineBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, Config().blockoverlayline, true, event.partialTicks);
 })

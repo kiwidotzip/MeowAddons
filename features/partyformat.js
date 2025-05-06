@@ -2,22 +2,19 @@ import Config from "../config";
 import { FeatManager } from "./helperfunction";
 const partyformat = FeatManager.createFeature("partyformat");
 
-partyformat.register("chat", (hypixelrank, username, message, event) => {
-    if (!Config().formatchatmessage) return;
-    cancel(event);
+partyformat.register("chat", (hrank, user, msg, evn) => {
     const rankColors = {
         "Admin": "&c",
         "Mod": "&2",
         "Helper": "&9",
         "GM": "&2",
-        "MVP++": `&${Config().mvppluspluscolor}`,
-        "MVP+": `&${Config().mvppluscolor}`,
-        "MVP": `&${Config().mvpcolor}`,
-        "VIP+": `&${Config().vippluscolor}`,
-        "VIP": `&${Config().vipcolor}`,
-    };
-    const rankNameMatch = hypixelrank ? hypixelrank.match(/\[(.+?)\]/) : null;
-    const rankName = rankNameMatch ? rankNameMatch[1] : null;
-    const rankColor = rankName && rankColors[rankName] ? rankColors[rankName] : "&7";
-    ChatLib.chat(`&9P &8> ${rankColor}${username}&f: ${message}`);
+        "MVP++": `&${Config().mvppluspluscolor || "6"}`,
+        "MVP+": `&${Config().mvppluscolor || "b"}`,
+        "MVP": `&${Config().mvpcolor || "b"}`,
+        "VIP+": `&${Config().vippluscolor || "a"}`,
+        "VIP": `&${Config().vipcolor || "a"}`
+    }
+    const rankColor = rankColors[hrank?.match(/\[(.+?)\]/)?.[1]] || "&7"
+    cancel(evn)
+    ChatLib.chat(`&9P &8> ${rankColor}${user}&f: ${msg}`)
 }, /Party > (\[.+?\])? ?(.+?): (.+)/)

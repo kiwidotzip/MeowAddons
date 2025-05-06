@@ -165,14 +165,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Auto-meow",
     shouldShow: data => data.automeow
 })
-.addSwitch({
-    category: "Meowing",
-    configName: "guildchattoggleautomeow",
-    title: "Enables automeow for guild chat",
-    description: "Enables automeow for guild chat.\n&4Enable random delay for auto meow",
-    subcategory: "Auto-meow",
-    shouldShow: data => data.automeow
-})
 
 // Meowing - Meow sounds
 
@@ -868,6 +860,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Filled block overlay",
     description: "Draws a filled block overlay",
     subcategory: "Block overlay",
+    shouldShow: data => data.blockoverlay
+})
+.addSlider({
+    category: "Misc.",
+    configName: "blockoverlayline",
+    title: "Block overlay line width",
+    description: "Width of the block overlay's line",
+    subcategory: "Block overlay",
+    options: [1, 6],
+    value: 2,
     shouldShow: data => data.blockoverlay
 })
 .addColorPicker({

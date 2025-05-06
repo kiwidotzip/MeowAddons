@@ -51,7 +51,6 @@ const Data = new LocalStore("MeowAddons", {
     version: "2.3.2"
 }, "./data/indexData.json")
 
-
 const LOCAL_VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version.replace(/^v/, '');
 const API_URL = 'https://api.github.com/repos/kiwidotzip/meowaddons/releases';
 let updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;

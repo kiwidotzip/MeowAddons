@@ -15,12 +15,6 @@ hide
     .register("chat", (player) => {
         hiding = true
         hide.update()
-        setTimeout(() => {
-            hiding = false
-            hide.update()
-        }, Config().hideleaptime * 1000)
+        setTimeout(() => (hiding = false, hide.update()), Config().hideleaptime * 1000)
     }, "You have teleported to ${player}")
-
-    .registersub("renderEntity", (ent, pos, pt, evn) => {
-        ent.getName() !== Player.getName() && cancel(evn)
-    }, () => hiding, net.minecraft.entity.player.EntityPlayer)
+    .registersub("renderEntity", (ent, pos, pt, evn) => ent.getName() !== Player.getName() && cancel(evn), () => hiding, net.minecraft.entity.player.EntityPlayer)

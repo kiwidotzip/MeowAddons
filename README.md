@@ -12,11 +12,10 @@
   </a>
 </p>
 
-<p align="center"><b>Total Downloads:</b> 3966 </p>
+<p align="center"><b>Total Downloads:</b> ~4.8k </p>
 
 <p align="center" id="description"><b>MeowAddons</b> is a Silly chattriggers module that has some QOL features</p>
-
----
+<p align="center"><a href="https://discord.com/invite/KPmHQUC97G"><b>Join the discord!</b></a></p>
 
 <h2 align="center">Features List</h2>
 

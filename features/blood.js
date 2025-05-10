@@ -34,7 +34,7 @@ Blood
         blooddone = true
         const camptime = ((Date.now() - starttime) / 1000)
         camptime < Data.bloodCampPB && (Data.bloodCampPB = camptime)
-        ChatLib.chat(`&e[MeowAddons] &fBlood camp took &b${camptime.toFixed(1)}s &7| &fPB: &b${Data.bloodCampPB.toFixed(1)}s`)
+        ChatLib.chat(`&e[MeowAddons] &fBlood camp took &b${camptime.toFixed(1)}s &7| &fPB: &b${Data.bloodCampPB}s`)
         Config().sendbloodparty && ChatLib.command(`pc MeowAddons » Blood camp took ${camptime.toFixed(1)}s!`)
     }, () => starttime, "[BOSS] The Watcher: You have proven yourself. You may pass.")
 

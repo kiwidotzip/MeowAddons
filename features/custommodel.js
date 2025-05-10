@@ -61,10 +61,9 @@ register("command", (arg) => {
 
 function drawCustomModel(pt) {
     if (!Client.isInGui() && Client.settings.getSettings().field_74320_O === 0) return
-
+    
     const tex = types[data.selectedType].textures[data.selectedTexture]
     const model = types[data.selectedType].model
-
     const player = Player.getPlayer()
     const bodyYaw = lerp(player.field_70760_ar, player.field_70761_aq, pt)
     const headYaw = clamp180(lerp(player.field_70758_at, player.field_70759_as, pt) - bodyYaw)

@@ -4,10 +4,8 @@ import "./features/meowsounds";
 import "./features/meowhitsound";
 // General
 import "./features/chatcleaner";
-import "./features/cleanfriendjoin";
-import "./features/cleanguildjoin";
-import "./features/partyformat";
-import "./features/guildformat";
+import "./features/cleanjoins";
+import "./features/cleanmsgs";
 // Party command
 import "./features/partycmd";
 // Skyblock General
@@ -57,27 +55,16 @@ let updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
 
 function compareVersions (v1, v2) {
     const a = v1.split('.').map(Number), b = v2.split('.').map(Number);
-    for (let i = 0; i < Math.max(a.length, b.length); i++) {
-      if ((a[i]||0) > (b[i]||0)) return 1;
-      if ((a[i]||0) < (b[i]||0)) return -1;
-    }
-    return 0;
-};
+    for (let i = 0, l = Math.max(a.length, b.length); i < l; i++) if ((a[i] || 0) !== (b[i] || 0)) return (a[i] || 0) > (b[i] || 0) ? 1 : -1
+    return 0
+}
 
 function buildUpdateMessage(releases) {
-    let message = `&9&m${ChatLib.getChatBreak("-")}\n`;
-    message += `&e&lMeowAddons Changelog: \n&fChanges since &bv${Data.version}&e:\n`;
+    let message = `&9&m${ChatLib.getChatBreak("-")}\n&e&lMeowAddons Changelog: \n&fChanges since &bv${Data.version}&f:\n`
     releases
         .filter(release => compareVersions(release.tag_name.replace(/^v/, ''), Data.version) > 0)
-        .forEach(release => {
-            release.body.split("\n").forEach(line => {
-                const trimmedLine = line.trim();
-                if (trimmedLine !== "" && !trimmedLine.includes("**Full Changelog**")) {
-                    message += `&b${trimmedLine}\n`;
-                }
-            });
-        });
-    return message + `&9&m${ChatLib.getChatBreak("-")}`;
+        .forEach(r => r.body.split("\n").forEach(l => l.trim() !== "" && !l.trim().includes("**Full Changelog**") && (message += `&b${l.trim()}\n`)))
+    return message + `&9&m${ChatLib.getChatBreak("-")}`
 }
 
 function checkUpdate(silent = false) {
@@ -86,31 +73,17 @@ function checkUpdate(silent = false) {
         json: true
     })
     .then(releases => {
-        if (!releases.length && !silent) {
-            ChatLib.chat('&e[MeowAddons] &cNo releases found!');
-            return;
-        }
-
-        const latestRelease = releases[0];
-        const remoteVersion = latestRelease.tag_name.replace(/^v/, '');
-        updateMessage = buildUpdateMessage(releases);
-
-        if (!silent && compareVersions(LOCAL_VERSION, remoteVersion) !== 0) ChatLib.chat('&e[MeowAddons] &aChecking for updates...');
-
-        if (compareVersions(LOCAL_VERSION, remoteVersion) > 0 && !silent) {
-            ChatLib.chat('&e[MeowAddons] &aYou\'re running a development build that is newer than the latest release!');
-        } else if (compareVersions(LOCAL_VERSION, remoteVersion) < 0 && !silent) {
-            ChatLib.chat(`&e[MeowAddons] &aUpdate available: &bv${remoteVersion}&a! Current: &ev${LOCAL_VERSION}`);
-            ChatLib.chat(new TextComponent(`&e[MeowAddons] &aClick here to go to the Github release page!`)
-                .setHoverValue(`&bOpens the release page - Github`)
-                .setClick("open_url", `https://github.com/kiwidotzip/meowaddons/releases/latest`));
-            ChatLib.chat(new TextComponent(`&e[MeowAddons] &aHover over this message to view changelogs!`)
-                .setHoverValue(updateMessage));
-        }
+        if (!releases.length && !silent) return ChatLib.chat('&e[MeowAddons] &fNo releases found!')
+        updateMessage = buildUpdateMessage(releases)
+        if (silent) return
+        compareVersions(LOCAL_VERSION, releases[0].tag_name) > 0 ? ChatLib.chat('&e[MeowAddons] &fYou\'re on a development build.')
+        : compareVersions(LOCAL_VERSION, releases[0].tag_name) < 0 && (
+            ChatLib.chat(`&e[MeowAddons] &fUpdate available: &bv${remoteVersion}&f! Current: &bv${LOCAL_VERSION}`),
+            ChatLib.chat(new TextComponent(`&e[MeowAddons] &fClick here to go to the release page!`).setClick("open_url", `https://github.com/kiwidotzip/meowaddons/releases/latest`)),
+            ChatLib.chat(new TextComponent(`&e[MeowAddons] &fHover over this message to view changelogs!`).setHoverValue(updateMessage))
+        )
     })
-    .catch(error => {
-        ChatLib.chat(`&e[MeowAddons] &cUpdate check failed: ${error}`);
-    });
+    .catch(error => ChatLib.chat(`&e[MeowAddons] &fUpdate check failed: &c${error}`))
 }
 
 // Update check

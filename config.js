@@ -1,7 +1,5 @@
-// Make sure these go to the right directory 
 import Settings from "../Amaterasu/core/Settings";
 import DefaultConfig from "../Amaterasu/core/DefaultConfig";
-import { meowc } from "./features/utils/data";
 const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Chat - General

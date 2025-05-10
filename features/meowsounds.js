@@ -1,4 +1,5 @@
 import { FeatManager } from "./helperfunction"
+import Config from "../config"
 
 const meowsounds = FeatManager.createFeature("meowsounds")
 const meowhitsound = FeatManager.createFeature("meowhitsound")
@@ -11,7 +12,6 @@ meowsounds
     .register("chat", (msg) => {
         msg.toLowerCase().includes("meow") && World.playSound(sounds[Math.floor(Math.random() * sounds.length)], 1, 1)
     }, /(?:Guild|Party|Co-op|From|To)? ?(?:>)? ?(?:\[.+?\])? ?(?:[a-zA-Z0-9_]+) ?(?:\[.+?\])?: (.+)/)
-
 
 meowhitsound
     .register("entityDeath", (e) => {

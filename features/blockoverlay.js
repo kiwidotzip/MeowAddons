@@ -1,7 +1,6 @@
 import Config from "../config";
 import { Render3D } from "../../tska/rendering/Render3D";
 import { FeatManager } from "./helperfunction";
-import config from "../config";
 
 // Credit to DocilElm's Doc module for like 70% of the code lmao <3
 

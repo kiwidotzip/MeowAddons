@@ -1,30 +1,26 @@
-import Settings from "../config"
+import { FeatManager } from "./helperfunction";
 
+const chatcleaner = FeatManager.createFeature("chatcleaner")
 const uselessMsgs = [
-    //////////////////////////////////////////
-    /Creeper Veil Activated!/,
+/Creeper Veil Activated!/,
 /Creeper Veil De-activated!/,
-//////////////////////////////////////////
-/./,
-/./,
-/./,
 /Be careful! Using Ender Pearls on this island will anger nearby Endermen!/,
-/[Bazaar] Executing instant buy.../,
-/[Bazaar] Executing instant sell.../,
-/[Bazaar] The Buy Orders for this item changed too much!/,
-/[Bazaar] Couldn't find any buyers for/,
-/[Bazaar] Putting goods in escrow.../,
-/[Bazaar] Submitting sell offer.../,
-/[Bazaar] Submitting buy order.../,
-/[Bazaar] Claiming order.../,
-/[Bazaar] Cancelling order.../,
+/\[Bazaar\] Executing instant buy.../,
+/\[Bazaar\] Executing instant sell.../,
+/\[Bazaar\] The Buy Orders for this item changed too much!/,
+/\[Bazaar\] Couldn't find any buyers for/,
+/\[Bazaar\] Putting goods in escrow.../,
+/\[Bazaar\] Submitting sell offer.../,
+/\[Bazaar\] Submitting buy order.../,
+/\[Bazaar\] Claiming order.../,
+/\[Bazaar\] Cancelling order.../,
+/\[Bazaar\] Couldn't find any buyers for/,
+/\[Bazaar\] No items could be matched to buyers!/,
 /Putting coins in escrow.../,
 /Strike using the .+ attunement on your dagger!/,
 /Your hit was reduced by Hellion Shield!/,
 /Processing purchase.../,
 /Claiming BIN auction.../,
-/[Bazaar] Couldn't find any buyers for/,
-/[Bazaar] No items could be matched to buyers!/,
 /Putting item in escrow.../,
 /Setting up the auction.../,
 /Visit the Auction House to collect your item!/,
@@ -32,9 +28,6 @@ const uselessMsgs = [
 /SWEET! .+/,
 /COMMON! .+/,
 /ALLOWANCE! You earned .+ coins!/,
-/Skytils (.*) » Failed to send room data to server. true/,
-/Skytils (.*) (.*)/,
-/Skytils .* Something isn't right! .*/,
 /You are sending commands too fast! Please slow down./,
 /You haven't claimed your Holidays Rewards yet!/,
 /Talk to the Gingerbread Man in the Hub!/,
@@ -45,10 +38,6 @@ const uselessMsgs = [
 /♨ [WARP] To Elizabeth in the next .+ to grab yours!/,
 /Your bone plating reduced the damage you took by .+!/,
 /A Wither Key was picked up!/,
-/\$SKYTILS-DUNGEON-SCORE-MIMIC\$/,
-/.*Mimic Killed!/,
-/.*Skytils-SC.*/,
-/       /,
 /Warping you to your SkyBlock island.../,
 /You earned .+ Event EXP from playing SkyBlock!/,
 /Warping.../,
@@ -57,7 +46,6 @@ const uselessMsgs = [
 /Error initializing players\: undefined/,
 /You are playing on profile\: .+/,
 /Profile ID\:.+/,
-/.+Mimic Killed!/,
 /Goldor's TNT Trap hit you for 1,788.9 true damage./,
 /A Blood Key was picked up/,
 /This Terminal doesn't seem to be responsive at the moment./,
@@ -162,6 +150,8 @@ const uselessMsgs = [
 /Ragnarok is ready to use! Press DROP to activate it!/,
 /This creature is immune to this kind of magic!/,
 /FISHING FESTIVAL The festival is now underway! Break out your fishing rods and watch out for sharks!/
-];
+]
 
-export default uselessMsgs;
+uselessMsgs.forEach(msg => {
+    chatcleaner.register("chat", e => cancel(e), msg)
+})

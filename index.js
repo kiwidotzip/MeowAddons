@@ -3,7 +3,7 @@ import "./features/automeow";
 import "./features/meowsounds";
 import "./features/meowhitsound";
 // General
-import "./features/chatcleaner";
+import "./features/chatcleanerentry";
 import "./features/cleanjoins";
 import "./features/cleanmsgs";
 // Party command

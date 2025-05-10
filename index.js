@@ -49,7 +49,7 @@ const Data = new LocalStore("MeowAddons", {
     version: "2.3.2"
 }, "./data/indexData.json")
 
-const LOCAL_VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version.replace(/^v/, '');
+const LOCAL_VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version
 const API_URL = 'https://api.github.com/repos/kiwidotzip/meowaddons/releases';
 let updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`;
 
@@ -78,7 +78,7 @@ function checkUpdate(silent = false) {
         if (silent) return
         compareVersions(LOCAL_VERSION, releases[0].tag_name) > 0 ? ChatLib.chat('&e[MeowAddons] &fYou\'re on a development build.')
         : compareVersions(LOCAL_VERSION, releases[0].tag_name) < 0 && (
-            ChatLib.chat(`&e[MeowAddons] &fUpdate available: &bv${remoteVersion}&f! Current: &bv${LOCAL_VERSION}`),
+            ChatLib.chat(`&e[MeowAddons] &fUpdate available: &bv${releases[0].tag_name}&f! Current: &bv${LOCAL_VERSION}`),
             ChatLib.chat(new TextComponent(`&e[MeowAddons] &fClick here to go to the release page!`).setClick("open_url", `https://github.com/kiwidotzip/meowaddons/releases/latest`)),
             ChatLib.chat(new TextComponent(`&e[MeowAddons] &fHover over this message to view changelogs!`).setHoverValue(updateMessage))
         )

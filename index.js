@@ -1,7 +1,6 @@
 // Meowing
 import "./features/automeow";
 import "./features/meowsounds";
-import "./features/meowhitsound";
 // General
 import "./features/chatcleanerentry";
 import "./features/cleanjoins";

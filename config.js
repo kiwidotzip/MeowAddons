@@ -51,6 +51,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Join/Leave format",
     shouldShow: data => data.cleantoggle
 })
+.addSwitch({
+    category: "Chat",
+    configName: "cleanpartyjoin",
+    title: "Clean party join messages",
+    description: "Formats party join messages",
+    subcategory: "Join/Leave format",
+    shouldShow: data => data.cleantoggle
+})
 
 // Chat - Chat format
 
@@ -608,6 +616,13 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "keyalert",
     title: "Key spawn alert",
     description: "Shows a title on key spawn",
+    subcategory: "Keys"
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "keypickalert",
+    title: "Key pickup alert",
+    description: "Shows a title on key pickup",
     subcategory: "Keys"
 })
 

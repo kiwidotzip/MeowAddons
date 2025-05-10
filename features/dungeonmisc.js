@@ -9,6 +9,7 @@ import Config from "../config"
 let bloodopen = false
 const KeyH = FeatManager.createFeature("keyhighlight", "catacombs")
 const KeyA = FeatManager.createFeature("keyalert", "catacombs")
+const KeyPA = FeatManager.createFeature("keypickalert", "catacombs")
 
 KeyH
     .register("ma:renderEntity", (ent, pos) => {
@@ -30,3 +31,10 @@ KeyA
         })
     }, () => !bloodopen)
     .onRegister(() => (bloodopen = false, KeyA.update()))
+KeyPA
+    .register("serverChat", (ent, key) => {
+        !bloodopen && Render2D.showTitle(`&b${key} &fpicked up!`, `&7by ${ent}`, 2000)
+    }, /^\[.+\] (.+) has obtained (Wither Key|Blood Key)!$/)
+    .register("serverChat", (key) => {
+        !bloodopen && Render2D.showTitle(`&b${key} &fpicked up!`)
+    }, /^A (Wither Key|Blood Key) was picked up!$/)

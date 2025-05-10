@@ -19,13 +19,13 @@ const getRankColor = (rank) => {
 }
 
 GuildMsg
-    .register("serverChat", (hrank, user, grank, msg, evn) => {
+    .register("chat", (hrank, user, grank, msg, evn) => {
         cancel(evn)
         ChatLib.chat(`&2G &8> ${grank && "&8" + grank + " "}${getRankColor(hrank)}${user}&f: ${msg}`)
     }, /Guild > ?(\[.+?\])? ?([a-zA-Z0-9_]+) ?(\[.+?\])?: (.+)/)
 
 PartyMsg
-    .register("serverChat", (hrank, user, msg, evn) => {
+    .register("chat", (hrank, user, msg, evn) => {
         cancel(evn)
         ChatLib.chat(`&9P &8> ${getRankColor(hrank)}${user}&f: ${msg}`)
     }, /Party > (\[.+?\])? ?(.+?): (.+)/)

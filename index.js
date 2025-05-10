@@ -29,6 +29,7 @@ import "./features/f7title";
 import "./features/cryptcounter";
 import "./features/firefreezetimer";
 import "./features/quiztimer";
+import "./features/dungeonmisc";
 // Misc
 import "./features/customsize";
 import "./features/custommodel";

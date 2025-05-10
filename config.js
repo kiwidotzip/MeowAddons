@@ -572,6 +572,53 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.cryptnotif
 })
 
+// Dungeons - Wither key highlight
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "keyhighlight",
+    title: "Key highlight",
+    description: "Highlights the wither/blood key in dungeons",
+    subcategory: "Keys"
+})
+.addColorPicker({
+    category: "Dungeons", 
+    configName: "keycolor",
+    title: "Color Picker",
+    description: "Pick a color for the key highlight",
+    subcategory: "Keys",
+    value: [255, 0, 0, 255],
+    shouldShow: data => data.keyhighlight
+})
+.addSlider({
+    category: "Dungeons",
+    configName: "linewidthkey",
+    title: "Key width",
+    description: "Width of the key highlight line",
+    subcategory: "Keys",
+    options: [1, 6],
+    value: 3,
+    shouldShow: data => data.keyhighlight
+})
+.addSwitch({
+    category: "Dungeons",
+    configName: "renderfilledkey",
+    title: "Render filled key",
+    description: "Renders a filled box around the key",
+    subcategory: "Keys",
+    shouldShow: data => data.keyhighlight
+})
+
+// Dungeons - Wither key alerts
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "keyalert",
+    title: "Key spawn alert",
+    description: "Shows a title on key spawn",
+    subcategory: "Keys"
+})
+
 // Dungeons - Titles
 
 .addSwitch({

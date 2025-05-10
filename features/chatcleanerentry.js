@@ -19,7 +19,7 @@ const uselessMsgs = [
 /[Bazaar] Claiming order.../,
 /[Bazaar] Cancelling order.../,
 /Putting coins in escrow.../,
-/Strike using the (.+) attunement on your dagger!/,
+/Strike using the .+ attunement on your dagger!/,
 /Your hit was reduced by Hellion Shield!/,
 /Processing purchase.../,
 /Claiming BIN auction.../,

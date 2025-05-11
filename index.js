@@ -38,7 +38,6 @@ import "./features/noclutter";
 import "./features/poisontracker";
 import "./features/worldage";
 import "./features/armorhud";
-import "./features/helmet";
 
 // Update Checker
 

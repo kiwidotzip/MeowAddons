@@ -3,16 +3,20 @@ import Dungeon from "../../tska/skyblock/dungeon/Dungeon"
 import { createSkull } from "../../tska/utils/InventoryUtils"
 import { FeatManager, hud } from "./helperfunction"
 import { Render2D } from "../../tska/rendering/Render2D"
+import { LocalStore } from "../../tska/storage/LocalStore"
 
 const SpiritMask = createSkull("eyJ0aW1lc3RhbXAiOjE1MDUyMjI5OTg3MzQsInByb2ZpbGVJZCI6IjBiZTU2MmUxNzIyODQ3YmQ5MDY3MWYxNzNjNjA5NmNhIiwicHJvZmlsZU5hbWUiOiJ4Y29vbHgzIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsibWV0YWRhdGEiOnsibW9kZWwiOiJzbGltIn0sInVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWJiZTcyMWQ3YWQ4YWI5NjVmMDhjYmVjMGI4MzRmNzc5YjUxOTdmNzlkYTRhZWEzZDEzZDI1M2VjZTlkZWMyIn19fQ==")
 const BonzoMask = createSkull("eyJ0aW1lc3RhbXAiOjE1ODc5MDgzMDU4MjYsInByb2ZpbGVJZCI6IjJkYzc3YWU3OTQ2MzQ4MDI5NDI4MGM4NDIyNzRiNTY3IiwicHJvZmlsZU5hbWUiOiJzYWR5MDYxMCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTI3MTZlY2JmNWI4ZGEwMGIwNWYzMTZlYzZhZjYxZThiZDAyODA1YjIxZWI4ZTQ0MDE1MTQ2OGRjNjU2NTQ5YyJ9fX0=")
 const Phoenix = createSkull("ewogICJ0aW1lc3RhbXAiIDogMTY0Mjg2NTc3MTM5MSwKICAicHJvZmlsZUlkIiA6ICJiYjdjY2E3MTA0MzQ0NDEyOGQzMDg5ZTEzYmRmYWI1OSIsCiAgInByb2ZpbGVOYW1lIiA6ICJsYXVyZW5jaW8zMDMiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZiMWI1OWJjODkwYzljOTc1Mjc3ODdkZGUyMDYwMGM4Yjg2ZjZiOTkxMmQ1MWE2YmZjZGIwZTRjMmFhM2M5NyIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9")
+
 const maskrem = FeatManager.createFeature("maskrem", "catacombs")
 const masknotifier = FeatManager.createFeature("masknotifier")
 const maskcd = FeatManager.createFeature("maskcd", "catacombs")
+const pheq = FeatManager.createFeature("maskcd")
 const GUI = hud.createHud("Mask Display", 240, 240, 95, 43)
 
 const helm = (helm) => Player.armor.getHelmet()?.getName()?.removeFormatting()?.includes(helm)
+const data = new LocalStore("MeowAddons", { pequipped: false }, "./data/maskcd.json")
 
 let bonzo = false
 let spirit = false
@@ -55,7 +59,7 @@ maskcd
         Renderer.scale(GUI.getScale())
         SpiritMask.draw(0, 0), Renderer.drawString(`&${helm("Spirit Mask") ? 'a' : 'c'}Spirit &7> &b${spirittick > 0 ? (spirittick / 20).toFixed(1) + 's' : '✔'}`, 16, 4)
         BonzoMask.draw(0, 12), Renderer.drawString(`&${helm("Bonzo's Mask") ? 'a' : 'c'}Bonzo &7> &b${bonzotick > 0 ? (bonzotick / 20).toFixed(1) + 's' : '✔'}`, 16, 5)
-        Phoenix.draw(0, 12), Renderer.drawString(`&cPhoenix &7> &b${phoenixtick > 0 ? (phoenixtick / 20).toFixed(1) + 's' : '✔'}`, 16, 5)
+        Phoenix.draw(0, 12), Renderer.drawString(`&${data.pequipped ? 'a' : 'c'}Phoenix &7> &b${phoenixtick > 0 ? (phoenixtick / 20).toFixed(1) + 's' : '✔'}`, 16, 5)
         Renderer.retainTransforms(false)
     })
     .registersub("servertick", () => {
@@ -65,7 +69,12 @@ maskcd
     }, () => bonzo || spirit || phoenix)
     .onRegister(() => (bonzo = spirit = p3 = false, bonzotick = spirittick = 0, maskcd.update()))
     .onUnregister(() => (bonzo = spirit = p3 = false, bonzotick = spirittick = 0, maskcd.update()))
-    
+
+pheq
+    .register("chat", (pet) => pet === "Phoenix" ? (data.pequipped = true) : (data.pequipped = false), /Autopet equipped your \[Lvl \d+\] (.+)! VIEW RULE/)
+    .register("chat", (pet) => pet === "Phoenix" ? (data.pequipped = true) : (data.pequipped = false), /You summoned your (.+)!/)
+    .register("chat", () => data.pequipped = false, "You despawned your Phoenix!")
+
 GUI.onDraw(() => {
     Renderer.retainTransforms(true)
     Renderer.translate(GUI.getX(), GUI.getY())
@@ -75,4 +84,4 @@ GUI.onDraw(() => {
     Phoenix.draw(0, 12), Renderer.drawString(`&cPhoenix &7> &b✔`, 16, 5)
     Renderer.retainTransforms(false)
     Renderer.finishDraw()
-})  
+})

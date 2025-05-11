@@ -784,6 +784,13 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Terminals",
     shouldShow: data => data.showTerm
 })
+.addSwitch({
+    category: "Dungeons",
+    configName: "termtrack",
+    title: "Term tracker",
+    description: "Tracks the terminals/devs/levers a player does",
+    subcategory: "Terminals"
+})
 .addDropDown({
     category: "Dungeons",
     configName: "sendTermInChat",

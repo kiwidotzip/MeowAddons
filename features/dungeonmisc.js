@@ -38,3 +38,24 @@ KeyPA
     .register("serverChat", (key) => {
         !bloodopen && Render2D.showTitle(`&b${key} &fpicked up!`)
     }, /^A (Wither Key|Blood Key) was picked up!$/)
+
+// Term tracker
+
+const Terms = FeatManager.createFeature("termtrack", "catacombs")
+const Completed = new Map()
+
+Terms
+    .register("chat", (user, type) => {
+        if (!["terminal", "lever", "device"].includes(type)) return
+        const currentData = Completed.get(user) || {}
+        const newData = { ...currentData }
+        newData[type] = (currentData[type] || 0) + 1
+        Completed.set(user, newData)
+    }, /^(\w{1,16}) (?:activated|completed) a (\w+)! \(\d\/\d\)$/)
+    .register("chat", () => {
+        Completed.forEach((data, user) => {
+            ChatLib.chat(`&e[MA] &b${user}&7 - &b${data.lever || 0} &flevers &7| &b${data.terminal || 0} &fterminals &7| &b${data.device || 0} &fdevices`)
+        })
+    }, "The Core entrance is opening!")
+    .onRegister(() => Completed.clear())
+    .onUnregister(() => Completed.clear())

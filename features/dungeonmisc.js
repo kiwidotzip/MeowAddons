@@ -59,3 +59,23 @@ Terms
     }, "The Core entrance is opening!")
     .onRegister(() => Completed.clear())
     .onUnregister(() => Completed.clear())
+
+// Custom PF messages
+
+const PFmsg = FeatManager.createFeature("pfmsg")
+
+PFmsg
+    .register("chat", (evn) => (cancel(evn), ChatLib.chat(`&c&lPF &7> 7fParty queued.`)), "Party Finder > Your party has been queued in the dungeon finder!")
+    .register("chat", (evn) => (cancel(evn), ChatLib.chat(`&c&lPF &7> 7fParty delisted.`)), "Party Finder > Your group has been de-listed!")
+    .register("chat", (user, cls, lvl, evn) => {
+        cancel(evn)
+        const msg = new Message(`&c&lPF &7> &b${user} &8| &b${cls} &7- &b${lvl}`)
+        user === Player.getName() ? msg.chat()
+        :  (msg.addTextComponent(new TextComponent(`&8 | &c[✖]`)).setClick(`run_command`, `/p kick ${user}`).setHover("show_text", "&cKick &b" + user),
+            msg.addTextComponent(new TextComponent(`&8 | &c[PV]`).setClick(`run_command`, `/pv ${user}`)).setHover("show_text", "&cPV &b" + user),
+            msg.chat())
+    }, /^Party Finder > (.+?) joined the dungeon group! \((\w+) Level (\d+)\)$/)
+    .register("chat", (user, cls, lvl, evn) => {
+        cancel(evn)
+        ChatLib.chat(`&c&lPF &7> &b${user} &fchanged to &b${cls} &7- &b${lvl}`)
+    }, /^Party Finder > (.+?) set their class to (\w+) Level (\d+)!$/)

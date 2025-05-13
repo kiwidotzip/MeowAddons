@@ -749,6 +749,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.dungeonscore300
 })
 
+// Dungeons - Custom PF message
+
+.addSwitch({
+    category: "Dungeons",
+    configName: "pfmsg",
+    title: "Custom PF message",
+    description: "Custom party finder messages",
+    subcategory: "Custom PF message"
+})
+
 // Dungeons - Terminal
 
 .addSwitch({

@@ -7,6 +7,7 @@ const noEnderTP = FeatManager.createFeature("noEnderTP")
 const noEmptyTooltip = FeatManager.createFeature("noEmptyTooltip")
 const hidenonstarmobs = FeatManager.createFeature("hidenonstarmobs", "catacombs")
 const hidedmg = FeatManager.createFeature("hidedmg", "catacombs")
+const noFall = FeatManager.createFeature("nofall")
 const livid = /^\w+ Livid$/
 const blaze = /^\[Lv15\] Blaze [\d,]+\/([\d,]+)❤$/
 const star = /^(?:\[Lv\d+\] )?[\w ]+ [\d,.]+\w(?:\/[\d,.]+\w)?❤$/
@@ -14,6 +15,7 @@ const dmg = /^.?\d[\d,.]+.*?$/
 
 // Credit to Doc/BloomModule for all of this <3 - https://github.com/DocilElm/Doc 
 
+noFall.register("renderEntity", (ent, pos, pt, evn) => cancel(evn), net.minecraft.entity.item.EntityFallingBlock)
 noLightning.register("renderEntity", (ent, pos, pt, evn) => cancel(evn), net.minecraft.entity.effect.EntityLightningBolt)
 noDeathAni.register("entityDeath", (ent) => livid.test(ent?.getName()?.removeFormatting()) && ent.getEntity().func_70106_y())
 noEnderTP.register("ma:endermanTP", (evn) => cancel(evn))

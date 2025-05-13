@@ -958,6 +958,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 })
 .addSwitch({
     category: "Misc.",
+    configName: "nofall",
+    title: "No falling blocks",
+    description: "Disables falling blocks",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
     configName: "noEnderTP",
     title: "No enderman teleport",
     description: "Disables enderman teleport animation",

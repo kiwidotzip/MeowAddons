@@ -1119,6 +1119,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     }
 })
 
+// Misc - Message hover changer
+
+.addSwitch({
+    category: "Misc.",
+    configname: "showcmd",
+    title: "Show action",
+    description: "Shows the action you're about to run when hovering over a message",
+    subcategory: "Show action"
+})
+
 // Misc - party commands
 
 .addSwitch({

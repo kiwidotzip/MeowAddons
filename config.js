@@ -1119,11 +1119,28 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     }
 })
 
+// Misc - Reaper armor highlight
+
+.addSwitch({
+    category: "Misc.",
+    configName: "reaperhighlight",
+    title: "Reaper armor highlight",
+    description: "Highlights reaper armor when its in your inventory",
+    subcategory: "Reaper armor"
+})
+.addColorPicker({
+    category: "Misc.",
+    configName: "reaperhgcolor",
+    title: "Color Picker",
+    description: "Pick a color for the highlight",
+    subcategory: "Reaper armor",
+})
+
 // Misc - Message hover changer
 
 .addSwitch({
     category: "Misc.",
-    configname: "showcmd",
+    configName: "showcmd",
     title: "Show action",
     description: "Shows the action you're about to run when hovering over a message",
     subcategory: "Show action"

@@ -253,21 +253,17 @@ TickTimer.registersub("servertick", () => {
 // Boss check
 
 register("step", () => {
-    checkCounter++;
-    if (checkCounter >= 20) {
-        checkCounter = 0;
-        carryees.forEach(carryee => {
-            if (settings().debug) {ChatLib.chat(`${prefix} &fChecking for boss entity.`)}
-            if (carryee.bossID !== null) {
-                const entity = World.getWorld()?.func_73045_a(carryee.bossID);
-                if (!entity || entity?.field_70128_L) {
-                    if (settings().debug) ChatLib.chat(`${prefix} &cBoss entity for ${carryee.name} not found/reset.`);
-                    carryee.reset();
-                }
+    carryees.forEach(carryee => {
+        if (settings().debug) ChatLib.chat(`${prefix} &fChecking for boss entity.`)
+        if (carryee.bossID !== null) {
+            const entity = World.getWorld()?.func_73045_a(carryee.bossID)
+            if (!entity || entity?.field_70128_L) {
+                if (settings().debug) ChatLib.chat(`${prefix} &cBoss entity for ${carryee.name} not found &f- &cResetting.`)
+                carryee.reset()
             }
-        });
-    }
-}).setFps(1);
+        }
+    })
+}).setDelay(20)
 
 // Entity death detection
 

@@ -72,8 +72,8 @@ PFmsg
         const msg = new Message(`&c&lPF &7> &b${user} &8| &b${cls} &7- &b${lvl}`)
         user === Player.getName() 
             ?  ChatLib.chat(msg)
-            :  (msg.addTextComponent(new TextComponent(`&8 | &c[✖]`)).setClick(`run_command`, `/p kick ${user}`).setHover("show_text", "&cKick &b" + user),
-                msg.addTextComponent(new TextComponent(`&8 | &c[PV]`).setClick(`run_command`, `/pv ${user}`)).setHover("show_text", "&cPV &b" + user),
+            :  (msg.addTextComponent(new TextComponent(`&8 | &a[✖]`).setClick(`run_command`, `/p kick ${user}`).setHover("show_text", "&cKick &b" + user)),
+                msg.addTextComponent(new TextComponent(`&8 | &a[PV]`).setClick(`run_command`, `/pv ${user}`).setHover("show_text", "&cPV &b" + user)),
                 ChatLib.chat(msg))
     }, /^Party Finder > (.+?) joined the dungeon group! \((\w+) Level (\d+)\)$/)
     .register("chat", (user, cls, lvl, evn) => {

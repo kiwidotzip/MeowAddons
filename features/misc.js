@@ -26,3 +26,14 @@ ReaperHG
     })
 
 Config().getConfig().registerListener("reaperhgcolor", (oldv, newv) => ReaperColor = Renderer.color(...newv))
+
+// Hide fireballs
+
+const Fireball = FeatManager.createFeature("hidefireball")
+let inBoss = false
+
+Fireball
+    .register("serverScoreboard", () => (inBoss = true, Fireball.update()), /Slay the boss!/)
+    .register("serverScoreboard", () => (inBoss = false, Fireball.update()), /Boss slain!/)
+    .registersub("ma:renderEntity", (ent, pos, pt, evn) => cancel(evn), () => Config().duringblaze && inBoss, [net.minecraft.entity.projectile.EntityFireball, net.minecraft.entity.projectile.EntitySmallFireball, net.minecraft.entity.projectile.EntityLargeFireball])
+    .registersub("ma:renderEntity", (ent, pos, pt, evn) => cancel(evn), () => !Config().duringblaze && inBoss, [net.minecraft.entity.projectile.EntityFireball, net.minecraft.entity.projectile.EntitySmallFireball, net.minecraft.entity.projectile.EntityLargeFireball])

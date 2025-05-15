@@ -980,6 +980,22 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "No Clutter",
     shouldShow: data => data.NoClutter
 })
+.addSwitch({
+    category: "Misc.",
+    configName: "hidefireball",
+    title: "No fireballs",
+    description: "Disables fireball entities",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter
+})
+.addSwitch({
+    category: "Misc.",
+    configName: "duringboss",
+    title: "Hide during boss",
+    description: "Disable to always hide fireballs and enable to only hide when your boss is spawned",
+    subcategory: "No Clutter",
+    shouldShow: data => data.NoClutter && data.hidefireball
+})
 
 // Misc - alerts
 

@@ -75,14 +75,14 @@ slayerkilltimer
     })
     .register("chat", () => {
         const timeTaken = Date.now() - timestarted
-        const msg = new Message(new TextComponent(`&e[MeowAddons] &fYou killed your boss in &b${(timeTaken / 1000).toFixed(2)}s&7 | &b${serverticks / 20}s.`)
+        const msg = new Message(new TextComponent(`&e[MeowAddons] &fYour killed you boss in &b${(timeTaken / 1000).toFixed(2)}s&7 | &b${serverticks / 20}s.`)
                                 .setHoverValue(`&c${serverticks} ticks &f| &c${timeTaken} ms &7- May not be 100% accurate`))
         ChatLib.chat(msg)
         resetBossTracker()
         slayerbossdisplay.update()
         Ticks.update()
     },/^  SLAYER QUEST FAILED!/)
-    
+
 Ticks
     .registersub("servertick", () => {
         serverticks++

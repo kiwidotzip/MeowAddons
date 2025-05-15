@@ -36,4 +36,4 @@ Fireball
     .register("serverScoreboard", () => (inBoss = true, Fireball.update()), /Slay the boss!/)
     .register("serverScoreboard", () => (inBoss = false, Fireball.update()), /Boss slain!/)
     .registersub("ma:renderEntity", (ent, pos, pt, evn) => cancel(evn), () => Config().duringblaze && inBoss, [net.minecraft.entity.projectile.EntityFireball, net.minecraft.entity.projectile.EntitySmallFireball, net.minecraft.entity.projectile.EntityLargeFireball])
-    .registersub("ma:renderEntity", (ent, pos, pt, evn) => cancel(evn), () => !Config().duringblaze && inBoss, [net.minecraft.entity.projectile.EntityFireball, net.minecraft.entity.projectile.EntitySmallFireball, net.minecraft.entity.projectile.EntityLargeFireball])
+    .registersub("ma:renderEntity", (ent, pos, pt, evn) => cancel(evn), () => !Config().duringblaze, [net.minecraft.entity.projectile.EntityFireball, net.minecraft.entity.projectile.EntitySmallFireball, net.minecraft.entity.projectile.EntityLargeFireball])

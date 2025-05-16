@@ -923,7 +923,7 @@ register("command", (...args = []) => {
     const currentArg = args[args.length - 1]?.toLowerCase();
     const playerNames = World.getAllPlayers()
         .filter(player => player.getUUID().version() === 4)
-        .map(player => player.getName()?.removeFormatting())
+        .map(player => player.getName().removeFormatting())
     if (args.length === 2 && modcmd.includes(subcommand)) return playerNames.filter(name => name.toLowerCase().startsWith(currentArg))
     if (args.length === 1) return allcmd.filter(c => c.startsWith(currentArg))
     return []

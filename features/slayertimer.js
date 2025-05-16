@@ -18,6 +18,8 @@ let hp = null
 let timestarted = 0
 let serverticks = 0
 let isFighting = false
+let lastHpUpdate = 0;
+const maxDisplayTime = 5000;
 
 const resetBossTracker = () => [timestarted, serverticks, bossID, hpEntity, timerEntity, isFighting] = [0, 0, null, null, null, false]
 
@@ -27,7 +29,7 @@ slayerbossdisplay
             if (entity.entity.func_145782_y() !== bossID + 1) return
             const name = entity.entity.func_70005_c_()?.removeFormatting()
             const match = name.match(BOSS_HP_REGEX)
-            if (match) ([bossName, hp] = [match[1], match[2]], slayerbossdisplay.update())
+            if (match) ([bossName, hp] = [match[1], match[2]], lastHpUpdate = Date.now(), slayerbossdisplay.update())
         })
     }, 10)
     .register("ma:entityJoin", (ent, id, evn) => {
@@ -49,7 +51,7 @@ slayerbossdisplay
         Renderer.drawStringWithShadow(`&c${hp}`, hpOffset, 0);
         Renderer.drawStringWithShadow(`&c☠ &b${bossName}`, 0, 10);
         Renderer.retainTransforms(false);
-    }, () => hpEntity)
+    }, () => hpEntity) && Date.now() - lastHpUpdate < maxDisplayTime
 
 slayerkilltimer
     .register("ma:entityJoin", (ent, id, evn) => {

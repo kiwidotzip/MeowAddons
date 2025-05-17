@@ -16,6 +16,6 @@ Crypt
         Config().cryptchatmsg && ChatLib.command(`pc ${Dungeon.getCrypts()}/5 crypts done yet.`)
         Config().crypttitle && Render2D.showTitle(`&b${Dungeon.getCrypts()}&7/&b5 &ccrypts`, null, 2500)
     }, () => started, 60 * delay)
-    .onRegister(() => sent = false)
+    .onRegister(() => (sent = started = false))
 
 Config().getConfig().registerListener("cryptremtime", (oldv, newv) => delay = newv)

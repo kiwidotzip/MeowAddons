@@ -46,7 +46,7 @@ import { LocalStore } from "../tska/storage/LocalStore";
 import { fetch } from "../tska/polyfill/Fetch";
 const Data = new LocalStore("MeowAddons", {
     firstInstall: true,
-    version: "2.3.2"
+    version: "2.3.3"
 }, "./data/indexData.json")
 
 const LOCAL_VERSION = JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version
@@ -93,7 +93,7 @@ let updateChecked = false
 const Changelog = register("worldLoad", () => {
     checkUpdate(true)
     Changelog.unregister()
-    Client.scheduleTask(40, () => (ChatLib.chat(updateMessage), Data.version = LOCAL_VERSION))
+    Client.scheduleTask(40, () => (ChatLib.chat(updateMessage + "\n&bWebsite&f:&7 https://meowaddons.top"), Data.version = LOCAL_VERSION))
 }).unregister()
 
 const UpdateCH = register("worldLoad", () => {
@@ -124,6 +124,7 @@ const fi = register("step", () => {
         ChatLib.chat(`&b`)
         ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
         ChatLib.chat(`&b> Discord&f:&7 https://discord.gg/KPmHQUC97G`)
+        ChatLib.chat(`&b> Website&f:&7 https://meowaddons.top`)
         ChatLib.chat(`&7&l-----------------------------------------------------`)
     })
 }).setDelay(2).unregister()
@@ -153,6 +154,7 @@ register("command", (...args) => {
             ChatLib.chat(`&b`)
             ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
             ChatLib.chat(`&b> Discord&f:&7 https://discord.gg/KPmHQUC97G`)
+            ChatLib.chat(`&b> Website&f:&7 https://meowaddons.top`)
             ChatLib.chat(`&7&l-----------------------------------------------------`)
             break
         case "update": 

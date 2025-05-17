@@ -12,6 +12,7 @@ export const FeatManager = new FeatureManager(Config().getConfig());
 
 // Custom events
 
+Event.createEvent("ma:command", (cb, name, aliases) => register("command", cb).setName(name).setAliases(aliases))
 Event.createEvent("ma:renderEntity", (cb, entityType) => register("renderEntity", cb).setFilteredClasses(entityType));
 Event.createEvent("ma:postRenderEntity", (cb, entityType) => register("postRenderEntity", cb).setFilteredClasses(entityType));
 Event.createEvent("ma:renderTileEntity", (cb, tileEntityType) => register("renderTileEntity", cb).setFilteredClasses(tileEntityType));

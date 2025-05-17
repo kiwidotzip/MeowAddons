@@ -5,7 +5,7 @@ import { scheduleTask } from "../../tska/shared/ServerTick";
 const slayerbossdisplay = FeatManager.createFeature("slayerbossdisplay")
 const slayerkilltimer = FeatManager.createFeature("slayerkilltimer")
 const slayerbosshighlight = FeatManager.createFeature("slayerbosshighlight")
-const Ticks = FeatManager.createFeatureNo()
+const slayerbossspawn = FeatManager.createFeature("slayerspawntime")
 
 const GUI = hud.createTextHud("Slayer Display", 120, 10, "a\n☠ &bVoidgloom Seraph IV")
 const BOSS_HP_REGEX = /☠ (.+?)\s*(?:ᛤ)?(?:\s*✯\s*)?([\d\.]+[MK]?\s*(?:Hits|❤))(?:\s*✯)?/i
@@ -18,6 +18,8 @@ let hp = null
 let timestarted = 0
 let serverticks = 0
 let isFighting = false
+let spawnticks = 0
+let startspawntime = 0
 
 const resetBossTracker = () => [timestarted, serverticks, bossID, hpEntity, timerEntity, isFighting] = [0, 0, null, null, null, false]
 
@@ -59,7 +61,7 @@ slayerkilltimer
                 bossID = id - 3
                 timestarted = Date.now()
                 isFighting = true
-                Ticks.update()
+                slayerkilltimer.update()
             }
         }, 2)
     })
@@ -71,7 +73,7 @@ slayerkilltimer
         ChatLib.chat(msg)
         resetBossTracker()
         slayerbossdisplay.update()
-        Ticks.update()
+        slayerkilltimer.update()
     })
     .register("chat", () => {
         const timeTaken = Date.now() - timestarted
@@ -80,13 +82,25 @@ slayerkilltimer
         ChatLib.chat(msg)
         resetBossTracker()
         slayerbossdisplay.update()
-        Ticks.update()
+        slayerkilltimer.update()
     },/^  SLAYER QUEST FAILED!/)
+    .registersub("servertick", () => serverticks++, () => isFighting)
+    
+// Slayer boss spawn timer
 
-Ticks
-    .registersub("servertick", () => {
-        serverticks++
-    }, () => isFighting)
+    .register("serverChat", () => {
+        startspawntime = Date.now()
+        spawnticks = 0
+        slayerkilltimer.update()
+    }, /^  SLAYER QUEST STARTED!$/)
+    .registersub("serverScoreboard", () => {
+        ChatLib.chat(new TextComponent(`&e[MeowAddons] &fSlayer boss spawned in &b${((Date.now() - startspawntime) / 1000).toFixed(2)}s&7 | &b${spawnticks / 20}s.`)
+                        .setHoverValue(`&c${spawnticks} tick &f| &c${(Date.now() - startspawntime)} ms &7- May not be 100% accurate`))
+        startspawntime = 0
+        spawnticks = 0
+        slayerkilltimer.update()
+    }, () => startspawntime, /^Slay the boss!$/)
+    .registersub("servertick", () => spawnticks++, () => startspawntime)
 
 slayerbosshighlight
     .register("ma:postRenderEntity", (ent, pos) => {

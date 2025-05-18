@@ -17,7 +17,7 @@
 <p align="center" id="description"><b>MeowAddons</b> is a Silly chattriggers module that has some QOL features</p>
 <p align="center"><a href="https://discord.com/invite/KPmHQUC97G"><b>Join the discord!</b></a></p>
 
-<h2 align="center">Features List</h2>
+<h2 align="center">Features List - Updated at https://meowaddons.top/docs</h2>
 
 <p align="center">Here are some of the standout features that <b>MeowAddons</b> has so far</p>
 

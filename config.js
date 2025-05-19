@@ -708,6 +708,13 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Shows the time until P3 starts (uses server ticks)",
     subcategory: "F7 Misc"
 })
+.addSwitch({
+    category: "Dungeons",
+    configName: "i4notif",
+    title: "F7 i4 Timer",
+    description: "Shows the time taken to complete i4",
+    subcategory: "F7 Misc"
+})
 
 // Dungeons - Quiz Timer
 

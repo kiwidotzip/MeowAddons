@@ -2,6 +2,7 @@ import { FeatManager } from "./helperfunction"
 import { Render3D } from "../../tska/rendering/Render3D"
 import { Render2D } from "../../tska/rendering/Render2D"
 import { scheduleTask } from "../../tska/shared/ServerTick"
+import { Data } from "./utils/data"
 import Config from "../config"
 
 // Key stuff
@@ -80,3 +81,27 @@ PFmsg
         cancel(evn)
         ChatLib.chat(`&c&lPF &7> &b${user} &fchanged to &b${cls} &7- &b${lvl}`)
     }, /^Party Finder > (.+?) set their class to (\w+) Level (\d+)!$/)
+
+// i4 Stuff
+
+const I4DG = FeatManager.createFeature("i4notif", "catacombs")
+let i4start = 0
+let devs = 0
+let i4 = false
+
+const i4msg = (message) => {
+    ChatLib.chat(`&e[MeowAddons] ${message}`)
+    Config().sendi4 && ChatLib.command(`p ${message.removeFormatting()}`)
+} 
+
+I4DG
+    .register("chat", () => {
+        i4start = Date.now()
+        setTimeout(() => (!i4 && i4msg(`&fI4 incomplete.`)), 15000)
+    }, "[BOSS] Goldor: Who dares trespass into my domain?")
+    .register("chat", () => {
+        Data.goldorsection === 1 && devs++
+        devs === 2 && (i4 = true, i4msg(`&fI4 completed in &b${((Date.now() - i4start) / 1000).toFixed(1)}s&f.`))
+    }, /(\w{1,16}) completed a device! \(\d\/7\)/)
+    .onRegister(() => (i4start = 0, devs = 0, i4 = false))
+    .onUnregister(() => (i4start = 0, devs = 0, i4 = false))

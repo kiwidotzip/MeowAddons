@@ -72,7 +72,7 @@ VengGUI
         Renderer.drawString(`&cVengeance: &b3.4s`, VengGUI.getX(), VengGUI.getY())
     })
 
-// Veng damage - credit for some of the code to https://github.com/nwjn/NwjnAddons/blob/refactor(do-not-use)/features/Combat/DamageTracker.js
+// Veng damage
 
 const VengD = FeatManager.createFeature("vengdamage")
 let inBossVE = false

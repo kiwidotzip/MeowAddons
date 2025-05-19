@@ -245,6 +245,13 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Slayers",
     shouldShow: data => data.slayermaintoggle
 })
+.addSwitch({
+    category: "Slayers",
+    configName: "vengtimer",
+    title: "Burning vengeance timer",
+    description: "Time until veng procs in the first phase",
+    subcategory: "Blaze slayer",
+})
 
 // Slayers - Carrying
 

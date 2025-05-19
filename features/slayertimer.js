@@ -5,7 +5,6 @@ import { scheduleTask } from "../../tska/shared/ServerTick";
 const slayerbossdisplay = FeatManager.createFeature("slayerbossdisplay")
 const slayerkilltimer = FeatManager.createFeature("slayerkilltimer")
 const slayerbosshighlight = FeatManager.createFeature("slayerbosshighlight")
-const slayerbossspawn = FeatManager.createFeature("slayerspawntime")
 
 const GUI = hud.createTextHud("Slayer Display", 120, 10, "a\n☠ &bVoidgloom Seraph IV")
 const BOSS_HP_REGEX = /☠ (.+?)\s*(?:ᛤ)?(?:\s*✯\s*)?([\d\.]+[MK]?\s*(?:Hits|❤))(?:\s*✯)?/i

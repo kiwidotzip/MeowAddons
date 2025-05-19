@@ -36,6 +36,7 @@ let inBossFB = false
 Fireball
     .register("serverScoreboard", () => (inBossFB = true, Fireball.update()), /Slay the boss!/)
     .register("serverScoreboard", () => (inBossFB = false, Fireball.update()), /Boss slain!/)
+    .register("serverChat", () => (inBossFB = false, Fireball.update()), /  SLAYER QUEST FAILED!/)
     .registersub("ma:renderEntity", (ent, pos, pt, evn) => cancel(evn), () => Config().duringblaze && inBossFB, [net.minecraft.entity.projectile.EntityFireball, net.minecraft.entity.projectile.EntitySmallFireball, net.minecraft.entity.projectile.EntityLargeFireball])
     .registersub("ma:renderEntity", (ent, pos, pt, evn) => cancel(evn), () => !Config().duringblaze, [net.minecraft.entity.projectile.EntityFireball, net.minecraft.entity.projectile.EntitySmallFireball, net.minecraft.entity.projectile.EntityLargeFireball])
 
@@ -47,9 +48,13 @@ const VengT = FeatManager.createFeature("vengtimer")
 const VengGUI = hud.createTextHud("Vengeance timer", 400, 400, "&cVengeance: &b3.4s")
 let starttime = null
 let Fhit = true
+let inBossVT = false
 
 VengT
-    .register("entityDamage", (ent, player) => {
+    .register("serverScoreboard", () => (inBossVT = true, VengT.update()), /Slay the boss!/)
+    .register("serverScoreboard", () => (inBossVT = false, VengT.update()), /Boss slain!/)
+    .register("serverChat", () => (inBossVT = false, VengT.update()), /  SLAYER QUEST FAILED!/)
+    .registersub("entityDamage", (ent, player) => {
         if (player.getName() !== Player.getName() || !Player.getHeldItem()?.getName()?.removeFormatting()?.includes("Pyrochaos Dagger") || !Fhit || !ent.getEntity() instanceof net.minecraft.entity.monster.EntityBlaze) return
         const name = World.getWorld()?.func_73045_a(ent.entity.func_145782_y() + 3)?.func_70005_c_()?.removeFormatting()
         if (name?.includes("Spawned by") && name?.split("by: ")[1] == Player.getName()) {
@@ -58,13 +63,13 @@ VengT
             VengT.update()
             setTimeout(() => (starttime = null, Fhit = true, VengT.update()), 5900)
         }
-    })
+    }, () => inBossVT)
     .registersub("renderOverlay", () => {
         if (hud.isOpen()) return
         const time = ((starttime - Date.now()) / 1000).toFixed(1)
         Renderer.scale(VengGUI.getScale())
         Renderer.drawString(`&cVengeance: &b${time}s`, VengGUI.getX(), VengGUI.getY())
-    }, () => starttime)
+    }, () => starttime && inBossVT)
 
 VengGUI
     .onDraw(() => {

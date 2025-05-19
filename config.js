@@ -250,7 +250,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "vengtimer",
     title: "Burning vengeance timer",
     description: "Time until veng procs in the first phase",
-    subcategory: "Blaze slayer",
+    subcategory: "Blaze slayer"
+})
+.addSwitch({
+    category: "Slayers",
+    configName: "vengdamage",
+    title: "Burning vengeance damage",
+    description: "Damage done by vengeance\n&7Only shows if damage is above 500k",
+    subcategory: "Blaze slayer"
 })
 
 // Slayers - Carrying

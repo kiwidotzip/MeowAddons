@@ -20,6 +20,7 @@ Event.createEvent("ma:postRenderTileEntity", (cb, tileEntityType) => register("p
 Event.createEvent("ma:entityJoin", (cb) => register(net.minecraftforge.event.entity.EntityJoinWorldEvent, (e) => cb(e.entity, e.entity.func_145782_y(), e)));
 Event.createEvent("ma:endermanTP", (cb) => register(net.minecraftforge.event.entity.living.EnderTeleportEvent, cb));
 Event.createEvent("ma:setSlot", (cb) => register("packetReceived", (p, evn) => cb(p.func_149175_c(), p.func_149173_d(), p.func_149174_e(), evn)).setFilteredClass(net.minecraft.network.play.server.S2FPacketSetSlot));
+Event.createEvent("ma:spawnMob", (cb) => register("packetReceived", (p) => cb(p.func_149024_d(), p)).setFilteredClass(net.minecraft.network.play.server.S0FPacketSpawnMob))
 
 // Hud save
 

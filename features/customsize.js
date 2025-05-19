@@ -2,6 +2,8 @@ import Settings from "../config";
 import { FeatManager } from "./helperfunction";
 const customsize = FeatManager.createFeature("customsize");
 
+// Credit to Cubed module - /ct import cubed
+
 customsize
     .register("renderEntity", entity => {
         Tessellator.pushMatrix();

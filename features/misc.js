@@ -84,20 +84,21 @@ let inBossVE = false
 let nametagID = 0
 
 VengD
-    .register("serverScoreboard", () => (inBossVE = true, nametagID = 0, VengD.update()), /Slay the boss!/)
-    .register("serverScoreboard", () => (inBossVE = false, nametagID = 0, VengD.update()), /Boss slain!/)
-    .register("serverChat", () => (inBossVE = false, nametagID = 0, VengD.update()), /  SLAYER QUEST FAILED!/)
+    .register("serverScoreboard", () => (inBossVE = true, VengD.update()), /Slay the boss!/)
+    .register("serverScoreboard", () => (inBossVE = false, VengD.update()), /Boss slain!/)
+    .register("serverChat", () => (inBossVE = false, VengD.update()), /  SLAYER QUEST FAILED!/)
     .registersub("ma:entityJoin", (ent, id) => {
         scheduleTask(() => {
             const name = ent.func_70005_c_()?.removeFormatting()
-            if (name?.includes("Spawned by") && name?.split("by: ")[1] === Player.getName()) (nametagID = id, VengD.update())
+            if (name?.includes("Spawned by") && name?.split("by: ")[1] === Player.getName()) nametagID = id
         }, 2)
-    }, () => inBossVE && !nametagID)
+    }, () => inBossVE)
     .registersub("ma:entityJoin", (ent) => {
-        try { if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || ent.func_70032_d(World.getWorld().func_73045_a(nametagID)) > 5) return
+        const target = World.getWorld().func_73045_a(nametagID)
+        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || (target && ent.func_70032_d(target) > 5)) return
         scheduleTask(() => {
             const string = ent.func_70005_c_()?.removeFormatting()
             const numstring = Number(string.replace(/,/g, "").replace("ﬗ", ""))
             new RegExp(/^\d+(?:,\d+)*ﬗ$/).test(string) && numstring > 500000 && ChatLib.chat(`&e[MA] &7| &fVeng DMG: &c${string}`)
-        }, 2)} catch (e) { return }
-    }, () => inBossVE && nametagID)
+        }, 2)
+    }, () => inBossVE)

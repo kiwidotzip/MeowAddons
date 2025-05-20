@@ -94,10 +94,10 @@ VengD
         }, 2)
     }, () => inBossVE && !nametagID)
     .registersub("ma:entityJoin", (ent) => {
-        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || ent.func_70032_d(World.getWorld().func_73045_a(nametagID)) > 5) return
+        try { if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || ent.func_70032_d(World.getWorld().func_73045_a(nametagID)) > 5) return
         scheduleTask(() => {
             const string = ent.func_70005_c_()?.removeFormatting()
             const numstring = Number(string.replace(/,/g, "").replace("ﬗ", ""))
-            new RegExp(/^\d+(?:,\d+)*ﬗ$/).test(string) && numstring > 500000 && ChatLib.chat(`&e[MA] &fVeng DMG: &c${string}`)
-        }, 2)
+            new RegExp(/^\d+(?:,\d+)*ﬗ$/).test(string) && numstring > 500000 && ChatLib.chat(`&e[MA] &7| &fVeng DMG: &c${string}`)
+        }, 2)} catch (e) { return }
     }, () => inBossVE && nametagID)

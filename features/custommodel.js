@@ -39,25 +39,14 @@ const types = {
     }
 }
 
-// example /macattexture 0
-register("command", (arg) => {
-    const int = parseInt(arg)
-    if (isNaN(int) || int < 0) return
-    if (types[data.selectedType].textures.length-1 < int) return
+let x = Settings().customX
+let y = Settings().customY
+let z = Settings().customZ
 
-    data.selectedTexture = int
-    data.save()
-}).setName("macattexture")
-
-
-// example /macatmodel ocelot
-register("command", (arg) => {
-    if (!types[arg]) return
-    data.selectedType = arg
-    data.selectedTexture = 0
-    data.save()
-}).setName("macatmodel")
-
+Settings().getConfig()
+    .registerListener("customX", (oldv, newv) => x = newv)
+    .registerListener("customY", (oldv, newv) => y = newv)
+    .registerListener("customZ", (oldv, newv) => z = newv)
 
 function drawCustomModel(pt) {
     if (!Client.isInGui() && Client.settings.getSettings().field_74320_O === 0) return
@@ -74,30 +63,21 @@ function drawCustomModel(pt) {
     GlStateManager.func_179094_E() // pushMatrix
     GlStateManager.func_179145_e() // enableRescaleNormal
     GlStateManager.func_179129_p() // enableAlpha
-    Tessellator.colorize(1, 1, 1, 1)
-    Tessellator.disableLighting()
+    Tessellator.colorize(1, 1, 1, 1).disableLighting()
     GlStateManager.func_179118_c() // enableBlend
-    GlStateManager.func_179139_a(Settings().customX * 10, Settings().customY * 10, Settings().customZ * 10) // scale 
+    GlStateManager.func_179139_a(x * 10, y * 10, z * 10) // scale
     GlStateManager.func_179137_b(0, 0.24, 0) // translate
     GlStateManager.func_179114_b(-bodyYaw, 0, 1, 0) // rotate
 
     Client.getMinecraft().func_110434_K().func_110577_a(tex)
-
-    model.func_78088_a(
-        player,                        // entity
-        limb,                          // limb swing
-        limbAmt,                       // limb swing amount
-        player.func_70654_ax() + pt,   // ageInTicks
-        -limit90(headYaw), // netHeadYaw
-        pitch,                         // headPitch
-        -0.01                          // scale
-    )
+    model.func_78088_a(player, limb, limbAmt, player.func_70654_ax() + pt, -limit90(headYaw), pitch, -0.01)
 
     GlStateManager.func_179089_o() // disableBlend
     GlStateManager.func_179141_d() // disableAlpha
     Tessellator.enableLighting()
     GlStateManager.func_179121_F() // popMatrix
 }
+
 custommodel
     .register("renderEntity", () => {
         GlStateManager.func_179094_E() // pushMatrix
@@ -107,3 +87,13 @@ custommodel
         GlStateManager.func_179121_F() // popMatrix
         drawCustomModel(pt)
     }, net.minecraft.client.entity.EntityPlayerSP)
+    .register("ma:command", (arg) => {
+        const int = parseInt(arg)
+        if (isNaN(int) || int < 0 || types[data.selectedType].textures.length-1 < int) return
+        data.selectedTexture = int
+    }, "macattexture")
+    .register("ma:command", (arg) => {
+        if (!types[arg]) return
+        data.selectedType = arg
+        data.selectedTexture = 0
+    }, "macatmodel")

@@ -44,7 +44,7 @@ Config().getConfig().registerListener("duringblaze", () => Fireball.update())
 
 // Burning veng timer
 
-const VengT = FeatManager.createFeature("vengtimer")
+const VengT = FeatManager.createFeature("vengtimer", "crimson isle")
 const VengGUI = hud.createTextHud("Vengeance timer", 400, 400, "&cVengeance: &b3.4s")
 let starttime = null
 let Fhit = true
@@ -79,25 +79,25 @@ VengGUI
 
 // Veng damage
 
-const VengD = FeatManager.createFeature("vengdamage")
+const VengD = FeatManager.createFeature("vengdamage", "crimson isle")
 let inBossVE = false
 let nametagID = 0
 
 VengD
-    .register("serverScoreboard", () => (inBossVE = true, VengD.update()), /Slay the boss!/)
-    .register("serverScoreboard", () => (inBossVE = false, VengD.update()), /Boss slain!/)
-    .register("serverChat", () => (inBossVE = false, VengD.update()), /  SLAYER QUEST FAILED!/)
+    .register("serverScoreboard", () => (inBossVE = true, nametagID = 0, VengD.update()), /Slay the boss!/)
+    .register("serverScoreboard", () => (inBossVE = false, nametagID = 0, VengD.update()), /Boss slain!/)
+    .register("serverChat", () => (inBossVE = false, nametagID = 0, VengD.update()), /  SLAYER QUEST FAILED!/)
     .registersub("ma:entityJoin", (ent, id) => {
         scheduleTask(() => {
             const name = ent.func_70005_c_()?.removeFormatting()
-            if (name?.includes("Spawned by") && name?.split("by: ")[1] === Player.getName()) nametagID = id
+            if (name?.includes("Spawned by") && name?.split("by: ")[1] === Player.getName()) (nametagID = id, VengD.update())
         }, 2)
-    }, () => inBossVE)
+    }, () => inBossVE && !nametagID)
     .registersub("ma:entityJoin", (ent) => {
         if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || (nametagID && ent.func_70032_d(World.getWorld().func_73045_a(nametagID)) > 5)) return
         scheduleTask(() => {
             const string = ent.func_70005_c_()?.removeFormatting()
             const numstring = Number(string.replace(/,/g, "").replace("ﬗ", ""))
-            new RegExp(/^\d+(?:,\d+)*ﬗ$/).test(string) && numstring > 500000 && ChatLib.chat(`&e[MeowAddons] &fVengeance damage: &b${string}`)
+            new RegExp(/^\d+(?:,\d+)*ﬗ$/).test(string) && numstring > 500000 && ChatLib.chat(`&e[MA] &fVeng DMG: &c${string}`)
         }, 2)
-    }, () => inBossVE)
+    }, () => inBossVE && nametagID)

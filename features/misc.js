@@ -94,7 +94,7 @@ VengD
         }, 2)
     }, () => inBossVE && !nametagID)
     .registersub("ma:entityJoin", (ent) => {
-        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || (nametagID && ent.func_70032_d(World.getWorld().func_73045_a(nametagID)) > 5)) return
+        if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || ent.func_70032_d(World.getWorld().func_73045_a(nametagID)) > 5) return
         scheduleTask(() => {
             const string = ent.func_70005_c_()?.removeFormatting()
             const numstring = Number(string.replace(/,/g, "").replace("ﬗ", ""))

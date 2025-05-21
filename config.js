@@ -1018,6 +1018,16 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     shouldShow: data => data.NoClutter && data.hidefireball
 })
 
+// Misc - Clear chat
+
+.addSwitch({
+    category: "Misc.",
+    configName: "clearchat",
+    title: "Clear chat",
+    description: "Clears the chat when you run the command\n&8Command: /clearchat, /maclearchat",
+    subcategory: "Clear chat"
+})
+
 // Misc - alerts
 
 .addSwitch({

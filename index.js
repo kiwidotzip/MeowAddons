@@ -161,7 +161,7 @@ register("command", (...args) => {
             updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`
             break
         case "broken":
-            const brokenMsg = new Message(`&e[MeowAddons] Choose one of the following options to troubleshoot: \n&7> `)
+            const brokenMsg = new Message(`&e[MeowAddons] &fChoose one of the following options to troubleshoot: \n&7> `)
             brokenMsg.addTextComponent(new TextComponent(`&b[Delete Amaterasu]`).setClick("run_command", "/ct delete Amaterasu").setHoverValue(`&fClick to delete Amaterasu`))
             brokenMsg.addTextComponent(`&7 | `)
             brokenMsg.addTextComponent(new TextComponent(`&b[Delete TSKA]\n&7> `).setClick("run_command", "/ct delete tska").setHoverValue(`&fClick to delete TSKA`))

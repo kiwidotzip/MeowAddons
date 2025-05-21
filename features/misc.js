@@ -104,3 +104,10 @@ VengD
             new RegExp(/^\d+(?:,\d+)*ﬗ$/).test(string) && numstring > 500000 && ChatLib.chat(`&e[MA] &7| &fVeng DMG: &c${string}`)
         }, 2)
     }, () => inBossVE)
+
+// Clear chat
+
+const ClearChat = FeatManager.createFeature("clearchat")
+
+ClearChat
+    .register("ma:command", () => (ChatLib.clearChat(), ChatLib.chat(`&e[MeowAddons] &fCleared chat.`)), "clearchat", "maclearchat")

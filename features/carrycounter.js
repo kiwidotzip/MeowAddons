@@ -30,7 +30,7 @@ const webhookUrl = settings().webhookurlcarry
 const carryCache = new Map()
 const ProccessedSp = new Set()
 const DateMEOW = new Date()
-const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster"]
+const bossnames = ["Voidgloom Seraph", "Revenant Horror", "Tarantula Broodfather", "Sven Packmaster", "Inferno Demonlord"]
 const modcmd = ["add","remove","set","settotal"]
 const allcmd = ["add","remove","set","settotal","list","gui","increase","decrease","clear","confirmdeath","canceldeath","logs","clearlogs"]
 const CarryLog = new LocalStore("MeowAddons",{
@@ -55,7 +55,6 @@ const UpdateCarryee = () => {
     BossChecker.update()
     BossOutline.update()
     PlayerOutline.update()
-
 }
 
 //////////////////

@@ -14,8 +14,8 @@ const excludedBlocks = new Set([
     net.minecraft.init.Blocks.field_150355_j     // StillWater
 ]);
 const getColor = ([r,g,b,a]) => {
-  const key = [r,g,b,a].toString();
-  return cachedColors.has(key) ? cachedColors.get(key) : (cachedColors.set(key, new java.awt.Color(r/255,g/255,b/255,a/255)), cachedColors.get(key));
+    const key = [r,g,b,a].toString();
+    return cachedColors.has(key) ? cachedColors.get(key) : (cachedColors.set(key, new java.awt.Color(r/255,g/255,b/255,a/255)), cachedColors.get(key));
 }
 
 DrawBlock.register("drawBlockHighlight", (pos, event) => {
@@ -25,6 +25,6 @@ DrawBlock.register("drawBlockHighlight", (pos, event) => {
     const color = getColor(Config().blockoverlaycolor);
     const phase = Client.settings.getSettings()?.field_74320_O !== 1;
     Config().blockoverlayfill
-      ? Render3D.filledBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, true, event.partialTicks)
-      : Render3D.outlineBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, Config().blockoverlayline, true, event.partialTicks);
+        ? Render3D.filledBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, true, event.partialTicks)
+        : Render3D.outlineBlock(block, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), phase, Config().blockoverlayline, true, event.partialTicks);
 })

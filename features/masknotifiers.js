@@ -12,7 +12,6 @@ const Phoenix = createSkull("ewogICJ0aW1lc3RhbXAiIDogMTY0Mjg2NTc3MTM5MSwKICAicHJ
 const maskrem = FeatManager.createFeature("maskrem", "catacombs")
 const masknotifier = FeatManager.createFeature("masknotifier")
 const maskcd = FeatManager.createFeature("maskcd", "catacombs")
-const pheq = FeatManager.createFeature("maskcd")
 const GUI = hud.createHud("Mask Display", 240, 240, 95, 43)
 
 const helm = (helm) => Player.armor.getHelmet()?.getName()?.removeFormatting()?.includes(helm)
@@ -26,17 +25,10 @@ let bonzotick = 0
 let spirittick = 0
 let phoenixtick = 0
 
-masknotifier.register("chat", (msg, event) => {
-    const mask = [
-        [/Your (?:. )?Bonzo's Mask saved your life!/, "Bonzo Mask activated (3s)"],
-        [/^Second Wind Activated! Your Spirit Mask saved your life!$/, "Spirit Mask activated (3s)"],
-        [/^Your Phoenix Pet saved you from certain death!$/, "Phoenix Pet activated (2-4s)"]
-    ].find(([pattern]) => pattern.test(msg));
-  
-    if (!mask) return;
-    ChatLib.command(`pc MeowAddons » ${mask[1]}`);
-    cancel(event);
-}, "${msg}")
+masknotifier
+    .register("chat", () => ChatLib.command(`pc MeowAddons » Bonzo mask activated (3s)`), /^Your (?:. )?Bonzo's Mask saved your life!$/)
+    .register("chat", () => ChatLib.command(`pc MeowAddons » Spirit mask activated (3s)`), /^Second Wind Activated! Your Spirit Mask saved you from certain death!$/)
+    .register("chat", () => ChatLib.command(`pc MeowAddons » Phoenix pet activated (2-4s)`), /^Your Phoenix Pet saved you from certain death!$/)
 
 maskrem
     .register("serverChat", () => {
@@ -52,6 +44,9 @@ maskcd
     .register("serverChat", () => (phoenix = true, phoenixtick = 1200, maskcd.update()), /^Your Phoenix Pet saved you from certain death!$/)
     .register("serverChat", () => p3 = true, "[BOSS] Storm: I should have known that I stood no chance.")
     .register("serverChat", () => p3 = false, "The Core entrance is opening!")
+    .register("chat", (pet) => pet === "Phoenix" ? (data.pequipped = true) : (data.pequipped = false), /Autopet equipped your \[Lvl \d+\] (.+)! VIEW RULE/)
+    .register("chat", (pet) => pet === "Phoenix" ? (data.pequipped = true) : (data.pequipped = false), /You summoned your (.+)!/)
+    .register("chat", () => data.pequipped = false, "You despawned your Phoenix!")
     .register("renderOverlay", () => {
         if (hud.isOpen() || (Config().onlyshowinp3 && !p3)) return
         Renderer.retainTransforms(true)
@@ -69,11 +64,6 @@ maskcd
     }, () => bonzo || spirit || phoenix)
     .onRegister(() => (bonzo = spirit = p3 = false, bonzotick = spirittick = 0, maskcd.update()))
     .onUnregister(() => (bonzo = spirit = p3 = false, bonzotick = spirittick = 0, maskcd.update()))
-
-pheq
-    .register("chat", (pet) => pet === "Phoenix" ? (data.pequipped = true) : (data.pequipped = false), /Autopet equipped your \[Lvl \d+\] (.+)! VIEW RULE/)
-    .register("chat", (pet) => pet === "Phoenix" ? (data.pequipped = true) : (data.pequipped = false), /You summoned your (.+)!/)
-    .register("chat", () => data.pequipped = false, "You despawned your Phoenix!")
 
 GUI.onDraw(() => {
     Renderer.retainTransforms(true)

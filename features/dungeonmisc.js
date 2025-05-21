@@ -4,6 +4,7 @@ import { Render2D } from "../../tska/rendering/Render2D"
 import { scheduleTask } from "../../tska/shared/ServerTick"
 import { Data } from "./utils/data"
 import Config from "../config"
+import Dungeon from "../../tska/skyblock/dungeon/Dungeon"
 
 // Key stuff
 
@@ -105,3 +106,40 @@ I4DG
     }, /(\w{1,16}) completed a device! \(\d\/7\)/)
     .onRegister(() => (i4start = 0, devs = 0, i4 = false))
     .onUnregister(() => (i4start = 0, devs = 0, i4 = false))
+
+// Terminal callouts
+
+const sendTermInChat = FeatManager.createFeature("sendTermInChat", "catacombs")
+
+sendTermInChat
+    .register("chat", () => {
+        ChatLib.command(Config().sendTermInChat == 5 ? "pc I will do devices!" : `pc I will do ${(Config().sendTermInChat)}th term!`)
+    }, "[BOSS] Storm: I should have known that I stood no chance.")
+
+// Leap announce
+
+const leapannounce = FeatManager.createFeature("leapannounce", "catacombs")
+
+leapannounce
+    .register("chat", (p) => ChatLib.command(`pc Leaping to ${player}`), "You have teleported to ${p}")
+
+// Leap hide
+
+const hide = FeatManager.createFeature("hideafterleap", "catacombs")
+let hiding = false
+
+hide
+    .register("chat", (player) => {
+        hiding = true
+        hide.update()
+        setTimeout(() => (hiding = false, hide.update()), Config().hideleaptime * 1000)
+    }, "You have teleported to ${player}")
+    .registersub("renderEntity", (ent, pos, pt, evn) => ent.getName() !== Player.getName() && cancel(evn), () => hiding, net.minecraft.entity.player.EntityPlayer)
+
+// Bat dead
+
+const BatDead = FeatManager.createFeature("batdeadtitle", "catacombs")
+BatDead
+    .register("soundPlay", () => !Dungeon.inBoss() && Render2D.showTitle(`&cBat Dead!`, null, 1000), "mob.bat.death")
+    .register("soundPlay", () => !Dungeon.inBoss() && Render2D.showTitle(`&cBat Dead!`, null, 1000), "mob.bat.hurt")
+

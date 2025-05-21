@@ -216,10 +216,8 @@ BossChecker
             const carryee = findCarryee(name.split("by: ")[1])
             if (!carryee) return
             carryee.recordBossStartTime(entID - 3)
-            if (settings().notifybossspawn) {
-                Render2D.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, null, 1000)
-                World.playSound("mob.cat.meow", 5, 2)
-            }
+            World.playSound("mob.cat.meow", 5, 2)
+            settings().notifybossspawn && Render2D.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, null, 1000)
         }, 2)
     }, () => carryees.length > 0)
     .registersub("entityDeath", (entity) => {

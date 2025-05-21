@@ -209,16 +209,19 @@ Dungeon
 
 BossChecker
     .registersub("ma:entityJoin", (ent, entID, evn) => {
-        scheduleTask(() => {
+        if (ProccessedSp.has(entID)) return
+        const checkName = () => {
             const name = ent.func_70005_c_()?.removeFormatting()
-            if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by") || ProccessedSp.has(entID)) return
+            if (!ent.func_145818_k_()) return scheduleTask(checkName, 2)
+            if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by")) return
             ProccessedSp.add(entID)
             const carryee = findCarryee(name.split("by: ")[1])
             if (!carryee) return
             carryee.recordBossStartTime(entID - 3)
             World.playSound("mob.cat.meow", 5, 2)
             settings().notifybossspawn && Render2D.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, null, 1000)
-        }, 2)
+        }
+        scheduleTask(() => checkName, 2)
     }, () => carryees.length > 0)
     .registersub("entityDeath", (entity) => {
         const bossID = entity.entity.func_145782_y()

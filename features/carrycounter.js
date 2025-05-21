@@ -378,10 +378,10 @@ const handleTradeCoins = (totalCoins, isAdding) => Client.scheduleTask(1, () => 
     if ((isAdding && !carryee) || (!isAdding && carryee)) {
         const action = isAdding ? `/carry add ${lastTradePlayer} ${carries}` : `/carry remove ${lastTradePlayer}`;
         const text = isAdding ? `Add &b${lastTradePlayer}&f for &b${carries}&f carries?` : `Remove &b${lastTradePlayer}&f?`;
-        //ChatLib.chat(new Message(`${prefix}&f ${text} `)
-        //.addTextComponent(new TextComponent("&a[Yes]").setClick("run_command", action).setHoverValue(`Click to ${isAdding ? 'add' : 'remove'} player`))
-        //.addTextComponent(" &7| ")
-        //.addTextComponent(new TextComponent("&c[No]").setHoverValue("Click to ignore")));
+        ChatLib.chat(new Message(`${prefix}&f ${text} `)
+        .addTextComponent(new TextComponent("&a[Yes]").setClick("run_command", action).setHoverValue(`Click to ${isAdding ? 'add' : 'remove'} player`))
+        .addTextComponent(" &7| ")
+        .addTextComponent(new TextComponent("&c[No]").setHoverValue("Click to ignore")));
     }
     resetTrade()
 })
@@ -468,8 +468,6 @@ renderGuiINV
         })
     }, () => getInventoryState())
 
-// Buttons
-
 register("guiMouseClick", (mouseX, mouseY, mouseButton) => {
     if (!isInInventory) return;
     const allCarryees = getAllCarryees();
@@ -552,8 +550,6 @@ function getButtonAreas(hudX, hudY, carryee, index) {
 function isInArea(x, y, area) {
     return x >= area.x1 && x <= area.x2 && y >= area.y1 && y <= area.y2;
 }
-
-// Commands
 
 register("command", (...args) => {
     if (!args) return showHelp()
@@ -924,8 +920,6 @@ function showHelp() {
     ChatLib.chat("> &e/carry clear &7- Clears all active carries")
     ChatLib.chat("> &e/carry gui &7- Open HUD editor");
 }
-
-// Game unload
 
 register("gameUnload", () => {
     if (carryees.length === 0) return;

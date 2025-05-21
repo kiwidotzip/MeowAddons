@@ -83,7 +83,6 @@ class Carryee {
             this.complete();
             carryees = carryees.filter(carryee => carryee !== this);
         }
-        if (settings().debug) ChatLib.chat(`${prefix} &fLogged 1 carry for &6${this.name} &7(${this.count}/${this.total})`);
         if (settings().sendcarrycount) sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`);
         sendcarrymsg(`${this.name}: ${this.count}/${this.total}`);
         UpdateCarryee();
@@ -121,19 +120,14 @@ class Carryee {
     }
 
     getBossPerHour() {
-        if (this.count <= 2) return "N/A";
-        let totalTime = this.totalCarryTime;
-        const liveSessionTime = this.firstBossTime ? (Date.now() - this.firstBossTime) : 0;
-        totalTime += liveSessionTime;
-        const totalTimeHours = totalTime / 3600000;
-        return totalTimeHours > 0 ? `${(this.count / totalTimeHours).toFixed(0)}/hr` : "N/A";
+        if (this.count <= 2) return "N/A"
+        let totalTime = this.totalCarryTime + (this.firstBossTime ? Date.now() - this.firstBossTime : 0)
+        return totalTime > 0 ? `${(this.count/(totalTime/36e5)).toFixed(0)}/hr` : "N/A"
     }
     
     getMoneyPerHour() {
-        const bph = this.getBossPerHour();
-        if (bph === "N/A") return "N/A";
-        const carryValue = parseFloat(settings().carryvalue.split(",")[0]) || 1.3;
-        return `${(parseFloat(bph) * carryValue).toFixed(1)}M/hr`;
+        const bph = this.getBossPerHour()
+        return bph === "N/A" ? "N/A" : `${(parseFloat(bph)*(parseFloat(settings().carryvalue.split(",")[0])||1.3)).toFixed(1)}M/hr`
     }
 
     reset() {
@@ -146,33 +140,18 @@ class Carryee {
 
     complete() {
         ChatLib.chat(`${prefix} &fCarries completed for &b${this.name}`);
-        if (settings().sendtrademsg) {
-            Client.scheduleTask(20, () => {
-                ChatLib.chat(
-                    new Message(`${prefix} &fTrade with &b${this.name}&f? `)
-                    .addTextComponent(new TextComponent("&a[Yes]")
-                    .setClick("run_command", `/trade ${this.name}`)
-                    .setHoverValue(`&fClick to trade with &b${this.name}`)));
-            });
-        }
+        if (settings().sendtrademsg) 
+            Client.scheduleTask(20, () => ChatLib.chat(new TextComponent(`${prefix} &fClick to trade with &b${this.name}&f.`).setClick("run_command", `/trade ${this.name}`)))
         World.playSound("note.pling", 5, 2);
-        Render2D.showTitle(
-            `&aCarries Completed: &6${this.name}`, 
-            `&b${this.count}&f/&b${this.total}`,
-            3000
-        );
-        cacheCarryee(this);
-        this.endSession();
+        Render2D.showTitle(`&aCarries Completed: &6${this.name}`, `&b${this.count}&f/&b${this.total}`, 3000)
+        cacheCarryee(this)
+        this.endSession()
     }
 
     toString() {
-        if (settings().bossph == 1) {
-            return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()} | ${this.getBossPerHour()})`;
-        } else if (settings().bossph == 2) {
-            return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()} | ${this.getMoneyPerHour()})`
-        } else {
-            return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${this.getTimeSinceLastBoss()})`;
-        }
+        let stat = this.getTimeSinceLastBoss()
+        settings().bossph === 1 ? stat += ` | ${this.getBossPerHour()}` : settings().bossph === 2 ? stat += ` | ${this.getMoneyPerHour()}` : ``
+        return `&b${this.name}&f: ${this.count}&8/&f${this.total} &7(${stat})`
     }
 }
 
@@ -193,7 +172,6 @@ class DungeonCarryee {
             this.complete();
             dungeonCarryees = dungeonCarryees.filter(c => c !== this);
         }
-        if (settings().debug) ChatLib.chat(`${prefix} &fLogged 1 dungeon carry for &6${this.name} &7(${this.count}/${this.total})`);
         if (settings().senddgcarrycount) sendPartyChatMessage(`pc ${this.name}: ${this.count}/${this.total}`);
     }
 
@@ -375,8 +353,8 @@ register("step", () => {
 // Trade detection
 
 register("chat", (lastplayer) => {
-        lastTradePlayer = lastplayer;
-        lastTradeTime = Date.now();
+    lastTradePlayer = lastplayer;
+    lastTradeTime = Date.now();
 }).setCriteria(/^Trade completed with (?:\[.*?\] )?(\w+)!$/);
 
 function resetTrade() {
@@ -400,10 +378,10 @@ const handleTradeCoins = (totalCoins, isAdding) => Client.scheduleTask(1, () => 
     if ((isAdding && !carryee) || (!isAdding && carryee)) {
         const action = isAdding ? `/carry add ${lastTradePlayer} ${carries}` : `/carry remove ${lastTradePlayer}`;
         const text = isAdding ? `Add &b${lastTradePlayer}&f for &b${carries}&f carries?` : `Remove &b${lastTradePlayer}&f?`;
-        ChatLib.chat(new Message(`${prefix}&f ${text} `)
-        .addTextComponent(new TextComponent("&a[Yes]").setClick("run_command", action).setHoverValue(`Click to ${isAdding ? 'add' : 'remove'} player`))
-        .addTextComponent(" &7| ")
-        .addTextComponent(new TextComponent("&c[No]").setHoverValue("Click to ignore")));
+        //ChatLib.chat(new Message(`${prefix}&f ${text} `)
+        //.addTextComponent(new TextComponent("&a[Yes]").setClick("run_command", action).setHoverValue(`Click to ${isAdding ? 'add' : 'remove'} player`))
+        //.addTextComponent(" &7| ")
+        //.addTextComponent(new TextComponent("&c[No]").setHoverValue("Click to ignore")));
     }
     resetTrade()
 })
@@ -577,7 +555,8 @@ function isInArea(x, y, area) {
 
 // Commands
 
-register("command", (...args = []) => {
+register("command", (...args) => {
+    if (!args) return showHelp()
     const [subcommand, name, count] = args;
     switch (subcommand?.toLowerCase()) {
         case "add":
@@ -785,7 +764,8 @@ register("command", (...args = []) => {
             ChatLib.chat(message);
             break; 
         default:
-            showHelp();
+            ChatLib.chat(`${prefix} &cInvalid command! Run /carry help for a list of commands.`)
+            break
     }
 }).setTabCompletions((args) => {
     const subcommand = args[0]?.toLowerCase();
@@ -798,8 +778,8 @@ register("command", (...args = []) => {
     return []
 }).setName("carry").setAliases(["macarry"]);
 
-// Dungeon commands (/dgcarry)
-register("command", (...args = []) => {
+register("command", (...args) => {
+    if (!args) return showDgHelp()
     const [subcommand, name, count] = args;
     switch (subcommand?.toLowerCase()) {
         case "add":
@@ -878,9 +858,10 @@ register("command", (...args = []) => {
             const message = dungeonCarryees.length ? `${prefix} &aCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
             dungeonCarryees = [];
             ChatLib.chat(message);
-            break; 
+            break;
         default:
-            showDgHelp();
+            ChatLib.chat(`${prefix} &cInvalid command! Run /dgcarry help for a list of commands.`)
+            break
     }
 }).setTabCompletions((args) => {
     const subcommand = args[0]?.toLowerCase();
@@ -954,5 +935,5 @@ function showHelp() {
 register("gameUnload", () => {
     if (carryees.length === 0) return;
     ChatLib.chat(`${prefix} &aPrinting &6${carryees.length} &aactive carries:`);
-    carryees.forEach(carryee => ChatLib.chat(`&e> &f${carryee.name}: ${`&b${carryee.count}&f/&b${carryee.total}`}`));
+    carryees.forEach(carryee => ChatLib.chat(`&e> &f${carryee.name}: ` + `&b`+ carryee.count + `&f/&b` + carryee.total));
 });

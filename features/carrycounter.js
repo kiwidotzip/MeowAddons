@@ -210,17 +210,17 @@ Dungeon
 BossChecker
     .registersub("ma:entityJoin", (ent, entID, evn) => {
         scheduleTask(() => {
-            const name = ent.func_70005_c_()?.removeFormatting();
-            if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by") || ProccessedSp.has(entID)) return;
+            const name = ent.func_70005_c_()?.removeFormatting()
+            if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by") || ProccessedSp.has(entID)) return
             ProccessedSp.add(entID)
-            const carryee = findCarryee(name.split("by: ")[1]);
-            if (!carryee) return;
-            carryee.recordBossStartTime(entID - 3);
+            const carryee = findCarryee(name.split("by: ")[1])
+            if (!carryee) return
+            carryee.recordBossStartTime(entID - 3)
             if (settings().notifybossspawn) {
-                Render2D.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, null, 1000);
-                World.playSound("mob.cat.meow", 5, 2);
+                Render2D.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, null, 1000)
+                World.playSound("mob.cat.meow", 5, 2)
             }
-        }, 2);
+        }, 2)
     }, () => carryees.length > 0)
     .registersub("entityDeath", (entity) => {
         const bossID = entity.entity.func_145782_y()
@@ -241,7 +241,7 @@ BossChecker
         if (!bossnames.includes(entityName)) return
         carryees.forEach((carryee) => {
             if (carryee.name === deadPlayer) {
-                carryee.reset();
+                carryee.reset()
                 ChatLib.chat(new Message(`${prefix} &c${carryee.name} died! Count the carry? `,
                     new TextComponent("&a[Yes]")
                         .setClick("run_command", `/carry confirmdeath ${carryee.name}`)
@@ -252,7 +252,7 @@ BossChecker
                         .setHoverValue("Click to ignore"))
                 )
             }
-        });
+        })
     }, () => carryees.length > 0, /^ ☠ (\w+) was killed by (.+).$/)
 
 
@@ -260,9 +260,7 @@ BossChecker
 
 TickTimer
     .registersub("servertick", () => {
-        carryees.forEach(carryee => {
-            if (carryee.isFighting) carryee.bossTicks++
-        })
+        carryees.forEach(carryee => carryee.isFighting && carryee.bossTicks++)
     }, () => carryees.some(carryee => carryee.isFighting))
 
 // Boss check
@@ -277,12 +275,12 @@ register("step", () => {
 
 BossOutline
     .registersub("ma:postRenderEntity", (entity, pos) => { 
-        const entityID = entity.entity.func_145782_y(); 
+        const entityID = entity.entity.func_145782_y()
         carryees.forEach((carryee) => {
-            if (carryee.bossID !== entityID) return;
+            if (carryee.bossID !== entityID) return
             let color = [0, 255, 255]
             const timer = World.getWorld()?.func_73045_a(carryee.timerID)?.func_70005_c_()?.removeFormatting()
-            const timeMatch = timer?.match(/^(\d+):([0-5]\d)$/);
+            const timeMatch = timer?.match(/^(\d+):([0-5]\d)$/)
             if (timeMatch && (parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10)) < 205) color = [255, 127, 127]
             Render3D.renderEntityBox(
                 pos.getX(),
@@ -381,7 +379,7 @@ const handleTradeCoins = (totalCoins, isAdding) => Client.scheduleTask(1, () => 
         ChatLib.chat(new Message(`${prefix}&f ${text} `)
         .addTextComponent(new TextComponent("&a[Yes]").setClick("run_command", action).setHoverValue(`Click to ${isAdding ? 'add' : 'remove'} player`))
         .addTextComponent(" &7| ")
-        .addTextComponent(new TextComponent("&c[No]").setHoverValue("Click to ignore")));
+        .addTextComponent(new TextComponent("&c[No]").setHoverValue("Click to ignore")))
     }
     resetTrade()
 })
@@ -398,8 +396,8 @@ register("chat", (totalCoins) => {
 
 register("gameLoad", () => {
     if (!CarryProfit.date || CarryProfit.date !== DateMEOW.getDate()) {
-        CarryProfit.date = DateMEOW.getDate();
-        CarryProfit.profit = 0;
+        CarryProfit.date = DateMEOW.getDate()
+        CarryProfit.profit = 0
     }
 })
 
@@ -767,15 +765,15 @@ register("command", (...args) => {
             ChatLib.chat(`${prefix} &cInvalid command! Run /carry help for a list of commands.`)
     }
 }).setTabCompletions((args) => {
-    const subcommand = args[0]?.toLowerCase();
-    const currentArg = args[args.length - 1]?.toLowerCase();
+    const subcommand = args[0]?.toLowerCase()
+    const currentArg = args[args.length - 1]?.toLowerCase()
     const playerNames = World.getAllPlayers()
         .filter(player => player.getUUID().version() === 4)
         .map(player => player.getName().removeFormatting())
     if (args.length === 2 && modcmd.includes(subcommand)) return playerNames.filter(name => name.toLowerCase().startsWith(currentArg))
     if (args.length === 1) return allcmd.filter(c => c.startsWith(currentArg))
     return []
-}).setName("carry").setAliases(["macarry"]);
+}).setName("carry").setAliases(["macarry"])
 
 register("command", (...args) => {
     if (!args) return showDgHelp()

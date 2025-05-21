@@ -117,6 +117,7 @@ const fi = register("step", () => {
         ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
         ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
         ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
+        ChatLib.chat(`&7> &7/&bma broken &7- &fLists troubleshooting steps`)
         ChatLib.chat(`&7> &7/&bma update &7- &fCheck for updates`)
         ChatLib.chat(`&b`)
         ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
@@ -147,6 +148,7 @@ register("command", (...args) => {
             ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
             ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
             ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
+            ChatLib.chat(`&7> &7/&bma broken &7- &fLists troubleshooting steps`)
             ChatLib.chat(`&7> &7/&bma update &7- &fCheck for updates`)
             ChatLib.chat(`&b`)
             ChatLib.chat(`&b> Github&f:&7 https://github.com/kiwidotzip/meowaddons`)
@@ -157,6 +159,14 @@ register("command", (...args) => {
         case "update": 
             checkUpdate()
             updateMessage = `&9&m${ChatLib.getChatBreak("-")}\n`
+            break
+        case "broken":
+            const brokenMsg = new Message(`&e[MeowAddons] Choose one of the following options to troubleshoot: \n&7> `)
+            brokenMsg.addTextComponent(new TextComponent(`&b[Delete Amaterasu]`).setClick("run_command", "/ct delete Amaterasu").setHoverValue(`&fClick to delete Amaterasu`))
+            brokenMsg.addTextComponent(`&7 | `)
+            brokenMsg.addTextComponent(new TextComponent(`&b[Delete TSKA]\n&7> `).setClick("run_command", "/ct delete tska").setHoverValue(`&fClick to delete TSKA`))
+            brokenMsg.addTextComponent(new TextComponent(`&b[Delete other dependencies]`).setClick("run_command", "/ct delete DocGuiLib").setHoverValue(`&fClick to delete other dependencies`))
+            ChatLib.chat(brokenMsg)
             break
         default:
             ChatLib.chat(`&e[MeowAddons] &fCommand not found! Do &c/ma help &ffor a list of commands.`)

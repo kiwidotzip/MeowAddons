@@ -259,6 +259,24 @@ BossChecker
             }
         })
     }, () => carryees.length > 0)
+    .registersub("chat", (deadPlayer, entityName) => {
+        if (!bossnames.includes(entityName)) return
+        carryees.forEach((carryee) => {
+            if (carryee.name === deadPlayer) {
+                carryee.reset();
+                ChatLib.chat(new Message(`${prefix} &c${carryee.name} died! Count the carry? `,
+                    new TextComponent("&a[Yes]")
+                        .setClick("run_command", `/carry confirmdeath ${carryee.name}`)
+                        .setHoverValue("Click to count the carry"),
+                    ` &7| `,
+                    new TextComponent("&c[No]")
+                        .setClick("run_command", `/carry canceldeath ${carryee.name}`)
+                        .setHoverValue("Click to ignore"))
+                )
+            }
+        });
+    }, () => carryees.length > 0, /^ ☠ (\w+) was killed by (.+).$/)
+
 
 // Tick timer
 
@@ -316,23 +334,6 @@ PlayerOutline
             } 
         }); 
     }, () => carryees.length > 0, net.minecraft.entity.player.EntityPlayer)
-    .register("chat", (deadPlayer, entityName) => {
-        if (!bossnames.includes(entityName)) return
-        carryees.forEach((carryee) => {
-            if (carryee.name === deadPlayer) {
-                carryee.reset();
-                ChatLib.chat(new Message(`${prefix} &c${carryee.name} died! Count the carry? `,
-                    new TextComponent("&a[Yes]")
-                        .setClick("run_command", `/carry confirmdeath ${carryee.name}`)
-                        .setHoverValue("Click to count the carry"),
-                    ` &7| `,
-                    new TextComponent("&c[No]")
-                        .setClick("run_command", `/carry canceldeath ${carryee.name}`)
-                        .setHoverValue("Click to ignore"))
-                )
-            }
-        });
-    }, /^ ☠ (\w+) was killed by (.+).$/)
 
 // Cache management
 

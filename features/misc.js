@@ -67,14 +67,16 @@ VengT
     .registersub("renderOverlay", () => {
         if (hud.isOpen()) return
         const time = ((starttime - Date.now()) / 1000).toFixed(1)
+        Renderer.translate(VengGUI.getX(), VengGUI.getY())
         Renderer.scale(VengGUI.getScale())
-        Renderer.drawString(`&cVengeance: &b${time}s`, VengGUI.getX(), VengGUI.getY())
+        Renderer.drawString(`&cVengeance: &b${time}s`, 0, 0)
     }, () => starttime && inBossVT)
 
 VengGUI
     .onDraw(() => {
+        Renderer.translate(VengGUI.getX(), VengGUI.getY())
         Renderer.scale(VengGUI.getScale())
-        Renderer.drawString(`&cVengeance: &b3.4s`, VengGUI.getX(), VengGUI.getY())
+        Renderer.drawString(`&cVengeance: &b3.4s`, 0, 0)
     })
 
 // Veng damage

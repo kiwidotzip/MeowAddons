@@ -16,9 +16,9 @@ customsize
     .register("postRenderEntity", () => Tessellator.popMatrix(), net.minecraft.client.entity.EntityPlayerSP)
 
 Config().getConfig()
-                    .registerListener("customX", (oldv, newv) => x = newv)
-                    .registerListener("customY", (oldv, newv) => y = newv)
-                    .registerListener("customZ", (oldv, newv) => z = newv)
-                    .onCloseGui(() => {
-                        Settings().customY < 0 && (Settings.customY = 1, ChatLib.chat(`&e[MeowAddons] &fYou can't put in negative values!`))
-                    })
+    .registerListener("customX", (oldv, newv) => x = newv)
+    .registerListener("customY", (oldv, newv) => y = newv)
+    .registerListener("customZ", (oldv, newv) => z = newv)
+    .onCloseGui(() => {
+       Config().customY < 0 && (Settings.customY = 1, ChatLib.chat(`&e[MeowAddons] &fYou can't put in negative values!`))
+    })

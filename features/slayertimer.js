@@ -84,7 +84,7 @@ slayerkilltimer
         slayerkilltimer.update()
     },/^  SLAYER QUEST FAILED!/)
     .registersub("servertick", () => serverticks++, () => isFighting)
-    
+    .registersub("stepDelay", () => bossID && !World.getWorld().func_73045_a(bossID) && resetBossTracker(), () => isFighting, 20)
 // Slayer boss spawn timer
 
     .register("serverChat", () => {

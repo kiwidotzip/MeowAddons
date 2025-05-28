@@ -172,12 +172,14 @@ class DungeonCarryee {
             dungeonCarryees = dungeonCarryees.filter(c => c !== this);
         }
         if (settings().senddgcarrycount) sendP(`pc ${this.name}: ${this.count}/${this.total}`);
+        Dungeon.update()
     }
 
     complete() {
         ChatLib.chat(`${prefix} &fDungeon carries completed for &b${this.name}`);
         World.playSound("note.pling", 5, 2);
         Render2D.showTitle(`&aCarries Completed: &6${this.name}`, `&b${this.count}&f/&b${this.total}`, 3000);
+        Dungeon.update()
     }
 
     toString() {
@@ -784,6 +786,7 @@ register("command", (...args) => {
             if (findDungeonCarryee(name)) return ChatLib.chat(`${prefix} &c${name} already exists!`);
             dungeonCarryees.push(new DungeonCarryee(name, parseInt(count)));
             ChatLib.chat(`${prefix} &fAdded &6${name} &ffor &6${count} &fcarries.`);
+            Dungeon.update()
             break;
         case "set":
             if (!name || !count) return dgSyntaxError("set <name> <count>");
@@ -808,6 +811,7 @@ register("command", (...args) => {
             if (!name) return dgSyntaxError("remove <name>");
             dungeonCarryees = dungeonCarryees.filter(carryee => carryee.name !== name);
             ChatLib.chat(`${prefix} &fRemoved &6${name}&f.`);
+            Dungeon.update()
             break;
         case "list":
             if (dungeonCarryees.length === 0) return ChatLib.chat(`${prefix} &cNo active carries!`);
@@ -816,15 +820,15 @@ register("command", (...args) => {
                 const message = new Message()
                     .addTextComponent(new TextComponent(`&7> &f${carryee.name}: &b${carryee.count}/${carryee.total} &7| `))
                     .addTextComponent(new TextComponent("&a[+]")
-                        .setClick("run_command", `/carry increase ${carryee.name}`)
+                        .setClick("run_command", `/dgcarry increase ${carryee.name}`)
                         .setHoverValue("&7Click to increase count"))
                     .addTextComponent(" &7| ")
                     .addTextComponent(new TextComponent("&c[-]")
-                        .setClick("run_command", `/carry decrease ${carryee.name}`)
+                        .setClick("run_command", `/dgcarry decrease ${carryee.name}`)
                         .setHoverValue("&7Click to decrease count"))
                     .addTextComponent(" &7| ")
                     .addTextComponent(new TextComponent("&4[×]")
-                        .setClick("run_command", `/carry remove ${carryee.name}`)
+                        .setClick("run_command", `/dgcarry remove ${carryee.name}`)
                         .setHoverValue("&7Click to remove player"))
                 ChatLib.chat(message)
             });
@@ -847,6 +851,7 @@ register("command", (...args) => {
             const message = dungeonCarryees.length ? `${prefix} &aCleared all active carries.` : `${prefix} &cNo active carries to clear.`;
             dungeonCarryees = [];
             ChatLib.chat(message);
+            Dungeon.update()
             break;
         default:
             ChatLib.chat(`${prefix} &cInvalid command! Run /dgcarry help for a list of commands.`)

@@ -9,13 +9,13 @@ let started = false
 let delay = Config().cryptremtime
 
 Crypt
-    .register("serverChat", () => started = true, /\[NPC\] Mort: Good luck\./)
+    .register("serverChat", () => (started = true, Crypt.update()), /\[NPC\] Mort: Good luck\./)
     .registersub("stepDelay", () => {
         if (Dungeon.getCrypts() >= 5 || sent || Dungeon.inBoss()) return
         sent = true
         Config().cryptchatmsg && ChatLib.command(`pc ${Dungeon.getCrypts()}/5 crypts done yet.`)
         Config().crypttitle && Render2D.showTitle(`&b${Dungeon.getCrypts()}&7/&b5 &ccrypts`, null, 2500)
     }, () => started, 60 * delay)
-    .onRegister(() => (sent = started = false))
+    .onRegister(() => (sent = started = false, Crypt.update()))
 
 Config().getConfig().registerListener("cryptremtime", (oldv, newv) => delay = newv)

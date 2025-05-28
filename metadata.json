@@ -2,7 +2,7 @@
     "name"          : "MeowAddons",
     "author"        : "Kiwi",
     "description"   : "QOL features and some dumb ones",
-    "version"       : "2.3.6",
+    "version"       : "2.3.7",
     "entry"         : "index.js",
     "helpMessage"   : "&e[MeowAddons]&f Open the GUI using &b/ma&f. View all commands using &b/ma help&f.",
     "requires"      : ["Amaterasu", "tska"]

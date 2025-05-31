@@ -209,21 +209,22 @@ Dungeon
 // Nametag detection
 
 BossChecker
-    .registersub("ma:entityJoin", (ent, entID, evn) => {
-        if (ProccessedSp.has(entID)) return
-        const checkName = () => {
-            const name = ent.func_70005_c_()?.removeFormatting()
-            if (!ent.func_145818_k_()) return scheduleTask(() => checkName(), 2)
-            if (!(ent instanceof net.minecraft.entity.item.EntityArmorStand) || !name?.includes("Spawned by")) return
-            ProccessedSp.add(entID)
+    .registersub("stepFps", () => {
+        const allEntities = World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand"))
+        allEntities.forEach(entity => {
+            const id = entity.entity.func_145782_y()
+            if (ProccessedSp.has(id)) return
+            const name = entity.entity.func_70005_c_()?.removeFormatting()
+            if (!name.includes("Spawned by")) return
+            ProccessedSp.add(id)
             const carryee = findCarryee(name.split("by: ")[1])
             if (!carryee) return
-            carryee.recordBossStartTime(entID - 3)
+            const bossID = id - 3
+            carryee.recordBossStartTime(bossID)
             World.playSound("mob.cat.meow", 5, 2)
             settings().notifybossspawn && Render2D.showTitle(`&b${name.split("by: ")[1]}&f spawned their boss!`, null, 1000)
-        }
-        scheduleTask(() => checkName(), 2)
-    }, () => carryees.length > 0)
+        })
+    }, () => carryees.length > 0, 10)
     .registersub("entityDeath", (entity) => {
         const bossID = entity.entity.func_145782_y()
         carryees.forEach((carryee) => {

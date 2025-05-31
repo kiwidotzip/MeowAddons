@@ -6,9 +6,9 @@ import { Event } from "../../tska/event/Event";
 import { HudManager } from "../../tska/gui/HudManager";
 import Config from "../config";
 
-const HudData = new LocalStore("tska", {});
-export const hud = new HudManager(HudData);
-export const FeatManager = new FeatureManager(Config().getConfig());
+const HudData = new LocalStore("tska", {})
+export const hud = new HudManager(HudData)
+export const FeatManager = new FeatureManager(Config())
 
 // Custom events
 

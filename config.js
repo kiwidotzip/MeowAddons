@@ -1,6 +1,5 @@
-import Settings from "../Amaterasu/core/Settings";
-import DefaultConfig from "../Amaterasu/core/DefaultConfig";
-const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
+import Base from "../sin/main/base"
+const sin = new Base("MeowAddons", "data/scheme.json", "MeowAddons")
 
 // Chat - General
 
@@ -93,7 +92,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "togglecustomchatrankcolor",
     title: "Toggle custom chat rank color",
     description: "Toggles custom chat rank color\n&4Requires party chat and guild chat formatting to be enabled",
-    subcategory: "Custom chat rank color",
+    subcategory: "Chat format",
 })
 .addTextInput({
     category: "Chat",
@@ -102,7 +101,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Color code for MVP++ rank",
     value: "6",
     placeHolder: "6",
-    subcategory: "Custom chat rank color",
+    subcategory: "Chat format",
     shouldShow: data => data.togglecustomchatrankcolor,
 })
 .addTextInput({
@@ -112,7 +111,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Color code for MVP+ rank",
     value: "b",
     placeHolder: "b",
-    subcategory: "Custom chat rank color",
+    subcategory: "Chat format",
     shouldShow: data => data.togglecustomchatrankcolor,
 })
 .addTextInput({
@@ -122,7 +121,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Color code for MVP rank",
     value: "b",
     placeHolder: "b",
-    subcategory: "Custom chat rank color",
+    subcategory: "Chat format",
     shouldShow: data => data.togglecustomchatrankcolor
 })
 .addTextInput({
@@ -132,7 +131,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Color code for VIP+ rank",
     value: "a",
     placeHolder: "a",
-    subcategory: "Custom chat rank color",
+    subcategory: "Chat format",
     shouldShow: data => data.togglecustomchatrankcolor
 })
 .addTextInput({
@@ -142,7 +141,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Color code for VIP rank",
     value: "a",
     placeHolder: "a",
-    subcategory: "Custom chat rank color",
+    subcategory: "Chat format",
     shouldShow: data => data.togglecustomchatrankcolor
 })
 
@@ -174,14 +173,12 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     subcategory: "Meow Sounds"
 })
 
-// Meowing - Meow hit sounds
-
 .addSwitch({
     category: "Meowing",
     configName: "meowhitsound",
     title: "Meow kill sounds",
     description: "Plays cat sounds whenever you kill a mob",
-    subcategory: "Meow Kills Sounds"
+    subcategory: "Meow Sounds"
 })
 
 .addSlider({
@@ -191,7 +188,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Radius in which the meow kill sound will play",
     options: [0, 32],
     value: 5,
-    subcategory: "Meow Kills Sounds",
+    subcategory: "Meow Sounds",
     shouldShow: data => data.meowhitsound
 })
 
@@ -233,9 +230,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit slayer boss display GUI",
     subcategory: "Slayers",
     shouldShow: data => data.slayerbossdisplay,
-    onClick() {
-        ChatLib.command(`meowaddons gui`, true)
-    }
+    onClick: () => ChatLib.command(`meowaddons gui`, true)
 })
 .addSwitch({
     category: "Slayers",
@@ -285,7 +280,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     title: "Carry price",
     description: "Auto-adds player to carry when you are receive a trade req. \n&4Put the carry value in millions",
     category: "Slayers",
-    subcategory: "Carrying - QOL",
+    subcategory: "Carrying",
     value: "1.3",
     placeHolder: "1.3"
 })
@@ -294,21 +289,21 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "notifybossspawn",
     title: "Notify boss spawn",
     description: "Displays a title when your client's boss spawns",
-    subcategory: "Carrying - QOL"
+    subcategory: "Carrying"
 })
 .addSwitch({
     category: "Slayers",
     configName: "sendtrademsg",
     title: "Send trade msg",
     description: "Sends a message asking if you want to trade the player after their carry ends.",
-    subcategory: "Carrying - QOL"
+    subcategory: "Carrying"
 })
 .addSwitch({
     category: "Slayers",
     configName: "carrytimesend",
     title: "Send carry time",
     description: "Sends carry time in chat, not party chat",
-    subcategory: "Carrying - QOL",
+    subcategory: "Carrying",
     value: "true"
 })
 
@@ -317,7 +312,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "sendcarrycount",
     title: "Send carry count",
     description: "Sends carry count in party chat",
-    subcategory: "Carrying - QOL",
+    subcategory: "Carrying",
     value: "true"
 })
 
@@ -326,7 +321,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "drawcarrybox",
     title: "Background for carry list",
     description: "Enables the background for carry list",
-    subcategory: "Carrying - Rendering"
+    subcategory: "Carrying"
 })
 
 .addColorPicker({
@@ -334,7 +329,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "carryboxcolor",
     title: "Color Picker",
     description: "Pick a color for the background",
-    subcategory: "Carrying - Rendering",
+    subcategory: "Carrying",
     value: [0, 0, 255, 255],
     shouldShow: data => data.drawcarrybox
 })
@@ -344,7 +339,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "bossph",
     title: "Boss/Money per hour",
     description: "Shows the approximate amount of bosses/money you can make per hour",
-    subcategory: "Carrying - Rendering",
+    subcategory: "Carrying",
     options: ['None', 'Boss', 'Money'],
     value: 0
 })
@@ -354,7 +349,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "renderbossoutline",
     title: "Highlight boss",
     description: "Highlights boss when its in render distance",
-    subcategory: "Carrying - Rendering"
+    subcategory: "Carrying"
 })
 
 .addSwitch({
@@ -362,21 +357,21 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "renderplayeroutline",
     title: "Highlight player",
     description: "Highlights the palyer you're carrying when they're in render distance",
-    subcategory: "Carrying - Rendering"
+    subcategory: "Carrying"
 })
 .addSwitch({
     category: "Slayers",
     configName: "sendcarrycountdc",
     title: "Send discord message",
     description: "Sends a discord message using your webhook that you provide.",
-    subcategory: "Carrying - Misc"
+    subcategory: "Carrying"
 })
 .addTextInput({
     category: "Slayers",
     configName: "webhookurlcarry",
     title: "Webhook URL",
     description: "Enter your discord webhook URL",
-    subcategory: "Carrying - Misc",
+    subcategory: "Carrying",
     placeHolder: "None",
     value: "None",
     shouldShow: data => data.sendcarrycountdc
@@ -415,7 +410,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "senddgcarrycount",
     title: "Send carry count",
     description: "Sends carry count in party chat",
-    subcategory: "Carrying - QOL"
+    subcategory: "Carrying"
 })
 
 // Dungeons - Server Lag Timer
@@ -461,9 +456,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit livid vulnerability timer GUI",
     subcategory: "Livid",
     shouldShow: data => data.lividvuln,
-    onClick() {
-        ChatLib.command(`meowaddons gui`, true)
-    }
+    onClick: () => ChatLib.command(`meowaddons gui`, true)
 })
 // Dungeons - Mask notif
 
@@ -530,14 +523,14 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     configName: "hidenonstarmobs",
     title: "Hide non star mob names",
     description: "Hides non star mob names",
-    subcategory: "No clutter - Dungeons"
+    subcategory: "No clutter"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "hidedmg",
     title: "Hide damage",
     description: "Hides the damage in dungeons",
-    subcategory: "No clutter - Dungeons"
+    subcategory: "No clutter"
 })
 
 // Dungeons - Fire freeze timer
@@ -552,13 +545,6 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 // Dungeons - Crypt counter
 
-.addSwitch({
-    category: "Dungeons",
-    configName: "cryptnotif",
-    title: "Main toggle for the crypt reminder",
-    description: "Disabling this will NOT disable the crypt features if you had them enabled",
-    subcategory: "Crypt Reminder"
-})
 .addTextInput({
     category: "Dungeons",
     configName: "cryptremtime",
@@ -566,24 +552,21 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Time between crypt count checks\n&c&lTIME IN MINUTES",
     subcategory: "Crypt Reminder",
     placeHolder: "1.5",
-    value: "1.5",
-    shouldShow: data => data.cryptnotif
+    value: "1.5"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "cryptchatmsg",
     title: "Crypt chat message",
     description: "Sends a message in party chat if 5 crypts have not been killed",
-    subcategory: "Crypt Reminder",
-    shouldShow: data => data.cryptnotif
+    subcategory: "Crypt Reminder"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "crypttitle",
     title: "Crypt title",
     description: "Shows you a reminder on your sceen if 5 crypts have not been killed",
-    subcategory: "Crypt Reminder",
-    shouldShow: data => data.cryptnotif
+    subcategory: "Crypt Reminder"
 })
 
 // Dungeons - Wither key highlight
@@ -644,66 +627,52 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 .addSwitch({
     category: "Dungeons",
-    configName: "AlertMainToggle",
-    title: "Show title options",
-    description: "Merely here to save space, disabling this will NOT disable the title features if you had them enabled",
-    subcategory: "Titles"
-})
-.addSwitch({
-    category: "Dungeons",
     configName: "batdeadtitle",
     title: "Bat dead title",
     description: "Shows a title when a bat dies",
-    subcategory: "Titles",
-    shouldShow: data => data.AlertMainToggle
+    subcategory: "Titles"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-crush",
     title: "F7 Crush titles",
     description: "Titles when you crush storm/maxor",
-    subcategory: "Titles",
-    shouldShow: data => data.AlertMainToggle
+    subcategory: "Titles"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-necron",
     title: "F7 Necron title",
     description: "Titles when necron is damageable",
-    subcategory: "Titles",
-    shouldShow: data => data.AlertMainToggle
+    subcategory: "Titles"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "f7title-dead",
     title: "F7 Death titles",
     description: "Titles when the wither kings die",
-    subcategory: "Titles",
-    shouldShow: data => data.AlertMainToggle
+    subcategory: "Titles"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "m7ragtitle",
     title: "Rag alert in m7",
     description: "Shows the rag axe title",
-    subcategory: "Titles",
-    shouldShow: data => data.AlertMainToggle
+    subcategory: "Titles"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "healtitle",
     title: "Wish alert",
     description: "Shows the wish alert in f6, f7, m6, and m7",
-    subcategory: "Titles",
-    shouldShow: data => data.AlertMainToggle
+    subcategory: "Titles"
 })
 .addSwitch({
     category: "Dungeons",
     configName: "tanktitle",
     title: "Ult (CoS) alert",
     description: "Shows the ult alert for tank in f7 and m7",
-    subcategory: "Titles",
-    shouldShow: data => data.AlertMainToggle
+    subcategory: "Titles"
 })
 
 // Dungeons - F7 Misc.
@@ -1032,50 +1001,38 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 
 .addSwitch({
     category: "Misc.",
-    configName: "alerttoggle",
-    title: "Alerts",
-    description: "Enable to see other alert toggles",
-    subcategory: "Alerts"
-})
-.addSwitch({
-    category: "Misc.",
     configName: "cellalignalert",
     title: "Cell align alert",
     description: "Alerts you when your cell alingement ends",
-    subcategory: "Alerts",
-    shouldShow: data => data.alerttoggle
+    subcategory: "Alerts"
 })
 .addSwitch({
     category: "Misc.",
     configName: "healwandalert",
     title: "Heal wand alert",
     description: "Alerts you when your healing wand's ability ends",
-    subcategory: "Alerts",
-    shouldShow: data => data.alerttoggle
+    subcategory: "Alerts"
 })
 .addSwitch({
     category: "Misc.",
     configName: "katanaalert",
     title: "Katana alert",
     description: "Alerts you when your katana's ability ends",
-    subcategory: "Alerts",
-    shouldShow: data => data.alerttoggle
+    subcategory: "Alerts"
 })
 .addSwitch({
     category: "Misc.",
     configName: "weirdtubaalert",
     title: "Weird tuba alert",
     description: "Alerts you when your weird tuba's ability ends",
-    subcategory: "Alerts",
-    shouldShow: data => data.alerttoggle
+    subcategory: "Alerts"
 })
 .addSwitch({
     category: "Misc.",
     configName: "withercloakalert",
     title: "Wither cloak alert",
     description: "Alerts you when your wither cloak's ability ends",
-    subcategory: "Alerts",
-    shouldShow: data => data.alerttoggle
+    subcategory: "Alerts"
 })
 
 // Misc - world age display
@@ -1094,9 +1051,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit world age display GUI",
     subcategory: "World age",
     shouldShow: data => data.worldagedisplay,
-    onClick() {
-        ChatLib.command(`meowaddons gui`, true)
-    }
+    onClick: () => ChatLib.command(`meowaddons gui`, true)
 })
 .addSwitch({
     category: "Misc.",
@@ -1122,9 +1077,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit arrow poison tracker GUI",
     subcategory: "Arrow poison tracker",
     shouldShow: data => data.arrowpoistracker,
-    onClick() {
-        ChatLib.command(`meowaddons gui`, true)
-    }
+    onClick: () => ChatLib.command(`meowaddons gui`, true)
 })
 
 // Misc - armor hud
@@ -1161,9 +1114,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Edit armor HUD GUI",
     subcategory: "Armor HUD",
     shouldShow: data => data.armorhud,
-    onClick() {
-        ChatLib.command(`meowaddons gui`, true)
-    }
+    onClick: () => ChatLib.command(`meowaddons gui`, true)
 })
 
 // Misc - Reaper armor highlight
@@ -1228,7 +1179,7 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
 .addButton({
     category: "Developer",
     configName: "credit2",
-    title: "Sascha_Vadkovson (Scatha)",
+    title: "Sascha",
     description: "Developer",
     subcategory: "Developer",
     onClick() {
@@ -1243,24 +1194,5 @@ const defaultConf = new DefaultConfig("MeowAddons", "data/settings.json")
     description: "Enables debug messages",
     subcategory: "Debug"
 })
-const config = new Settings("MeowAddons", defaultConf, "data/ColorScheme.json")
-        .onOpenGui(() => config.mainRightBlock.setWidth((80).percent()))
-const rcolor = Renderer.color(187, 134, 252)
-const bcolor = Renderer.color(13, 13, 13)
-config.getHandler().registers.onDraw(() => {
-    // Line
-    const mb = config.mainBlock;
-    const width = mb.getRight() - mb.getLeft();
-    const height = mb.getBottom() - mb.getTop();
-    Renderer.drawLine(rcolor, mb.getLeft() + width * 0.20, mb.getTop() + height * 0.05, mb.getLeft() + width * 0.20, mb.getBottom() - height * 0.05, 2);
-    // Box
-    Renderer.drawRect(bcolor, mb.getLeft() + (width - width * 0.3) / 2, mb.getTop() + height * 0.0008, width * 0.5, height * 0.09)
-    // Title
-    Renderer.colorize(187, 134, 252, 255)
-    Renderer.drawString(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`, mb.getLeft() + (width - width * 0.31) / 2 + width * 0.5 / 2 - Renderer.getStringWidth(`MeowAddons v${JSON.parse(FileLib.read("MeowAddons", "metadata.json")).version}`) / 2, mb.getTop() + height * 0.0004 + height * 0.075 / 2)
-})
-config.AmaterasuGui.searchBar.x = 200 // yay no search bar
-config
-      .setSize(60,60)
-      .apply()
-export default () => config.settings
+
+export default () => sin.getSettings()

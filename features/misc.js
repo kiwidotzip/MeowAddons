@@ -18,7 +18,7 @@ ShowCMD
 // Reaper highlight
 
 const ReaperHG = FeatManager.createFeature("reaperhighlight")
-let ReaperColor = Renderer.color(...Config().reaperhgcolor)
+let ReaperColor = Renderer.color(...Config().reaperhgcolor ?? [255, 255, 255])
 
 ReaperHG
     .register("renderSlot", (slot) => {

@@ -19,6 +19,3 @@ Config().getConfig()
     .registerListener("customX", (oldv, newv) => x = newv)
     .registerListener("customY", (oldv, newv) => y = newv)
     .registerListener("customZ", (oldv, newv) => z = newv)
-    .onCloseGui(() => {
-       Config().customY < 0 && (Config().customY = 1, ChatLib.chat(`&e[MeowAddons] &fYou can't put in negative values!`))
-    })

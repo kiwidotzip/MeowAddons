@@ -162,7 +162,7 @@ register("command", (...args) => {
             break
         case "broken":
             const brokenMsg = new Message(`&e[MeowAddons] &fChoose one of the following options to troubleshoot: \n&7> `)
-            brokenMsg.addTextComponent(new TextComponent(`&b[Delete Amaterasu]`).setClick("run_command", "/ct delete Amaterasu").setHoverValue(`&fClick to delete Amaterasu`))
+            brokenMsg.addTextComponent(new TextComponent(`&b[Delete sin]`).setClick("run_command", "/ct delete sin").setHoverValue(`&fClick to delete SIN`))
             brokenMsg.addTextComponent(`&7 | `)
             brokenMsg.addTextComponent(new TextComponent(`&b[Delete TSKA]\n&7> `).setClick("run_command", "/ct delete tska").setHoverValue(`&fClick to delete TSKA`))
             brokenMsg.addTextComponent(new TextComponent(`&b[Delete other dependencies]`).setClick("run_command", "/ct delete DocGuiLib").setHoverValue(`&fClick to delete other dependencies`))

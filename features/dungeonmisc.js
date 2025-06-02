@@ -121,7 +121,7 @@ sendTermInChat
 const leapannounce = FeatManager.createFeature("leapannounce", "catacombs")
 
 leapannounce
-    .register("chat", (p) => ChatLib.command(`pc Leaping to ${player}`), "You have teleported to ${p}")
+    .register("chat", (p) => ChatLib.command(`pc Leaping to ${p}`), "You have teleported to ${p}")
 
 // Leap hide
 

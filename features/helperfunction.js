@@ -8,7 +8,7 @@ import Config from "../config";
 
 const HudData = new LocalStore("tska", {})
 export const hud = new HudManager(HudData)
-export const FeatManager = new FeatureManager(Config())
+export const FeatManager = new FeatureManager(Config().getConfig())
 
 // Custom events
 

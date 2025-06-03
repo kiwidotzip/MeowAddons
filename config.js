@@ -50,14 +50,6 @@ const sin = new Base("MeowAddons", "data/scheme.json", "MeowAddons")
     subcategory: "Join/Leave format",
     shouldShow: data => data.cleantoggle
 })
-.addSwitch({
-    category: "Chat",
-    configName: "cleanpartyjoin",
-    title: "Clean party join messages",
-    description: "Formats party join messages",
-    subcategory: "Join/Leave format",
-    shouldShow: data => data.cleantoggle
-})
 
 // Chat - Chat format
 
@@ -1195,4 +1187,4 @@ const sin = new Base("MeowAddons", "data/scheme.json", "MeowAddons")
     subcategory: "Debug"
 })
 
-export default () => sin.getSettings()
+export default () => sin.settings

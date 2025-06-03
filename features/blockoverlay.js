@@ -13,6 +13,7 @@ const excludedBlocks = new Set([
     net.minecraft.init.Blocks.field_150358_i,    // FlowWater
     net.minecraft.init.Blocks.field_150355_j     // StillWater
 ]);
+
 const getColor = ([r,g,b,a]) => {
     const key = [r,g,b,a].toString();
     return cachedColors.has(key) ? cachedColors.get(key) : (cachedColors.set(key, new java.awt.Color(r/255,g/255,b/255,a/255)), cachedColors.get(key));

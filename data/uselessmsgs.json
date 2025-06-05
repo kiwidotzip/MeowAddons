@@ -1,10 +1,11 @@
 [
+    "Creeper Veil Activated!",
     "Creeper Veil De-activated!",
     "Be careful! Using Ender Pearls on this island will anger nearby Endermen!",
-    "____",
-    "\\[Bazaar\\] Executing instant sell...E",
+    "\\[Bazaar\\] Executing instant buy...",
+    "\\[Bazaar\\] Executing instant sell...",
     "\\[Bazaar\\] The Buy Orders for this item changed too much!",
-    "\\[Bazaar\\] Couldn't find any buyers for .+",
+    "\\[Bazaar\\] Couldn't find any buyers for",
     "\\[Bazaar\\] Putting goods in escrow...",
     "\\[Bazaar\\] Submitting sell offer...",
     "\\[Bazaar\\] Submitting buy order...",
@@ -55,7 +56,6 @@
     "The Frozen Adventurer used Ice Spray on you!",
     "It isn't your turn!",
     "That chest is locked!",
-    "Autopet equipped your.+",
     "Don't move diagonally! Bad!",
     "Oops! You stepped on the wrong block!",
     "Used Ragnarok!",
@@ -137,10 +137,11 @@
     "You cannot move the silverfish in that direction!",
     "You cannot hit the silverfish while it's moving!",
     "Your Kill Combo has expired! You reached a .+ Kill Combo!",
-    "aa",
+    "Your active Potion Effects have been paused and stored. They will be restored when you leave Dungeons! You are not allowed to use existing Potion Effects while in Dungeons.",
+    ".+ has obtained Blood Key!",
     "The Flamethrower hit you for .+ damage!",
     ".+ found a Wither Essence! Everyone gains an extra essence!",
     "Ragnarok is ready to use! Press DROP to activate it!",
     "This creature is immune to this kind of magic!",
-    "FISHING FESTIVAL The festival is now underway! Break out your fishing rods and wat"
+    "FISHING FESTIVAL The festival is now underway! Break out your fishing rods and watch out for sharks!"
 ]

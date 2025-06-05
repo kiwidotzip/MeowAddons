@@ -2,7 +2,7 @@
 import "./features/automeow";
 import "./features/meowsounds";
 // General
-import "./features/chatcleanerentry";
+import "./features/chatcleaner";
 import "./features/cleanjoins";
 import "./features/cleanmsgs";
 // Party command
@@ -148,6 +148,7 @@ register("command", (...args) => {
             ChatLib.chat(`&7> &7/&bmacarry help &7- &fView slayer carry commands &7&o(Aliases: /carry)`)
             ChatLib.chat(`&7> &7/&bmadgcarry help &7- &fView dungeon carry commands &7&o(Aliases: /dgcarry)`)
             ChatLib.chat(`&7> &7/&bmeowcount &7- &fCheck the amount of times you've meowed!`)
+            ChatLib.chat(`&7> &7/&bmachatcleaner &7- &fOpens chat cleaner filter editor`)
             ChatLib.chat(`&7> &7/&bma broken &7- &fLists troubleshooting steps`)
             ChatLib.chat(`&7> &7/&bma update &7- &fCheck for updates`)
             ChatLib.chat(`&b`)
@@ -164,8 +165,7 @@ register("command", (...args) => {
             const brokenMsg = new Message(`&e[MeowAddons] &fChoose one of the following options to troubleshoot: \n&7> `)
             brokenMsg.addTextComponent(new TextComponent(`&b[Delete sin]`).setClick("run_command", "/ct delete sin").setHoverValue(`&fClick to delete SIN`))
             brokenMsg.addTextComponent(`&7 | `)
-            brokenMsg.addTextComponent(new TextComponent(`&b[Delete TSKA]\n&7> `).setClick("run_command", "/ct delete tska").setHoverValue(`&fClick to delete TSKA`))
-            brokenMsg.addTextComponent(new TextComponent(`&b[Delete other dependencies]`).setClick("run_command", "/ct delete DocGuiLib").setHoverValue(`&fClick to delete other dependencies`))
+            brokenMsg.addTextComponent(new TextComponent(`&b[Delete TSKA]`).setClick("run_command", "/ct delete tska").setHoverValue(`&fClick to delete TSKA`))
             ChatLib.chat(brokenMsg)
             break
         default:

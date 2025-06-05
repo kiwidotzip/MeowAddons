@@ -10,6 +10,14 @@ const sin = new Base("MeowAddons", "data/scheme.json", "MeowAddons")
     description: "Hides a LOT of useless messages",
     subcategory: "General"
 })
+.addButton({
+    category: "Chat",
+    configName: "chatcleanerguieditor",
+    title: "Open",
+    description: "Edit chat cleaner filters",
+    subcategory: "General",
+    onClick: () => ChatLib.command(`machatcleaner`, true)
+})
 .addSwitch({
     category: "Chat",
     configName: "betterah",

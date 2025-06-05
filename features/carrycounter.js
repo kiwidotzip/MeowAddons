@@ -589,7 +589,6 @@ register("command", (...args) => {
             UpdateCarryee()
             ChatLib.chat(messageADD)
             break
-            
         case "set":
             if (!name || !count) return syntaxError("set <name> <count>")
             const carryee = findCarryee(name)
@@ -598,7 +597,6 @@ register("command", (...args) => {
             carryee.reset()
             ChatLib.chat(`${prefix} &fSet &6${name}&f's count to &6${count}&f.`)
             break
-            
         case "settotal": 
             if (!name || !count) return syntaxError("settotal <name> <total>")
             const carryeeSetTotal = findCarryee(name)
@@ -609,14 +607,12 @@ register("command", (...args) => {
             carryeeSetTotal.total = newSetTotal
             ChatLib.chat(`${prefix} &fSet &6${name}&f's total to &6${newSetTotal}&f.`)
             break
-            
         case "remove":
             if (!name) return syntaxError("remove <name>")
             carryees = carryees.filter(carryee => carryee.name !== name)
             UpdateCarryee()
             ChatLib.chat(`${prefix} &fRemoved &6${name}&f.`)
             break
-            
         case "list":
             if (carryees.length === 0) return ChatLib.chat(`${prefix} &cNo active carries!`)
             ChatLib.chat(`${prefix} &fActive carries:`)
@@ -636,8 +632,7 @@ register("command", (...args) => {
                         .setHoverValue("&7Click to remove player"))
                 ChatLib.chat(message)
             })
-            break
-            
+            break   
         case "increase":
             if (!name) return syntaxError("increase <name>")
             const carryeeInc = findCarryee(name)
@@ -646,7 +641,6 @@ register("command", (...args) => {
             carryeeInc.reset()
             ChatLib.chat(`${prefix} &fIncreased &6${name}&f's count to &6${carryeeInc.count}&f.`)
             break
-            
         case "decrease":
             if (!name) return syntaxError("decrease <name>")
             const carryeeDec = findCarryee(name)
@@ -655,11 +649,9 @@ register("command", (...args) => {
             carryeeDec.reset()
             ChatLib.chat(`${prefix} &fDecreased &6${name}&f's count to &6${carryeeDec.count}&f.`)
             break
-            
         case "gui":
             hud.open()
             break
-            
         case "confirmdeath":
             if (!name) return syntaxError("confirmdeath <name>")
             const carryeeConfirm = findCarryee(name)
@@ -668,7 +660,6 @@ register("command", (...args) => {
             carryeeConfirm.recordBossTime()
             ChatLib.chat(`${prefix} &fCount incremented for &6${name}&f.`)
             break
-            
         case "logs": 
             const entriesPerPage = 10
             const page = Math.min(Math.max(1, parseInt(args[1]) || 1), 
@@ -730,7 +721,6 @@ register("command", (...args) => {
             
             ChatLib.chat(logMsg.setChatLineId(9999999))
             break
-            
         case "clearlog": 
             const confirmMsg = new Message(
                 `${prefix} &cClear ALL carry logs? `,
@@ -743,27 +733,26 @@ register("command", (...args) => {
             )
             ChatLib.chat(confirmMsg)
             break
-            
         case "clearlog_confirm": 
             CarryLog.data = []
             if (carryCache) carryCache.clear()
             ChatLib.chat(`${prefix} &aAll carry logs have been cleared.`)
             break
-            
         case "canceldeath":
             if (!name) return syntaxError("canceldeath <name>")
             const carryeeCancel = findCarryee(name)
             if (!carryeeCancel) return ChatLib.chat(`${prefix} &c${name} not found!`)
             ChatLib.chat(`${prefix} &7Ignored death for &6${name}&f.`)
             break
-            
         case "clear":
             const message = carryees.length ? `${prefix} &fCleared all active carries.` : `${prefix} &cNo active carries to clear.`
             carryees = []
             UpdateCarryee()
             ChatLib.chat(message)
             break
-            
+        case "help":
+            showHelp()
+            break
         default:
             ChatLib.chat(`${prefix} &cInvalid command! Run /carry help for a list of commands.`)
     }
@@ -853,6 +842,9 @@ register("command", (...args) => {
             dungeonCarryees = [];
             ChatLib.chat(message);
             Dungeon.update()
+            break;
+        case "help":
+            showDgHelp();
             break;
         default:
             ChatLib.chat(`${prefix} &cInvalid command! Run /dgcarry help for a list of commands.`)

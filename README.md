@@ -12,15 +12,12 @@
   </a>
 </p>
 
-<p align="center"><b>Total Downloads:</b> ~4.8k </p>
+<p align="center"><b>Total Downloads:</b> ~5.6k </p>
 
-<p align="center" id="description"><b>MeowAddons</b> is a Silly chattriggers module that has some QOL features</p>
-<p align="center"><a href="https://discord.com/invite/KPmHQUC97G"><b>Join the discord!</b></a></p>
+<h1 align="center" id="description"><b>Moved to <a href="https://github.com/kiwidotzip/zen">Zen</b></h1>
+<h2 align="center">Join the <a href="https://discord.com/invite/KPmHQUC97G"><b>discord!</b></a></h2>
 
 <h2 align="center">Features List - Updated at https://meowaddons.top/docs</h2>
-
-<p align="center">Here are some of the standout features that <b>MeowAddons</b> has so far</p>
-
 ## *General*
  
 - Chat Cleaner 
